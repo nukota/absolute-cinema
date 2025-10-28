@@ -12,12 +12,12 @@ import {
   DashboardRounded,
   MovieRounded,
   PeopleRounded,
-  TheaterComedyRounded,
   SettingsRounded,
-  BusinessRounded,
   MeetingRoomRounded,
   ShoppingCartRounded,
   ReceiptRounded,
+  LocationOnRounded,
+  CalendarViewDayRounded,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -32,16 +32,21 @@ const navItems: NavItem[] = [
   { text: "Movies", icon: <MovieRounded />, path: "/admin/movies" },
   {
     text: "Showtimes",
-    icon: <TheaterComedyRounded />,
+    icon: <CalendarViewDayRounded />,
     path: "/admin/showtimes",
   },
-  { text: "Cinemas", icon: <BusinessRounded />, path: "/admin/cinemas" },
+  { text: "Cinemas", icon: <LocationOnRounded />, path: "/admin/cinemas" },
   { text: "Rooms", icon: <MeetingRoomRounded />, path: "/admin/rooms" },
   { text: "Customers", icon: <PeopleRounded />, path: "/admin/customers" },
   { text: "Products", icon: <ShoppingCartRounded />, path: "/admin/products" },
   { text: "Invoices", icon: <ReceiptRounded />, path: "/admin/invoices" },
-  { text: "Settings", icon: <SettingsRounded />, path: "/admin/settings" },
 ];
+
+const settingsItem: NavItem = {
+  text: "Settings",
+  icon: <SettingsRounded />,
+  path: "/admin/settings",
+};
 
 export const NavBar = () => {
   const navigate = useNavigate();
@@ -60,13 +65,13 @@ export const NavBar = () => {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        boxShadow: "2px 0 4px rgba(0,0,0,0.08)",
       }}
     >
       {/* Logo Section */}
       <Box
         sx={{
-          p: 2,
+          height: { xs: 60, sm: 66 },
+          px: 3,
           display: "flex",
           alignItems: "center",
           gap: 1.5,
@@ -79,8 +84,8 @@ export const NavBar = () => {
           sx={{
             fontFamily: '"Montserrat Alternates", sans-serif',
             fontSize: 18,
-            fontWeight: 700,
-            color: "text.primary",
+            fontWeight: 500,
+            color: "primary.main",
           }}
         >
           Absolute Cinema
@@ -88,13 +93,14 @@ export const NavBar = () => {
       </Box>
 
       {/* Navigation Items */}
-      <List sx={{ flex: 1, pt: 2 }}>
+      <List sx={{ flex: 1, pt: 2, overflow: "auto" }}>
         {navItems.map((item) => (
           <ListItem key={item.text} disablePadding>
             <ListItemButton
               onClick={() => navigate(item.path)}
               sx={{
                 mx: 1,
+                px: 2,
                 borderRadius: 1,
                 backgroundColor: isActive(item.path)
                   ? "rgba(156, 39, 176, 0.08)"
@@ -120,7 +126,7 @@ export const NavBar = () => {
               <ListItemText
                 primary={item.text}
                 primaryTypographyProps={{
-                  fontSize: "0.95rem",
+                  fontSize: "1rem",
                   fontWeight: isActive(item.path) ? 700 : 600,
                 }}
               />
@@ -128,6 +134,74 @@ export const NavBar = () => {
           </ListItem>
         ))}
       </List>
+
+      {/* Settings Item at Bottom */}
+      <List sx={{ pt: 0 }}>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => navigate(settingsItem.path)}
+            sx={{
+              mx: 1,
+              px: 2,
+              borderRadius: 1,
+              backgroundColor: isActive(settingsItem.path)
+                ? "rgba(156, 39, 176, 0.08)"
+                : "transparent",
+              color: isActive(settingsItem.path)
+                ? "primary.main"
+                : "text.primary",
+              "&:hover": {
+                backgroundColor: isActive(settingsItem.path)
+                  ? "rgba(156, 39, 176, 0.12)"
+                  : "action.hover",
+              },
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 40,
+                color: isActive(settingsItem.path)
+                  ? "primary.main"
+                  : "text.secondary",
+              }}
+            >
+              {settingsItem.icon}
+            </ListItemIcon>
+            <ListItemText
+              primary={settingsItem.text}
+              primaryTypographyProps={{
+                fontSize: "1rem",
+                fontWeight: isActive(settingsItem.path) ? 700 : 600,
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
+      </List>
+
+      {/* Footer */}
+      <Box
+        sx={{
+          p: 1,
+          m: 2,
+          mt: 0,
+          borderRadius: 1,
+          backgroundColor: "rgba(156, 39, 176, 0.02)",
+          border: "1px solid rgba(156, 39, 176, 0.1)",
+        }}
+      >
+        <Typography
+          variant="subtitle2"
+          sx={{
+            color: "primary.main",
+            fontWeight: 600,
+            display: "block",
+            textAlign: "center",
+            lineHeight: 1.4,
+          }}
+        >
+          This application was developed by group 0
+        </Typography>
+      </Box>
     </Box>
   );
 };

@@ -7,14 +7,17 @@ import {
   MenuItem,
   Divider,
   ListItemIcon,
-} from '@mui/material';
+  Badge,
+} from "@mui/material";
 import {
-  NotificationsOutlined,
-  AccountCircleOutlined,
-  SettingsOutlined,
-  LogoutOutlined,
-} from '@mui/icons-material';
-import { useState } from 'react';
+  NotificationsRounded,
+  AccountCircleRounded,
+  SettingsRounded,
+  LogoutRounded,
+  MessageRounded,
+  CalendarTodayRounded,
+} from "@mui/icons-material";
+import { useState } from "react";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -31,41 +34,63 @@ export const Header = () => {
   return (
     <Box
       sx={{
-        width: '100%',
-        backgroundColor: 'background.paper',
+        width: "100%",
+        backgroundColor: "background.paper",
+        overflowX: "hidden",
         borderBottom: 1,
-        borderColor: 'divider',
-        mb: 3,
-        boxShadow: '0 2px 4px rgba(0,0,0,0.08)',
+        borderColor: "divider",
       }}
     >
-      <Box 
-        sx={{ 
-          display: 'flex',
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          gap: 1,
-          minHeight: { xs: 64, sm: 70 },
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          gap: { xs: 1, lg: 2 },
+          height: { xs: 60, sm: 66 },
           px: 3,
         }}
       >
-        {/* Notifications */}
-        <IconButton color="default" size="large">
-          <NotificationsOutlined />
+        {/* Icon Buttons */}
+        <IconButton color="default" sx={{ p: 1.25 }}>
+          <CalendarTodayRounded sx={{ fontSize: 24 }} />
+        </IconButton>
+
+        <IconButton color="default" sx={{ p: 1.25 }}>
+          <MessageRounded sx={{ fontSize: 24 }} />
+        </IconButton>
+
+        <IconButton color="default" sx={{ p: 1.25 }}>
+          <Badge badgeContent={3} color="error">
+            <NotificationsRounded sx={{ fontSize: 28 }} />
+          </Badge>
         </IconButton>
 
         {/* Profile Section */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Box sx={{ textAlign: 'right' }}>
-            <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary', fontSize: { xs: '0.875rem', sm: '0.875rem' } }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box sx={{ textAlign: "right" }}>
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: 600,
+                color: "text.primary",
+                fontSize: { xs: "0.875rem", sm: "1rem" },
+              }}
+            >
               Admin User
             </Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: { xs: '0.75rem', sm: '0.75rem' } }}>
+            <Typography
+              variant="caption"
+              sx={{
+                color: "text.secondary",
+                fontSize: { xs: "0.75rem", sm: "0.85rem" },
+              }}
+            >
               admin@absolutecinema.com
             </Typography>
           </Box>
           <IconButton onClick={handleClick} size="small">
-            <Avatar sx={{ width: 40, height: 40, bgcolor: 'primary.main' }}>
+            <Avatar sx={{ width: 40, height: 40, bgcolor: "primary.main" }}>
               A
             </Avatar>
           </IconButton>
@@ -77,8 +102,8 @@ export const Header = () => {
           open={open}
           onClose={handleClose}
           onClick={handleClose}
-          transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-          anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           slotProps={{
             paper: {
               elevation: 3,
@@ -91,20 +116,20 @@ export const Header = () => {
         >
           <MenuItem>
             <ListItemIcon>
-              <AccountCircleOutlined fontSize="small" />
+              <AccountCircleRounded fontSize="small" />
             </ListItemIcon>
             Profile
           </MenuItem>
           <MenuItem>
             <ListItemIcon>
-              <SettingsOutlined fontSize="small" />
+              <SettingsRounded fontSize="small" />
             </ListItemIcon>
             Settings
           </MenuItem>
           <Divider />
           <MenuItem>
             <ListItemIcon>
-              <LogoutOutlined fontSize="small" />
+              <LogoutRounded fontSize="small" />
             </ListItemIcon>
             Logout
           </MenuItem>
@@ -112,4 +137,4 @@ export const Header = () => {
       </Box>
     </Box>
   );
-}
+};
