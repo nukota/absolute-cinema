@@ -1,37 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-import { Typography } from '@mui/material'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import AdminLayout from './pages/admin/index';
+import Dashboard from './pages/admin/Dashboard';
+import Movies from './pages/admin/Movies';
+import Showtimes from './pages/admin/Showtimes';
+import Cinemas from './pages/admin/Cinemas';
+import Rooms from './pages/admin/Rooms';
+import Customers from './pages/admin/Customers';
+import Products from './pages/admin/Products';
+import Invoices from './pages/admin/Invoices';
+import Settings from './pages/admin/Settings';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <Typography variant="h1">Hello World</Typography>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        {/* Redirect root to admin */}
+        <Route path="/" element={<Navigate to="/admin" replace />} />
+        
+        {/* Admin routes */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Dashboard />} />
+          <Route path="movies" element={<Movies />} />
+          <Route path="showtimes" element={<Showtimes />} />
+          <Route path="cinemas" element={<Cinemas />} />
+          <Route path="rooms" element={<Rooms />} />
+          <Route path="customers" element={<Customers />} />
+          <Route path="products" element={<Products />} />
+          <Route path="invoices" element={<Invoices />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
