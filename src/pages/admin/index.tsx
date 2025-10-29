@@ -84,7 +84,8 @@ const AdminLayout = () => {
         {/* Page Content */}
         <Box
           sx={{
-            p: 3,
+            py: 6,
+            px: 5,
             flexGrow: 1,
             boxShadow: "inset 4px 4px 10px rgba(0, 0, 0, 0.16)",
           }}

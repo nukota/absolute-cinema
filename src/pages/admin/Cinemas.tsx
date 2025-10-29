@@ -1,31 +1,40 @@
-import { Box, Typography, Button, Card, CardContent } from '@mui/material';
-import { AddOutlined } from '@mui/icons-material';
+import { useState } from 'react';
+import CustomTabs from '../../components/layouts/Tabs';
+import Cinema from '../../components/items/Cinema';
+import { mockCinemas } from '../../utils/mockdata';
 
 const Cinemas = () => {
-  return (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Box>
-          <Typography variant="h4" gutterBottom fontWeight={600}>
-            Cinemas
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Manage cinema locations and facilities
-          </Typography>
-        </Box>
-        <Button variant="contained" startIcon={<AddOutlined />}>
-          Add Cinema
-        </Button>
-      </Box>
+  const [activeTab, setActiveTab] = useState('All');
+  const [loading] = useState(false);
 
-      <Card elevation={0} sx={{ border: 1, borderColor: 'divider' }}>
-        <CardContent>
-          <Typography variant="body1" color="text.secondary">
-            Cinema locations will appear here
-          </Typography>
-        </CardContent>
-      </Card>
-    </Box>
+  const tabs = [
+    { label: 'All', value: 'All' },
+  ];
+
+  const handleAddNew = () => {
+    console.log('Add new cinema');
+  };
+
+  return (
+    <CustomTabs
+      title="Cinemas"
+      activeTab={activeTab}
+      onTabChange={setActiveTab}
+      tabs={tabs}
+      data={mockCinemas}
+      loading={loading}
+      onAddNew={handleAddNew}
+      addButtonText="Add Cinema"
+      searchColumns={['name', 'address', 'city']}
+      gridCols="grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      gap="gap-6"
+    >
+      {(filteredData) =>
+        filteredData.map((cinema) => (
+          <Cinema key={cinema._id} cinema={cinema} />
+        ))
+      }
+    </CustomTabs>
   );
 };
 

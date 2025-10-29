@@ -1,36 +1,48 @@
 import { useState } from 'react';
-import { Box, IconButton, Tooltip, Typography } from '@mui/material';
+import { Box, IconButton, Tooltip, Typography, Rating as MuiRating } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CustomDataGrid from '../../components/layouts/DataGrid';
-import { mockShowtimes } from '../../utils/mockdata';
+import { mockRatings } from '../../utils/mockdata';
 import type { GridColDef } from '@mui/x-data-grid';
 
-const Showtimes = () => {
+const Ratings = () => {
   const [loading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
-  const handleAddNewShowtime = () => {
-    console.log('Add new showtime');
-    // Navigate to add showtime page or open a modal
-  };
-
   const handleViewDetails = (id: string) => {
-    console.log('View details for showtime:', id);
-    // Navigate to showtime details page or open a modal
+    console.log('View details for rating:', id);
+    // Navigate to rating details page or open a modal
   };
 
   const columns: GridColDef[] = [
     {
       field: '_id',
       headerName: 'ID',
-      width: 100,
+      width: 80,
       sortable: true,
+    },
+    {
+      field: 'customer',
+      headerName: 'Customer',
+      flex: 1,
+      minWidth: 180,
+      sortable: true,
+      renderCell: (params) => (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+          <Typography sx={{maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}} variant="caption" color="text.secondary">
+            ID: {params.row.customer_id}
+          </Typography>
+          <Typography variant="body2" fontWeight={500}>
+            {params.row.customer_name}
+          </Typography>
+        </Box>
+      ),
     },
     {
       field: 'movie',
       headerName: 'Movie',
       flex: 1,
-      minWidth: 200,
+      minWidth: 180,
       sortable: true,
       renderCell: (params) => (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
@@ -44,63 +56,36 @@ const Showtimes = () => {
       ),
     },
     {
-      field: 'room',
-      headerName: 'Room',
-      flex: 1,
-      minWidth: 180,
+      field: 'rating',
+      headerName: 'Rating',
+      width: 150,
       sortable: true,
       renderCell: (params) => (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <Typography sx={{maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}} variant="caption" color="text.secondary">
-            ID: {params.row.room_id}
-          </Typography>
-          <Typography variant="body2" fontWeight={500}>
-            {params.row.room_name}
-          </Typography>
-        </Box>
+        <MuiRating value={params.row.rating} readOnly size="small" />
       ),
     },
     {
-      field: 'time',
-      headerName: 'Time',
+      field: 'comment',
+      headerName: 'Comment',
       flex: 1,
       minWidth: 200,
+      sortable: false,
+    },
+    {
+      field: 'date',
+      headerName: 'Date',
+      width: 180,
       sortable: true,
-      renderCell: (params) => {
-        const startDate = new Date(params.row.start_time);
-        const endDate = new Date(params.row.end_time);
-        
-        const startTime = startDate.toLocaleTimeString('en-GB', {
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-        const endTime = endDate.toLocaleTimeString('en-GB', {
-          hour: '2-digit',
-          minute: '2-digit',
-        });
-        const date = startDate.toLocaleDateString('en-GB', {
+      valueFormatter: (value) => {
+        if (!value) return '';
+        const date = new Date(value);
+        return date.toLocaleString('en-GB', {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
         });
-        
-        return (
-          <Typography variant="body2">
-            {startTime} - {endTime}, {date}
-          </Typography>
-        );
-      },
-    },
-    {
-      field: 'price',
-      headerName: 'Price',
-      width: 140,
-      sortable: true,
-      valueFormatter: (value) => {
-        return new Intl.NumberFormat('vi-VN', {
-          style: 'currency',
-          currency: 'VND',
-        }).format(value);
       },
     },
     {
@@ -126,18 +111,16 @@ const Showtimes = () => {
   ];
 
   const handleDeleteSelected = () => {
-    console.log('Delete selected showtimes:', selectedRows);
+    console.log('Delete selected ratings:', selectedRows);
     // Implement delete logic here
   };
 
   return (
     <CustomDataGrid
-      title="Showtimes Management"
+      title="Ratings Management"
       loading={loading}
-      rows={mockShowtimes}
+      rows={mockRatings}
       columns={columns}
-      onAddNew={handleAddNewShowtime}
-      addButtonText="Add New Showtime"
       selectedRows={selectedRows}
       onRowSelectionChange={setSelectedRows}
       onDeleteSelected={handleDeleteSelected}
@@ -148,4 +131,4 @@ const Showtimes = () => {
   );
 };
 
-export default Showtimes;
+export default Ratings;

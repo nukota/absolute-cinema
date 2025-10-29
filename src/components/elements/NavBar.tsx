@@ -18,6 +18,7 @@ import {
   ReceiptRounded,
   LocationOnRounded,
   CalendarViewDayRounded,
+  StarRounded,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -29,17 +30,18 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { text: "Dashboard", icon: <DashboardRounded />, path: "/admin" },
+  { text: "Cinemas", icon: <LocationOnRounded />, path: "/admin/cinemas" },
+  { text: "Rooms", icon: <MeetingRoomRounded />, path: "/admin/rooms" },
   { text: "Movies", icon: <MovieRounded />, path: "/admin/movies" },
   {
     text: "Showtimes",
     icon: <CalendarViewDayRounded />,
     path: "/admin/showtimes",
   },
-  { text: "Cinemas", icon: <LocationOnRounded />, path: "/admin/cinemas" },
-  { text: "Rooms", icon: <MeetingRoomRounded />, path: "/admin/rooms" },
   { text: "Customers", icon: <PeopleRounded />, path: "/admin/customers" },
   { text: "Products", icon: <ShoppingCartRounded />, path: "/admin/products" },
   { text: "Invoices", icon: <ReceiptRounded />, path: "/admin/invoices" },
+  { text: "Ratings", icon: <StarRounded />, path: "/admin/ratings" },
 ];
 
 const settingsItem: NavItem = {
@@ -126,8 +128,8 @@ export const NavBar = () => {
               <ListItemText
                 primary={item.text}
                 primaryTypographyProps={{
-                  fontSize: "1rem",
-                  fontWeight: isActive(item.path) ? 700 : 600,
+                  fontSize: "1.125rem",
+                  fontWeight: isActive(item.path) ? 800 : 700,
                 }}
               />
             </ListItemButton>
@@ -170,8 +172,8 @@ export const NavBar = () => {
             <ListItemText
               primary={settingsItem.text}
               primaryTypographyProps={{
-                fontSize: "1rem",
-                fontWeight: isActive(settingsItem.path) ? 700 : 600,
+                fontSize: "1.125rem",
+                  fontWeight: isActive(settingsItem.path) ? 800 : 700,
               }}
             />
           </ListItemButton>
