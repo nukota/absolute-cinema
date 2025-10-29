@@ -17,13 +17,15 @@ interface TabItem {
   value: string;
 }
 
+type TabFilterStrategy = "status" | "category" | "custom";
+
 interface CustomTabsProps {
   title: string;
   activeTab: string;
   onTabChange: (value: string) => void;
   tabs: TabItem[];
   data: any[]; // Raw data array
-  loading?: boolean; // Add loading prop
+  loading?: boolean;
   gridCols?: string;
   gap?: string;
   className?: string;
@@ -31,6 +33,8 @@ interface CustomTabsProps {
   addButtonText?: string;
   dateColumns?: string[]; // Array of column names that can be filtered with dates
   searchColumns?: string[]; // Array of column names to search in
+  tabFilterStrategy?: TabFilterStrategy; // How to filter by tabs
+  customTabFilter?: (item: any, activeTab: string) => boolean; // Custom filter function for tabs
   children: (filteredData: any[]) => ReactNode; // Render prop for filtered data
 }
 
@@ -40,7 +44,7 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
   onTabChange,
   tabs,
   data,
-  loading = false, // Add loading with default value
+  loading = false,
   gridCols = "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
   gap = "gap-y-8",
   className = "",
@@ -48,6 +52,8 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
   addButtonText = "Add New",
   dateColumns = [],
   searchColumns = [],
+  tabFilterStrategy = "status", // Default strategy
+  customTabFilter,
   children,
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -68,24 +74,39 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
   // Filtering logic moved inside CustomTabs
   const filteredData = useMemo(() => {
     return data.filter((item) => {
-      // Tab filtering
-      const matchesTab =
-        activeTab === "All" ||
-        item.status === activeTab ||
-        (activeTab === "Food and Drinks" &&
-          (item.category === "Food" || item.category === "Drink")) ||
-        (activeTab === "Others" &&
-          item.category !== "Food" &&
-          item.category !== "Drink" &&
-          item.category !== "Souvenirs") ||
-        item.category === activeTab;
+      // Tab filtering with strategy pattern
+      let matchesTab = false;
+
+      if (activeTab === "All") {
+        matchesTab = true;
+      } else if (customTabFilter) {
+        // Use custom filter function if provided
+        matchesTab = customTabFilter(item, activeTab);
+      } else if (tabFilterStrategy === "status") {
+        // Filter by status field
+        matchesTab = item.status === activeTab;
+      } else if (tabFilterStrategy === "category") {
+        // Filter by category field with special cases
+        if (activeTab === "Food and Drinks") {
+          matchesTab = item.category === "food" || item.category === "drink";
+        } else if (activeTab === "Others") {
+          matchesTab =
+            item.category !== "food" &&
+            item.category !== "drink" &&
+            item.category !== "souvenir";
+        } else {
+          matchesTab = item.category === activeTab.toLowerCase();
+        }
+      }
 
       // Search filtering
       let matchesSearch = true;
       if (searchTerm && searchColumns.length > 0) {
         const searchTermLower = searchTerm.toLowerCase();
         matchesSearch = searchColumns.some((column) => {
-          const value = item[column];
+          // Support nested object paths (e.g., "customer.full_name")
+          const value = column.split(".").reduce((obj, key) => obj?.[key], item);
+          
           if (Array.isArray(value)) {
             return value.some(
               (v) => v && v.toString().toLowerCase().includes(searchTermLower)
@@ -101,13 +122,16 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
       let matchesDate = true;
       if (selectedDate && dateColumns.length > 0) {
         matchesDate = dateColumns.some((column) => {
-          const itemDate = item[column];
+          // Support nested object paths
+          const itemDate = column.split(".").reduce((obj, key) => obj?.[key], item);
           if (!itemDate) return false;
 
           // Handle different date formats
-          if (column.includes("ordered_at") || column.includes("created_at")) {
+          if (column.includes("created_at") || column.includes("ordered_at")) {
+            // For timestamp fields, match the date part
             return itemDate.startsWith(selectedDate);
           } else {
+            // For date fields, check if item date is on or before selected date
             return new Date(itemDate) <= new Date(selectedDate);
           }
         });
@@ -115,7 +139,16 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
 
       return matchesTab && matchesSearch && matchesDate;
     });
-  }, [data, activeTab, searchTerm, selectedDate, searchColumns, dateColumns]);
+  }, [
+    data,
+    activeTab,
+    searchTerm,
+    selectedDate,
+    searchColumns,
+    dateColumns,
+    tabFilterStrategy,
+    customTabFilter,
+  ]);
 
   const showActionBar =
     onAddNew || searchColumns.length > 0 || dateColumns.length > 0;

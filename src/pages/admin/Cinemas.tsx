@@ -31,7 +31,7 @@ const Cinemas = () => {
     >
       {(filteredData) =>
         filteredData.map((cinema) => (
-          <Cinema key={cinema._id} cinema={cinema} />
+          <Cinema key={cinema.cinema_id} cinema={cinema} handleInfoClick={() => console.log('Cinema clicked:', cinema.cinema_id)} />
         ))
       }
     </CustomTabs>
