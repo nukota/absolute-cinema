@@ -100,6 +100,10 @@ export interface RoomDTO {
 
 export interface ShowtimeDTO {
   showtime_id: string;
+  cinema: {
+    cinema_id: string;
+    name: string;
+  };
   room: {
     room_id: string;
     name: string;

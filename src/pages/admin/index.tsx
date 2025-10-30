@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Box, Drawer, IconButton } from "@mui/material";
 import { Menu as MenuIcon } from "@mui/icons-material";
 import { Outlet } from "react-router-dom";
-import { NavBar } from "../../components/elements/NavBar";
-import { Header } from "../../components/elements/Header";
+import { NavBar } from "../../components/elements/admin/NavBar";
+import { Header } from "../../components/elements/admin/Header";
 
 const drawerWidth = 250;
 

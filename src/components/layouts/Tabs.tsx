@@ -8,6 +8,10 @@ import {
   TextField,
   InputAdornment,
   Skeleton,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SearchIcon from '@mui/icons-material/Search';
@@ -17,7 +21,16 @@ interface TabItem {
   value: string;
 }
 
-type TabFilterStrategy = 'status' | 'category' | 'custom';
+interface SelectFilterOption {
+  label: string;
+  value: string;
+}
+
+interface SelectFilter {
+  label: string;
+  property: string; // Property to filter by (supports nested paths like "cinema.name")
+  options: SelectFilterOption[];
+}
 
 interface CustomTabsProps {
   title: string;
@@ -33,8 +46,9 @@ interface CustomTabsProps {
   addButtonText?: string;
   dateColumns?: string[]; // Array of column names that can be filtered with dates
   searchColumns?: string[]; // Array of column names to search in
-  tabFilterStrategy?: TabFilterStrategy; // How to filter by tabs
+  tabFilterProperty?: string; // Property name to filter by (e.g., 'status', 'category', 'type')
   customTabFilter?: (item: any, activeTab: string) => boolean; // Custom filter function for tabs
+  selectFilters?: SelectFilter[]; // Array of select filters
   children: (filteredData: any[]) => ReactNode; // Render prop for filtered data
 }
 
@@ -52,12 +66,16 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
   addButtonText = 'Add New',
   dateColumns = [],
   searchColumns = [],
-  tabFilterStrategy = 'status', // Default strategy
+  tabFilterProperty = 'status', // Default property to filter by
   customTabFilter,
+  selectFilters = [],
   children,
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectFilterValues, setSelectFilterValues] = useState<
+    Record<string, string>
+  >({});
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
     onTabChange?.(newValue);
@@ -71,30 +89,34 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
     setSelectedDate(event.target.value);
   };
 
+  const handleSelectFilterChange = (property: string, value: string) => {
+    setSelectFilterValues((prev) => ({
+      ...prev,
+      [property]: value,
+    }));
+  };
+
   // Filtering logic moved inside CustomTabs
   const filteredData = useMemo(() => {
     return data.filter((item) => {
-      // Tab filtering with strategy pattern
+      // Tab filtering with flexible property-based filtering
       let matchesTab = true; // Default to true when no tabs
 
       if (tabs.length > 0 && activeTab && activeTab !== 'All') {
         if (customTabFilter) {
           // Use custom filter function if provided
           matchesTab = customTabFilter(item, activeTab);
-        } else if (tabFilterStrategy === 'status') {
-          // Filter by status field
-          matchesTab = item.status === activeTab;
-        } else if (tabFilterStrategy === 'category') {
-          // Filter by category field with special cases
-          if (activeTab === 'Food and Drinks') {
-            matchesTab = item.category === 'food' || item.category === 'drink';
-          } else if (activeTab === 'Others') {
-            matchesTab =
-              item.category !== 'food' &&
-              item.category !== 'drink' &&
-              item.category !== 'souvenir';
+        } else if (tabFilterProperty) {
+          // Filter by the specified property (works with any property name)
+          const itemValue = item[tabFilterProperty];
+          const tabValueLower = activeTab.toLowerCase();
+          
+          if (typeof itemValue === 'string') {
+            // For string values, compare case-insensitively
+            matchesTab = itemValue.toLowerCase() === tabValueLower;
           } else {
-            matchesTab = item.category === activeTab.toLowerCase();
+            // For other types, direct comparison
+            matchesTab = itemValue === activeTab;
           }
         }
       }
@@ -141,7 +163,26 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
         });
       }
 
-      return matchesTab && matchesSearch && matchesDate;
+      // Select filters filtering
+      let matchesSelectFilters = true;
+      if (selectFilters.length > 0) {
+        matchesSelectFilters = selectFilters.every((filter) => {
+          const selectedValue = selectFilterValues[filter.property];
+          if (!selectedValue || selectedValue === 'all') return true;
+
+          // Support nested object paths
+          const itemValue = filter.property
+            .split('.')
+            .reduce((obj, key) => obj?.[key], item);
+
+          if (typeof itemValue === 'string') {
+            return itemValue.toLowerCase() === selectedValue.toLowerCase();
+          }
+          return itemValue === selectedValue;
+        });
+      }
+
+      return matchesTab && matchesSearch && matchesDate && matchesSelectFilters;
     });
   }, [
     data,
@@ -150,13 +191,18 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
     selectedDate,
     searchColumns,
     dateColumns,
-    tabFilterStrategy,
+    tabFilterProperty,
     customTabFilter,
     tabs,
+    selectFilters,
+    selectFilterValues,
   ]);
 
   const showActionBar =
-    onAddNew || searchColumns.length > 0 || dateColumns.length > 0;
+    onAddNew ||
+    searchColumns.length > 0 ||
+    dateColumns.length > 0 ||
+    selectFilters.length > 0;
 
   return (
     <div
@@ -223,6 +269,35 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
                 }}
               />
             )}
+
+            {/* Select Filters */}
+            {selectFilters.map((filter) => (
+              <FormControl
+                key={filter.property}
+                size="small"
+                sx={{
+                  minWidth: 200,
+                  backgroundColor: 'white',
+                  borderRadius: '4px',
+                }}
+              >
+                <InputLabel>{filter.label}</InputLabel>
+                <Select
+                  value={selectFilterValues[filter.property] || 'all'}
+                  label={filter.label}
+                  onChange={(e) =>
+                    handleSelectFilterChange(filter.property, e.target.value)
+                  }
+                >
+                  <MenuItem value="all">All</MenuItem>
+                  {filter.options.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ))}
           </Box>
 
           {/* Add Button */}

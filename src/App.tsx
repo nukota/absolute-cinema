@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AdminLayout from './pages/admin/index';
 import Dashboard from './pages/admin/Dashboard';
 import Movies from './pages/admin/Movies';
@@ -10,20 +10,36 @@ import Products from './pages/admin/Products';
 import Invoices from './pages/admin/Invoices';
 import Ratings from './pages/admin/Ratings';
 import Settings from './pages/admin/Settings';
-import Signin from './pages/users/Signin';
-import Signup from './pages/users/Signup';
+import Signin from './pages/user/Signin';
+import Signup from './pages/user/Signup';
+import UserLayout from './pages/user';
+import Home from './pages/user/Home';
+import MoviesPage from './pages/user/MoviesPage';
+import MovieDetail from './pages/user/MovieDetail';
+import Booking from './pages/user/Booking';
+import Payment from './pages/user/Payment';
+import Confirmation from './pages/user/Confirmation';
+import Profile from './pages/user/Profile';
 import './App.css';
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Redirect root to signin */}
-        <Route path="/" element={<Navigate to="/signin" replace />} />
-        
         {/* Auth routes */}
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
+        
+        {/* User routes with layout */}
+        <Route path="/" element={<UserLayout />}>
+          <Route index element={<Home />} />
+          <Route path="movies" element={<MoviesPage />} />
+          <Route path="movie/:id" element={<MovieDetail />} />
+          <Route path="booking/:showtimeId" element={<Booking />} />
+          <Route path="payment" element={<Payment />} />
+          <Route path="confirmation" element={<Confirmation />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
         
         {/* Admin routes */}
         <Route path="/admin" element={<AdminLayout />}>

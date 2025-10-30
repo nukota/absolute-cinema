@@ -40,8 +40,7 @@ const Movie: React.FC<MovieProps> = ({ movie, handleInfoClick }) => {
         cursor: 'pointer',
         transition: 'all 0.3s ease',
         '&:hover': {
-          transform: 'scale(1.05)',
-          boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+          transform: 'translateY(-10px)',
         },
       }}
       onClick={handleInfoClick}
@@ -71,10 +70,10 @@ const Movie: React.FC<MovieProps> = ({ movie, handleInfoClick }) => {
       >
         <Typography
           sx={{
-            fontWeight: 500,
-            fontSize: '15px',
+            fontWeight: 600,
+            fontSize: '16px',
             color: 'black',
-            my: 0.5,
+            my: 0.75,
             height: '24px', // Fixed height for 1 line
             overflow: 'hidden',
             textOverflow: 'ellipsis',
@@ -94,8 +93,7 @@ const Movie: React.FC<MovieProps> = ({ movie, handleInfoClick }) => {
         >
           <Typography
             sx={{
-              fontWeight: 600,
-              fontSize: '15px',
+              fontSize: '14px',
               color: 'gray',
               flex: 1,
               mr: 1,
@@ -108,7 +106,7 @@ const Movie: React.FC<MovieProps> = ({ movie, handleInfoClick }) => {
           </Typography>
           <Typography
             sx={{
-              fontSize: '15px',
+              fontSize: '14px',
               color: getStatusColor(movie.status),
               textTransform: 'uppercase',
             }}

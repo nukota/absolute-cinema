@@ -21,6 +21,16 @@ import movie3 from '../assets/images/examples/movie3.jpg';
 import movie4 from '../assets/images/examples/movie4.jpg';
 import movie5 from '../assets/images/examples/movie5.jpg';
 import movie6 from '../assets/images/examples/movie6.jpg';
+import movie7 from '../assets/images/examples/movie7.jpg';
+import movie8 from '../assets/images/examples/movie8.jpg';
+import movie9 from '../assets/images/examples/movie9.jpg';
+import movie10 from '../assets/images/examples/movie10.jpg';
+import movie11 from '../assets/images/examples/movie11.jpg';
+import movie12 from '../assets/images/examples/movie12.jpg';
+import movie13 from '../assets/images/examples/movie13.jpg';
+import movie14 from '../assets/images/examples/movie14.jpg';
+import movie15 from '../assets/images/examples/movie15.jpg';
+import movie16 from '../assets/images/examples/movie16.jpg';
 
 // Re-export DTO types for convenience
 export type {
@@ -479,6 +489,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
       room_id: 'R001',
       name: 'Room 1 - IMAX',
     },
+    cinema: {
+      cinema_id: 'C001',
+      name: 'Absolute Cinema - District 1',
+    },
     movie: {
       movie_id: 'M001',
       title: 'Avengers: Endgame',
@@ -493,6 +507,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
     room: {
       room_id: 'R002',
       name: 'Room 2 - Standard',
+    },
+    cinema: {
+      cinema_id: 'C001',
+      name: 'Absolute Cinema - District 1',
     },
     movie: {
       movie_id: 'M002',
@@ -509,6 +527,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
       room_id: 'R003',
       name: 'Room 3 - VIP',
     },
+    cinema: {
+      cinema_id: 'C001',
+      name: 'Absolute Cinema - District 1',
+    },
     movie: {
       movie_id: 'M003',
       title: 'Spider-Man: No Way Home',
@@ -523,6 +545,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
     room: {
       room_id: 'R001',
       name: 'Room 1 - IMAX',
+    },
+    cinema: {
+      cinema_id: 'C001',
+      name: 'Absolute Cinema - District 1',
     },
     movie: {
       movie_id: 'M004',
@@ -539,6 +565,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
       room_id: 'R002',
       name: 'Room 2 - Standard',
     },
+    cinema: {
+      cinema_id: 'C001',
+      name: 'Absolute Cinema - District 1',
+    },
     movie: {
       movie_id: 'M005',
       title: 'Inception',
@@ -553,6 +583,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
     room: {
       room_id: 'R004',
       name: 'Room 4 - 4DX',
+    },
+    cinema: {
+      cinema_id: 'C002',
+      name: 'Absolute Cinema - District 3',
     },
     movie: {
       movie_id: 'M001',
@@ -569,6 +603,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
       room_id: 'R003',
       name: 'Room 3 - VIP',
     },
+    cinema: {
+      cinema_id: 'C001',
+      name: 'Absolute Cinema - District 1',
+    },
     movie: {
       movie_id: 'M002',
       title: 'The Batman',
@@ -583,6 +621,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
     room: {
       room_id: 'R001',
       name: 'Room 1 - IMAX',
+    },
+    cinema: {
+      cinema_id: 'C001',
+      name: 'Absolute Cinema - District 1',
     },
     movie: {
       movie_id: 'M003',
@@ -599,6 +641,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
       room_id: 'R005',
       name: 'Room 5 - Premium',
     },
+    cinema: {
+      cinema_id: 'C002',
+      name: 'Absolute Cinema - District 3',
+    },
     movie: {
       movie_id: 'M004',
       title: 'Interstellar',
@@ -613,6 +659,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
     room: {
       room_id: 'R004',
       name: 'Room 4 - 4DX',
+    },
+    cinema: {
+      cinema_id: 'C002',
+      name: 'Absolute Cinema - District 3',
     },
     movie: {
       movie_id: 'M005',
@@ -629,6 +679,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
       room_id: 'R002',
       name: 'Room 2 - Standard',
     },
+    cinema: {
+      cinema_id: 'C001',
+      name: 'Absolute Cinema - District 1',
+    },
     movie: {
       movie_id: 'M001',
       title: 'Avengers: Endgame',
@@ -643,6 +697,10 @@ export const mockShowtimes: ShowtimeDTO[] = [
     room: {
       room_id: 'R005',
       name: 'Room 5 - Premium',
+    },
+    cinema: {
+      cinema_id: 'C002',
+      name: 'Absolute Cinema - District 3',
     },
     movie: {
       movie_id: 'M003',
@@ -746,33 +804,183 @@ export const mockMovies: MovieDTO[] = [
     created_at: '2008-07-18T00:00:00Z',
     status: MovieStatus.Stopped,
   },
+  {
+    movie_id: 'M007',
+    title: 'The Matrix',
+    description:
+      'A computer hacker learns from mysterious rebels about the true nature of his reality.',
+    duration_min: 136,
+    release_date: '1999-03-31',
+    rating: 'R',
+    poster_url: movie7,
+    director: 'Lana Wachowski, Lilly Wachowski',
+    actors: ['Keanu Reeves', 'Laurence Fishburne', 'Carrie-Anne Moss'],
+    genre: ['Action', 'Sci-Fi'],
+    created_at: '1999-03-31T00:00:00Z',
+    status: MovieStatus.NowShowing,
+  },
+  {
+    movie_id: 'M008',
+    title: 'Pulp Fiction',
+    description:
+      'The lives of two mob hitmen, a boxer, a gangster and his wife intertwine in four tales of violence and redemption.',
+    duration_min: 154,
+    release_date: '1994-10-14',
+    rating: 'R',
+    poster_url: movie8,
+    director: 'Quentin Tarantino',
+    actors: ['John Travolta', 'Uma Thurman', 'Samuel L. Jackson'],
+    genre: ['Crime', 'Drama'],
+    created_at: '1994-10-14T00:00:00Z',
+    status: MovieStatus.Stopped,
+  },
+  {
+    movie_id: 'M009',
+    title: 'Forrest Gump',
+    description:
+      'The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal and other historical events unfold from the perspective of an Alabama man with an IQ of 75.',
+    duration_min: 142,
+    release_date: '1994-07-06',
+    rating: 'PG-13',
+    poster_url: movie9,
+    director: 'Robert Zemeckis',
+    actors: ['Tom Hanks', 'Robin Wright', 'Gary Sinise'],
+    genre: ['Drama', 'Romance'],
+    created_at: '1994-07-06T00:00:00Z',
+    status: MovieStatus.NowShowing,
+  },
+  {
+    movie_id: 'M010',
+    title: 'The Shawshank Redemption',
+    description:
+      'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
+    duration_min: 142,
+    release_date: '1994-09-23',
+    rating: 'R',
+    poster_url: movie10,
+    director: 'Frank Darabont',
+    actors: ['Tim Robbins', 'Morgan Freeman', 'Bob Gunton'],
+    genre: ['Drama'],
+    created_at: '1994-09-23T00:00:00Z',
+    status: MovieStatus.Stopped,
+  },
+  {
+    movie_id: 'M011',
+    title: 'Fight Club',
+    description:
+      'An insomniac office worker and a devil-may-care soapmaker form an underground fight club that evolves into something much, much more.',
+    duration_min: 139,
+    release_date: '1999-10-15',
+    rating: 'R',
+    poster_url: movie11,
+    director: 'David Fincher',
+    actors: ['Brad Pitt', 'Edward Norton', 'Helena Bonham Carter'],
+    genre: ['Drama'],
+    created_at: '1999-10-15T00:00:00Z',
+    status: MovieStatus.ComingSoon,
+  },
+  {
+    movie_id: 'M012',
+    title: 'The Lord of the Rings: The Fellowship of the Ring',
+    description:
+      'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.',
+    duration_min: 178,
+    release_date: '2001-12-19',
+    rating: 'PG-13',
+    poster_url: movie12,
+    director: 'Peter Jackson',
+    actors: ['Elijah Wood', 'Ian McKellen', 'Orlando Bloom'],
+    genre: ['Action', 'Adventure', 'Drama'],
+    created_at: '2001-12-19T00:00:00Z',
+    status: MovieStatus.NowShowing,
+  },
+  {
+    movie_id: 'M013',
+    title: 'Star Wars: A New Hope',
+    description:
+      "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station.",
+    duration_min: 121,
+    release_date: '1977-05-25',
+    rating: 'PG',
+    poster_url: movie13,
+    director: 'George Lucas',
+    actors: ['Mark Hamill', 'Harrison Ford', 'Carrie Fisher'],
+    genre: ['Action', 'Adventure', 'Fantasy'],
+    created_at: '1977-05-25T00:00:00Z',
+    status: MovieStatus.Stopped,
+  },
+  {
+    movie_id: 'M014',
+    title: 'The Godfather',
+    description:
+      'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.',
+    duration_min: 175,
+    release_date: '1972-03-24',
+    rating: 'R',
+    poster_url: movie14,
+    director: 'Francis Ford Coppola',
+    actors: ['Marlon Brando', 'Al Pacino', 'James Caan'],
+    genre: ['Crime', 'Drama'],
+    created_at: '1972-03-24T00:00:00Z',
+    status: MovieStatus.ComingSoon,
+  },
+  {
+    movie_id: 'M015',
+    title: 'Titanic',
+    description:
+      'A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.',
+    duration_min: 194,
+    release_date: '1997-12-19',
+    rating: 'PG-13',
+    poster_url: movie15,
+    director: 'James Cameron',
+    actors: ['Leonardo DiCaprio', 'Kate Winslet', 'Billy Zane'],
+    genre: ['Drama', 'Romance'],
+    created_at: '1997-12-19T00:00:00Z',
+    status: MovieStatus.NowShowing,
+  },
+  {
+    movie_id: 'M016',
+    title: 'Jurassic Park',
+    description:
+      'A pragmatic paleontologist visiting an almost complete theme park is tasked with protecting a couple of kids after a power failure causes the park\'s cloned dinosaurs to run loose.',
+    duration_min: 127,
+    release_date: '1993-06-11',
+    rating: 'PG-13',
+    poster_url: movie16,
+    director: 'Steven Spielberg',
+    actors: ['Sam Neill', 'Laura Dern', 'Jeff Goldblum'],
+    genre: ['Action', 'Adventure', 'Sci-Fi'],
+    created_at: '1993-06-11T00:00:00Z',
+    status: MovieStatus.Stopped,
+  },
 ];
 
 export const mockCinemas: CinemaDTO[] = [
   {
     cinema_id: 'C001',
-    name: 'Absolute Cinema - District 1',
+    name: 'Starlight Cinema',
     address: '123 Nguyen Hue Street',
     employee_count: 50,
     room_count: 8,
   },
   {
     cinema_id: 'C002',
-    name: 'Absolute Cinema - District 3',
+    name: 'Galaxy Movies',
     address: '456 Le Van Sy Street',
     employee_count: 40,
     room_count: 6,
   },
   {
     cinema_id: 'C003',
-    name: 'Absolute Cinema - District 7',
+    name: 'Premier Cinema',
     address: '789 Nguyen Van Linh Boulevard',
     employee_count: 60,
     room_count: 10,
   },
   {
     cinema_id: 'C004',
-    name: 'Absolute Cinema - Binh Thanh',
+    name: 'Elite Films Binh Thanh',
     address: '321 Xo Viet Nghe Tinh Street',
     employee_count: 30,
     room_count: 5,

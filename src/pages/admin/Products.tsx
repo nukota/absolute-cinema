@@ -9,9 +9,10 @@ const Products = () => {
 
   const tabs = [
     { label: 'All', value: 'All' },
-    { label: 'Food & Drinks', value: 'Food and Drinks' },
-    { label: 'Souvenirs', value: 'Souvenirs' },
-    { label: 'Others', value: 'Others' },
+    { label: 'Food', value: 'food' },
+    { label: 'Drink', value: 'drink' },
+    { label: 'Souvenir', value: 'souvenir' },
+    { label: 'Other', value: 'other' },
   ];
 
   const handleAddNew = () => {
@@ -29,12 +30,13 @@ const Products = () => {
       onAddNew={handleAddNew}
       addButtonText="Add Product"
       searchColumns={['name', 'category']}
+      tabFilterProperty="category"
       gridCols="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8"
       gap="gap-6"
     >
       {(filteredData) =>
         filteredData.map((product) => (
-          <Product key={product._id} product={product} />
+          <Product key={product.product_id} product={product} />
         ))
       }
     </CustomTabs>

@@ -9,8 +9,10 @@ const Movies = () => {
 
   const tabs = [
     { label: 'All', value: 'All' },
-    { label: 'Now Showing', value: 'Now Showing' },
-    { label: 'Coming Soon', value: 'Coming Soon' },
+    { label: 'Now Showing', value: 'now showing' },
+    { label: 'Coming Soon', value: 'coming soon' },
+    { label: 'Stopped', value: 'stopped' },
+    { label: 'Unknown', value: 'unknown' },
   ];
 
   const handleAddNew = () => {
@@ -28,7 +30,8 @@ const Movies = () => {
       onAddNew={handleAddNew}
       addButtonText="Add Movie"
       searchColumns={['title', 'genre']}
-      gridCols="grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      tabFilterProperty="status"
+      gridCols="grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6"
       gap="gap-6"
     >
       {(filteredData) =>

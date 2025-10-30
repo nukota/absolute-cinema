@@ -16,3 +16,72 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Swiper Movie Slide Styles */
+.slide-item-info {
+  opacity: 0;
+  top: 20px;
+  left: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.slide-item-filter {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.slide-item:hover .slide-item-info {
+  opacity: 1;
+  transform: translateY(-20px);
+}
+
+.slide-item:hover .slide-item-filter {
+  opacity: 0.8;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  top: 50%;
+}
+
+.movie-slide .swiper-button-next,
+.movie-slide .swiper-button-prev {
+  font-weight: 600;
+  color: black;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.movie-slide:hover .swiper-button-next,
+.movie-slide:hover .swiper-button-prev {
+  opacity: 1;
+}
+
+.swiper-gradient-right {
+  right: 0;
+  background: linear-gradient(to left, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+}
+
+.movie-slide-container:hover .swiper-gradient-left,
+.movie-slide-container:hover .swiper-gradient-right {
+  opacity: 1;
+}
+
+/* Hero Swiper Pagination Styles */
+.swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.7);
+  opacity: 1;
+}
+
+.swiper-pagination-bullet-active {
+  background: white;
+  transform: scale(1.2);
+}

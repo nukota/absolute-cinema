@@ -23,7 +23,7 @@ const Showtimes = () => {
     {
       field: 'showtime_id',
       headerName: 'ID',
-      width: 100,
+      width: 70,
       sortable: true,
     },
     {
@@ -53,10 +53,23 @@ const Showtimes = () => {
       ),
     },
     {
+      field: 'cinema',
+      headerName: 'Cinema',
+      flex: 1,
+      minWidth: 180,
+      sortable: true,
+      valueGetter: (_value, row) => row.cinema.name,
+      renderCell: (params) => (
+        <Typography variant="body2">
+          {params.row.cinema.name}
+        </Typography>
+      ),
+    },
+    {
       field: 'room',
       headerName: 'Room',
       flex: 1,
-      minWidth: 180,
+      minWidth: 150,
       sortable: true,
       renderCell: (params) => (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
