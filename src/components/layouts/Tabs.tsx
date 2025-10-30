@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import type { ReactNode } from "react";
+import React, { useState, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import {
   Tabs,
   Tab,
@@ -8,22 +8,22 @@ import {
   TextField,
   InputAdornment,
   Skeleton,
-} from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import SearchIcon from "@mui/icons-material/Search";
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
 
 interface TabItem {
   label: string;
   value: string;
 }
 
-type TabFilterStrategy = "status" | "category" | "custom";
+type TabFilterStrategy = 'status' | 'category' | 'custom';
 
 interface CustomTabsProps {
   title: string;
-  activeTab: string;
-  onTabChange: (value: string) => void;
-  tabs: TabItem[];
+  activeTab?: string;
+  onTabChange?: (value: string) => void;
+  tabs?: TabItem[];
   data: any[]; // Raw data array
   loading?: boolean;
   gridCols?: string;
@@ -40,27 +40,27 @@ interface CustomTabsProps {
 
 const CustomTabs: React.FC<CustomTabsProps> = ({
   title,
-  activeTab,
+  activeTab = 'All',
   onTabChange,
-  tabs,
+  tabs = [],
   data,
   loading = false,
-  gridCols = "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
-  gap = "gap-y-8",
-  className = "",
+  gridCols = 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6',
+  gap = 'gap-y-8',
+  className = '',
   onAddNew,
-  addButtonText = "Add New",
+  addButtonText = 'Add New',
   dateColumns = [],
   searchColumns = [],
-  tabFilterStrategy = "status", // Default strategy
+  tabFilterStrategy = 'status', // Default strategy
   customTabFilter,
   children,
 }) => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [selectedDate, setSelectedDate] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>('');
 
   const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
-    onTabChange(newValue);
+    onTabChange?.(newValue);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,27 +75,27 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
   const filteredData = useMemo(() => {
     return data.filter((item) => {
       // Tab filtering with strategy pattern
-      let matchesTab = false;
+      let matchesTab = true; // Default to true when no tabs
 
-      if (activeTab === "All") {
-        matchesTab = true;
-      } else if (customTabFilter) {
-        // Use custom filter function if provided
-        matchesTab = customTabFilter(item, activeTab);
-      } else if (tabFilterStrategy === "status") {
-        // Filter by status field
-        matchesTab = item.status === activeTab;
-      } else if (tabFilterStrategy === "category") {
-        // Filter by category field with special cases
-        if (activeTab === "Food and Drinks") {
-          matchesTab = item.category === "food" || item.category === "drink";
-        } else if (activeTab === "Others") {
-          matchesTab =
-            item.category !== "food" &&
-            item.category !== "drink" &&
-            item.category !== "souvenir";
-        } else {
-          matchesTab = item.category === activeTab.toLowerCase();
+      if (tabs.length > 0 && activeTab && activeTab !== 'All') {
+        if (customTabFilter) {
+          // Use custom filter function if provided
+          matchesTab = customTabFilter(item, activeTab);
+        } else if (tabFilterStrategy === 'status') {
+          // Filter by status field
+          matchesTab = item.status === activeTab;
+        } else if (tabFilterStrategy === 'category') {
+          // Filter by category field with special cases
+          if (activeTab === 'Food and Drinks') {
+            matchesTab = item.category === 'food' || item.category === 'drink';
+          } else if (activeTab === 'Others') {
+            matchesTab =
+              item.category !== 'food' &&
+              item.category !== 'drink' &&
+              item.category !== 'souvenir';
+          } else {
+            matchesTab = item.category === activeTab.toLowerCase();
+          }
         }
       }
 
@@ -105,11 +105,13 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
         const searchTermLower = searchTerm.toLowerCase();
         matchesSearch = searchColumns.some((column) => {
           // Support nested object paths (e.g., "customer.full_name")
-          const value = column.split(".").reduce((obj, key) => obj?.[key], item);
-          
+          const value = column
+            .split('.')
+            .reduce((obj, key) => obj?.[key], item);
+
           if (Array.isArray(value)) {
             return value.some(
-              (v) => v && v.toString().toLowerCase().includes(searchTermLower)
+              (v) => v && v.toString().toLowerCase().includes(searchTermLower),
             );
           }
           return (
@@ -123,11 +125,13 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
       if (selectedDate && dateColumns.length > 0) {
         matchesDate = dateColumns.some((column) => {
           // Support nested object paths
-          const itemDate = column.split(".").reduce((obj, key) => obj?.[key], item);
+          const itemDate = column
+            .split('.')
+            .reduce((obj, key) => obj?.[key], item);
           if (!itemDate) return false;
 
           // Handle different date formats
-          if (column.includes("created_at") || column.includes("ordered_at")) {
+          if (column.includes('created_at') || column.includes('ordered_at')) {
             // For timestamp fields, match the date part
             return itemDate.startsWith(selectedDate);
           } else {
@@ -148,6 +152,7 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
     dateColumns,
     tabFilterStrategy,
     customTabFilter,
+    tabs,
   ]);
 
   const showActionBar =
@@ -166,17 +171,17 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
       {showActionBar && (
         <Box
           sx={{
-            display: "flex",
+            display: 'flex',
             gap: 2,
             rowGap: 1,
-            alignItems: { xs: "flex-start", md: "center" },
+            alignItems: { xs: 'flex-start', md: 'center' },
             mt: 2,
             mb: 1,
-            flexDirection: { xs: "column", md: "row" },
-            justifyContent: { xs: "flex-start", md: "space-between" },
+            flexDirection: { xs: 'column', md: 'row' },
+            justifyContent: { xs: 'flex-start', md: 'space-between' },
           }}
         >
-          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
             {/* Date Filter */}
             {dateColumns.length > 0 && (
               <TextField
@@ -185,14 +190,14 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
                 value={selectedDate}
                 onChange={handleDateChange}
                 InputLabelProps={
-                  dateColumns.includes("ordered_at")
+                  dateColumns.includes('ordered_at')
                     ? { shrink: true }
                     : undefined
                 }
                 sx={{
                   width: 240,
-                  backgroundColor: "white",
-                  borderRadius: "4px",
+                  backgroundColor: 'white',
+                  borderRadius: '4px',
                 }}
               />
             )}
@@ -213,8 +218,8 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
                 }}
                 sx={{
                   width: 240,
-                  backgroundColor: "white",
-                  borderRadius: "4px",
+                  backgroundColor: 'white',
+                  borderRadius: '4px',
                 }}
               />
             )}
@@ -237,22 +242,24 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
 
       {/* Tabs and Content */}
       <div className="content relative min-w-[360px] sm:min-w-[680px] w-full flex-1 bg-white border-[1px] border-light-gray rounded-md flex flex-col">
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-          <Tabs
-            value={activeTab}
-            onChange={handleTabChange}
-            sx={{
-              "& .MuiTab-root": {
-                fontWeight: 600,
-                minWidth: 120,
-              },
-            }}
-          >
-            {tabs.map((tab) => (
-              <Tab key={tab.value} label={tab.label} value={tab.value} />
-            ))}
-          </Tabs>
-        </Box>
+        {tabs.length > 0 && (
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs
+              value={activeTab}
+              onChange={handleTabChange}
+              sx={{
+                '& .MuiTab-root': {
+                  fontWeight: 600,
+                  minWidth: 120,
+                },
+              }}
+            >
+              {tabs.map((tab) => (
+                <Tab key={tab.value} label={tab.label} value={tab.value} />
+              ))}
+            </Tabs>
+          </Box>
+        )}
 
         {/* Content Area */}
         <div
@@ -268,12 +275,12 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
                   <Skeleton
                     variant="rectangular"
                     height={200}
-                    sx={{ borderRadius: "8px" }}
+                    sx={{ borderRadius: '8px' }}
                   />
-                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
+                  <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
                   <Skeleton
                     variant="text"
-                    sx={{ fontSize: "0.875rem" }}
+                    sx={{ fontSize: '0.875rem' }}
                     width="60%"
                   />
                 </div>

@@ -1,9 +1,9 @@
 import { Box, Typography } from '@mui/material';
-import type { ProductDTO as ProductType } from '../../utils/mockdata';
+import type { ProductDTO } from '../../utils/mockdata';
 import TextureImg from '../../assets/images/texture.png';
 
 interface ProductProps {
-  product: ProductType;
+  product: ProductDTO;
 }
 
 const Product = ({ product }: ProductProps) => {

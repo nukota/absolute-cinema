@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Box, IconButton, Tooltip, Typography, Rating as MuiRating } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Tooltip,
+  Typography,
+  Rating as MuiRating,
+} from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CustomDataGrid from '../../components/layouts/DataGrid';
 import { mockRatings } from '../../utils/mockdata';
@@ -16,7 +22,7 @@ const Ratings = () => {
 
   const columns: GridColDef[] = [
     {
-      field: '_id',
+      field: 'rating_id',
       headerName: 'ID',
       width: 80,
       sortable: true,
@@ -28,12 +34,21 @@ const Ratings = () => {
       minWidth: 180,
       sortable: true,
       renderCell: (params) => (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <Typography sx={{maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}} variant="caption" color="text.secondary">
-            ID: {params.row.customer_id}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Typography
+            sx={{
+              maxWidth: 100,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+            variant="caption"
+            color="text.secondary"
+          >
+            ID: {params.row.customer.customer_id}
           </Typography>
           <Typography variant="body2" fontWeight={500}>
-            {params.row.customer_name}
+            {params.row.customer.full_name}
           </Typography>
         </Box>
       ),
@@ -45,34 +60,43 @@ const Ratings = () => {
       minWidth: 180,
       sortable: true,
       renderCell: (params) => (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <Typography sx={{maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}} variant="caption" color="text.secondary">
-            ID: {params.row.movie_id}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Typography
+            sx={{
+              maxWidth: 100,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+            variant="caption"
+            color="text.secondary"
+          >
+            ID: {params.row.movie.movie_id}
           </Typography>
           <Typography variant="body2" fontWeight={500}>
-            {params.row.movie_title}
+            {params.row.movie.title}
           </Typography>
         </Box>
       ),
     },
     {
-      field: 'rating',
+      field: 'rating_value',
       headerName: 'Rating',
       width: 150,
       sortable: true,
       renderCell: (params) => (
-        <MuiRating value={params.row.rating} readOnly size="small" />
+        <MuiRating value={params.row.rating_value} readOnly size="small" />
       ),
     },
     {
-      field: 'comment',
+      field: 'review',
       headerName: 'Comment',
       flex: 1,
       minWidth: 200,
       sortable: false,
     },
     {
-      field: 'date',
+      field: 'created_at',
       headerName: 'Date',
       width: 180,
       sortable: true,
@@ -97,7 +121,7 @@ const Ratings = () => {
         <Tooltip title="View Details">
           <IconButton
             size="small"
-            onClick={() => handleViewDetails(params.row._id)}
+            onClick={() => handleViewDetails(params.row.rating_id)}
             sx={{
               width: 32,
               height: 32,
@@ -125,6 +149,7 @@ const Ratings = () => {
       onRowSelectionChange={setSelectedRows}
       onDeleteSelected={handleDeleteSelected}
       showCheckboxSelection={true}
+      getRowId={(row) => row.rating_id}
       pageSize={10}
       pageSizeOptions={[10, 20, 50]}
     />

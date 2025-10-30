@@ -1,7 +1,8 @@
-import React from "react";
-import Dialog, { FormSection, DialogAction } from "./Dialog";
+import React from 'react';
+import Dialog from './Dialog';
+import type { FormSection, DialogAction } from './Dialog';
 
-export type { FormField } from "./Field";
+export type { FormField } from './Field';
 export type { FormSection, DialogAction };
 
 interface DetailDialogProps {
@@ -31,9 +32,9 @@ const DetailDialog: React.FC<DetailDialogProps> = ({
 }) => {
   const actions: DialogAction[] = [
     {
-      label: "Cancel",
+      label: 'Cancel',
       onClick: onCancel || onClose,
-      variant: "outlined",
+      variant: 'outlined',
     },
   ];
 
@@ -41,28 +42,28 @@ const DetailDialog: React.FC<DetailDialogProps> = ({
     // Edit mode - show Save button
     if (onSave) {
       actions.push({
-        label: "Save",
+        label: 'Save',
         onClick: onSave,
-        variant: "contained",
-        color: "primary",
+        variant: 'contained',
+        color: 'primary',
       });
     }
   } else {
     // View mode - show Edit and/or Delete buttons
     if (onDelete) {
       actions.push({
-        label: "Delete",
+        label: 'Delete',
         onClick: onDelete,
-        variant: "outlined",
-        color: "error",
+        variant: 'outlined',
+        color: 'error',
       });
     }
     if (onEdit) {
       actions.push({
-        label: "Edit",
+        label: 'Edit',
         onClick: onEdit,
-        variant: "contained",
-        color: "primary",
+        variant: 'contained',
+        color: 'primary',
       });
     }
   }

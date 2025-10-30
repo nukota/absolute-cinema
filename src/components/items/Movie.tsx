@@ -1,5 +1,6 @@
-import React from "react";
-import type { MovieDTO } from "../../utils/mockdata";
+import React from 'react';
+import { Typography, Box } from '@mui/material';
+import type { MovieDTO } from '../../utils/mockdata';
 
 interface MovieProps {
   movie: MovieDTO;
@@ -8,45 +9,115 @@ interface MovieProps {
 
 const Movie: React.FC<MovieProps> = ({ movie, handleInfoClick }) => {
   const formattedDate = movie.release_date
-    ? new Date(movie.release_date).toLocaleDateString("en-US", {
-        month: "2-digit",
-        year: "numeric",
+    ? new Date(movie.release_date).toLocaleDateString('en-US', {
+        month: '2-digit',
+        year: 'numeric',
       })
-    : "";
+    : '';
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'now showing':
+        return '#166534'; // green-800
+      case 'coming soon':
+        return '#0c4a6e'; // sky-800
+      case 'stopped':
+        return '#9f1239'; // rose-800
+      default:
+        return '#6b7280'; // gray-500
+    }
+  };
+
   return (
-    <div
-      className="movie h-[256px] w-[160px] flex flex-col rounded-md border border-[#999] overflow-hidden cursor-pointer"
-      style={{
-        transition: "all 0.2s ease",
+    <Box
+      sx={{
+        height: 280,
+        width: 180,
+        display: 'flex',
+        flexDirection: 'column',
+        borderRadius: '16px',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+          transform: 'scale(1.05)',
+          boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
+        },
       }}
       onClick={handleInfoClick}
     >
-      <div className="relative h-[180px] w-full">
-        <img
-          className="h-full w-full rounded-t-sm object-cover"
+      <Box sx={{ position: 'relative', height: 220, width: '100%' }}>
+        <Box
+          component="img"
+          sx={{
+            height: '100%',
+            width: '100%',
+            objectFit: 'cover',
+            borderTopLeftRadius: '16px',
+            borderTopRightRadius: '16px',
+            border: '1px solid #C4C4C4',
+          }}
           src={movie.poster_url}
           alt="movie poster"
         />
-        {/* Fade gradient overlay */}
-        <div
-          className="absolute bottom-0 left-0 w-full h-8 pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%)",
+      </Box>
+      <Box
+        sx={{
+          position: 'relative',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+        }}
+      >
+        <Typography
+          sx={{
+            fontWeight: 500,
+            fontSize: '15px',
+            color: 'black',
+            my: 0.5,
+            height: '24px', // Fixed height for 1 line
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
           }}
-        />
-      </div>
-      <div className="px-2 relative flex flex-col flex-1">
-        <div className="font-medium text-[13px] text-black my-1 tracking-wide line-clamp-2">
+        >
           {movie.title}
-        </div>
-        <div className="flex flex-row items-center absolute bottom-2 w-full pr-3">
-          <div className="font-medium text-[13px] text-gray truncate">
+        </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'flex-end',
+            position: 'absolute',
+            bottom: 8,
+          }}
+        >
+          <Typography
+            sx={{
+              fontWeight: 600,
+              fontSize: '15px',
+              color: 'gray',
+              flex: 1,
+              mr: 1,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+          >
             {formattedDate}
-          </div>
-        </div>
-      </div>
-    </div>
+          </Typography>
+          <Typography
+            sx={{
+              fontSize: '15px',
+              color: getStatusColor(movie.status),
+              textTransform: 'uppercase',
+            }}
+          >
+            {movie.status}
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 };
 

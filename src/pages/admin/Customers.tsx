@@ -21,7 +21,7 @@ const Customers = () => {
 
   const columns: GridColDef[] = [
     {
-      field: '_id',
+      field: 'customer_id',
       headerName: 'ID',
       width: 80,
       sortable: true,
@@ -45,7 +45,7 @@ const Customers = () => {
       },
     },
     {
-      field: 'cccd',
+      field: 'CCCD',
       headerName: 'CCCD',
       width: 140,
       sortable: true,
@@ -66,7 +66,7 @@ const Customers = () => {
         <Tooltip title="View Details">
           <IconButton
             size="small"
-            onClick={() => handleViewDetails(params.row._id)}
+            onClick={() => handleViewDetails(params.row.customer_id)}
             sx={{
               width: 32,
               height: 32,
@@ -96,6 +96,7 @@ const Customers = () => {
       onRowSelectionChange={setSelectedRows}
       onDeleteSelected={handleDeleteSelected}
       showCheckboxSelection={true}
+      getRowId={(row) => row.customer_id}
       pageSize={10}
       pageSizeOptions={[10, 20, 50]}
     />

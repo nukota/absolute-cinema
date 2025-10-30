@@ -1,7 +1,9 @@
-import React, { ReactNode } from "react";
-import Dialog, { FormSection, DialogAction } from "./Dialog";
+import React from 'react';
+import type { ReactNode } from 'react';
+import Dialog from './Dialog';
+import type { FormSection, DialogAction } from './Dialog';
 
-export type { FormField } from "./Field";
+export type { FormField } from './Field';
 export type { FormSection, DialogAction };
 
 interface CreateDialogProps {
@@ -27,15 +29,15 @@ const CreateDialog: React.FC<CreateDialogProps> = ({
 }) => {
   const actions: DialogAction[] = [
     {
-      label: "Cancel",
+      label: 'Cancel',
       onClick: onClose,
-      variant: "outlined",
+      variant: 'outlined',
     },
     {
-      label: "Add",
+      label: 'Add',
       onClick: onAdd,
-      variant: "contained",
-      color: "primary",
+      variant: 'contained',
+      color: 'primary',
     },
   ];
 

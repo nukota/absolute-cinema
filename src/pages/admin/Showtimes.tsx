@@ -21,7 +21,7 @@ const Showtimes = () => {
 
   const columns: GridColDef[] = [
     {
-      field: '_id',
+      field: 'showtime_id',
       headerName: 'ID',
       width: 100,
       sortable: true,
@@ -33,12 +33,21 @@ const Showtimes = () => {
       minWidth: 200,
       sortable: true,
       renderCell: (params) => (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <Typography sx={{maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}} variant="caption" color="text.secondary">
-            ID: {params.row.movie_id}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Typography
+            sx={{
+              maxWidth: 100,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+            variant="caption"
+            color="text.secondary"
+          >
+            ID: {params.row.movie.movie_id}
           </Typography>
           <Typography variant="body2" fontWeight={500}>
-            {params.row.movie_title}
+            {params.row.movie.title}
           </Typography>
         </Box>
       ),
@@ -50,12 +59,21 @@ const Showtimes = () => {
       minWidth: 180,
       sortable: true,
       renderCell: (params) => (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-          <Typography sx={{maxWidth: 100, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}} variant="caption" color="text.secondary">
-            ID: {params.row.room_id}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Typography
+            sx={{
+              maxWidth: 100,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
+            }}
+            variant="caption"
+            color="text.secondary"
+          >
+            ID: {params.row.room.room_id}
           </Typography>
           <Typography variant="body2" fontWeight={500}>
-            {params.row.room_name}
+            {params.row.room.name}
           </Typography>
         </Box>
       ),
@@ -69,7 +87,7 @@ const Showtimes = () => {
       renderCell: (params) => {
         const startDate = new Date(params.row.start_time);
         const endDate = new Date(params.row.end_time);
-        
+
         const startTime = startDate.toLocaleTimeString('en-GB', {
           hour: '2-digit',
           minute: '2-digit',
@@ -83,7 +101,7 @@ const Showtimes = () => {
           month: '2-digit',
           year: 'numeric',
         });
-        
+
         return (
           <Typography variant="body2">
             {startTime} - {endTime}, {date}
@@ -112,7 +130,7 @@ const Showtimes = () => {
         <Tooltip title="View Details">
           <IconButton
             size="small"
-            onClick={() => handleViewDetails(params.row._id)}
+            onClick={() => handleViewDetails(params.row.showtime_id)}
             sx={{
               width: 32,
               height: 32,
@@ -142,6 +160,7 @@ const Showtimes = () => {
       onRowSelectionChange={setSelectedRows}
       onDeleteSelected={handleDeleteSelected}
       showCheckboxSelection={true}
+      getRowId={(row) => row.showtime_id}
       pageSize={10}
       pageSizeOptions={[10, 20, 50]}
     />
