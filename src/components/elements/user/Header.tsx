@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Container, IconButton, Toolbar, Typography } from '@mui/material';
+import { Box, Button, Container, IconButton, Typography } from '@mui/material';
 import { MovieFilter, Person, Home as HomeIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,9 +6,24 @@ const Header = () => {
   const navigate = useNavigate();
 
   return (
-    <AppBar position="sticky" elevation={1}>
+    <Box
+      sx={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 1100,
+        backdropFilter: 'blur(10px)',
+      }}
+    >
       <Container maxWidth="lg">
-        <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 0 } }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            py: 2,
+            px: { xs: 2, sm: 0 },
+          }}
+        >
           {/* Logo */}
           <Box
             sx={{
@@ -16,6 +31,7 @@ const Header = () => {
               alignItems: 'center',
               gap: 1,
               cursor: 'pointer',
+              color: 'white',
             }}
             onClick={() => navigate('/')}
           >
@@ -26,6 +42,7 @@ const Header = () => {
                 fontFamily: '"Montserrat Alternates", sans-serif',
                 fontWeight: 700,
                 display: { xs: 'none', sm: 'block' },
+                color: 'white',
               }}
             >
               Absolute Cinema
@@ -37,13 +54,25 @@ const Header = () => {
             <Button
               startIcon={<HomeIcon />}
               onClick={() => navigate('/')}
-              sx={{ display: { xs: 'none', md: 'flex' } }}
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                color: 'white',
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                },
+              }}
             >
               Home
             </Button>
             <Button
               onClick={() => navigate('/movies')}
-              sx={{ display: { xs: 'none', md: 'flex' } }}
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                color: 'white',
+                '&:hover': {
+                  bgcolor: 'rgba(255, 255, 255, 0.1)',
+                },
+              }}
             >
               Movies
             </Button>
@@ -60,9 +89,9 @@ const Header = () => {
               <Person />
             </IconButton>
           </Box>
-        </Toolbar>
+        </Box>
       </Container>
-    </AppBar>
+    </Box>
   );
 };
 

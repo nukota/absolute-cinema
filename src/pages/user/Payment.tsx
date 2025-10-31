@@ -3,6 +3,7 @@ import { Box, Button, Card, CardContent, Container, Divider, FormControl, FormCo
 import { CreditCard, AccountBalance, Smartphone } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { PaymentMethod } from '../../utils/enum';
+import { formatDateLong, formatTime } from '../../utils/helper';
 
 const Payment = () => {
   const navigate = useNavigate();
@@ -46,29 +47,17 @@ const Payment = () => {
     navigate('/confirmation');
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
   return (
-    <Box sx={{ bgcolor: 'grey.50', minHeight: '100vh', py: 6 }}>
+    <Box sx={{ 
+      background: 'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
+      minHeight: '100vh', 
+      py: 6 
+    }}>
       <Container maxWidth="lg">
-        <Typography variant="h3" fontWeight={700} gutterBottom>
+        <Typography variant="h3" fontWeight={700} gutterBottom color="white">
           Payment
         </Typography>
-        <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+        <Typography variant="body1" color="rgba(255, 255, 255, 0.7)" sx={{ mb: 4 }}>
           Complete your booking by providing payment details
         </Typography>
 
@@ -269,7 +258,7 @@ const Payment = () => {
                     Date & Time
                   </Typography>
                   <Typography variant="body1">
-                    {formatDate(bookingData.showtime.start_time)}
+                    {formatDateLong(bookingData.showtime.start_time)}
                   </Typography>
                   <Typography variant="body2">
                     {formatTime(bookingData.showtime.start_time)}

@@ -4,6 +4,8 @@ import {
   AccessTime,
   PlayCircle,
   LocalActivity,
+  Movie,
+  Star,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import type { MovieDTO } from '../../utils/types';
@@ -87,6 +89,7 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
         <Box
           component="span"
           sx={{
+            fontFamily: '"Montserrat Alternates", sans-serif',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
@@ -103,7 +106,7 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
           display: 'flex',
           alignItems: 'center',
           border: 1,
-          borderColor: 'primary.main',
+          borderColor: 'secondary.main',
           borderRadius: 2,
           backgroundColor: 'transparent',
           overflow: 'hidden',
@@ -112,7 +115,7 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
         <Button
           variant="text"
           fullWidth
-          color="primary"
+          color="secondary"
           startIcon={<PlayCircle sx={{ fontSize: 10 }} />}
           sx={{ fontSize: 12, fontWeight: 600, flex: 1 }}
           onClick={handlePlayTrailerClicked}
@@ -122,13 +125,15 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
         <Button
           variant="contained"
           fullWidth
-          color="primary"
+          color="secondary"
           startIcon={<LocalActivity sx={{ fontSize: 10 }} />}
           sx={{
             fontSize: 12,
             fontWeight: 500,
             px: 2,
             flex: 0.75,
+            borderTopLeftRadius: 0,
+            borderBottomLeftRadius: 0,
           }}
           onClick={handleBuyTicketClicked}
           disableElevation
@@ -177,46 +182,81 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box
+              <Movie sx={{ fontSize: 16, color: 'primary.main' }} />
+              <Typography
                 sx={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  bgcolor: 'primary.main',
+                  fontSize: 14,
+                  color: 'white',
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis',
                 }}
-              />
-              {Array.isArray(movie.genre)
-                ? movie.genre.join(', ')
-                : movie.genre || 'N/A'}
+              >
+                Genre: {Array.isArray(movie.genre) ? movie.genre.join(', ') : movie.genre || 'N/A'}
+              </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <AccessTime sx={{ fontSize: 16, color: 'primary.main' }} />
-              {movie.duration_min} min
+              <Typography
+                sx={{
+                  fontSize: 14,
+                  color: 'white',
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Duration: {movie.duration_min} min
+              </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box
+              <Star sx={{ fontSize: 16, color: 'primary.main' }} />
+              <Typography
                 sx={{
-                  width: 6,
-                  height: 6,
-                  borderRadius: '50%',
-                  bgcolor: 'primary.main',
+                  fontSize: 14,
+                  color: 'white',
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis',
                 }}
-              />
-              Rating: {movie.rating || 'N/A'}
+              >
+                Rating: {movie.rating || 'N/A'}
+              </Typography>
             </Box>
           </Box>
         </Box>
       </Box>
       <Dialog open={open} onClose={handleClose} maxWidth="lg">
         <DialogContent sx={{ p: 0, bgcolor: 'black' }}>
-          <iframe
-            width="1000"
-            height="562"
-            src={getEmbedUrl(movie.poster_url || '')}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="Trailer"
-          />
+          {getEmbedUrl(movie.poster_url || '') ? (
+            <iframe
+              width="1000"
+              height="562"
+              src={getEmbedUrl(movie.poster_url || '')}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              title="Trailer"
+            />
+          ) : (
+            <Box
+              sx={{
+                width: 1000,
+                height: 562,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'white',
+              }}
+            >
+              <Typography variant="h6">Trailer not available</Typography>
+            </Box>
+          )}
         </DialogContent>
       </Dialog>
     </Box>

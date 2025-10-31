@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Box, Button, Container, Divider, Paper, Typography } from '@mui/material';
 import { CheckCircle, Email, Print } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { formatDateLong, formatTime } from '../../utils/helper';
 
 const Confirmation = () => {
   const navigate = useNavigate();
@@ -20,30 +21,21 @@ const Confirmation = () => {
     return null;
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
   const handlePrint = () => {
     window.print();
   };
 
   return (
-    <Box sx={{ bgcolor: 'grey.50', minHeight: '100vh', py: 6 }}>
+    <Box
+      sx={{
+        background:
+          "radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)",
+        minHeight: "100vh",
+        py: 6,
+      }}
+    >
       <Container maxWidth="md">
-        <Paper sx={{ p: 4 }}>
+        <Paper sx={{ p: 4, background: 'linear-gradient(135deg, #4a148c 0%, #543468 100%)', color: 'white' }}>
           {/* Success Icon */}
           <Box sx={{ textAlign: 'center', mb: 4 }}>
             <CheckCircle
@@ -52,7 +44,7 @@ const Confirmation = () => {
             <Typography variant="h3" fontWeight={700} gutterBottom>
               Booking Confirmed!
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant="body1" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               Your tickets have been booked successfully
             </Typography>
           </Box>
@@ -74,7 +66,7 @@ const Confirmation = () => {
               }}
             >
               <Box>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   Booking ID
                 </Typography>
                 <Typography variant="body1" fontWeight={600}>
@@ -82,7 +74,7 @@ const Confirmation = () => {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   Booking Date
                 </Typography>
                 <Typography variant="body1" fontWeight={600}>
@@ -107,7 +99,7 @@ const Confirmation = () => {
               }}
             >
               <Box>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   Name
                 </Typography>
                 <Typography variant="body1">
@@ -115,7 +107,7 @@ const Confirmation = () => {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   Email
                 </Typography>
                 <Typography variant="body1">
@@ -123,7 +115,7 @@ const Confirmation = () => {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   Phone
                 </Typography>
                 <Typography variant="body1">
@@ -148,7 +140,7 @@ const Confirmation = () => {
               }}
             >
               <Box>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   Movie
                 </Typography>
                 <Typography variant="body1" fontWeight={600}>
@@ -156,7 +148,7 @@ const Confirmation = () => {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   Cinema
                 </Typography>
                 <Typography variant="body1">
@@ -164,7 +156,7 @@ const Confirmation = () => {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   Room
                 </Typography>
                 <Typography variant="body1">
@@ -172,11 +164,11 @@ const Confirmation = () => {
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                   Date & Time
                 </Typography>
                 <Typography variant="body1">
-                  {formatDate(bookingData.showtime.start_time)}
+                  {formatDateLong(bookingData.showtime.start_time)}
                 </Typography>
                 <Typography variant="body2">
                   {formatTime(bookingData.showtime.start_time)}
@@ -252,7 +244,7 @@ const Confirmation = () => {
                 }).format(bookingData.total)}
               </Typography>
             </Box>
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
               Payment Method: {bookingData.paymentMethod.charAt(0).toUpperCase() + bookingData.paymentMethod.slice(1)}
             </Typography>
           </Box>
@@ -287,16 +279,15 @@ const Confirmation = () => {
             </Button>
           </Box>
 
-          {/* Important Notice */}
           <Box
             sx={{
               mt: 4,
               p: 2,
-              bgcolor: 'info.lighter',
+              bgcolor: 'rgba(255, 255, 255, 0.1)',
               borderRadius: 1,
             }}
           >
-            <Typography variant="caption" color="text.secondary">
+            <Typography variant="caption" sx={{ color: 'rgba(255, 255, 255, 0.8)' }}>
               <strong>Important:</strong> Please arrive at least 15 minutes before the showtime.
               Bring a valid ID and show this confirmation at the cinema entrance.
             </Typography>

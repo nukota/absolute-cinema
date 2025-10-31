@@ -13,7 +13,6 @@ interface MovieSwiperProps {
 const MovieSwiper: React.FC<MovieSwiperProps> = ({ title, movies }) => {
   return (
     <Box
-      className="movie-slide-container"
       sx={{
         width: '100%',
         display: 'flex',
@@ -21,41 +20,65 @@ const MovieSwiper: React.FC<MovieSwiperProps> = ({ title, movies }) => {
         overflow: 'visible',
         px: 2,
         position: 'relative',
+        '& .swiper-button-next, & .swiper-button-prev': {
+          color: 'secondary.main',
+          backgroundColor: 'rgba(156, 39, 176, 0.8)',
+          borderRadius: '50%',
+          width: '48px',
+          height: '48px',
+          marginTop: '-24px',
+          '&:hover': {
+            backgroundColor: 'primary.main',
+            color: 'white',
+          },
+          '&::after': {
+            fontSize: '20px',
+            fontWeight: 'bold',
+          },
+        },
+        '& .swiper-button-next': {
+          right: '10px',
+        },
+        '& .swiper-button-prev': {
+          left: '10px',
+        },
+        '& .swiper-button-disabled': {
+          opacity: 0.3,
+          cursor: 'not-allowed',
+        },
       }}
     >
       <Typography
-        variant="h4"
+        variant="h3"
         sx={{
-          color: 'text.primary',
+          color: 'text.secondary',
           fontWeight: 700,
-          pb: 3,
-          ml: 6,
+          pb: 4,
+          ml: 2,
         }}
       >
         {title}
       </Typography>
       <Swiper
         modules={[Navigation, Mousewheel]}
-        spaceBetween={0}
         slidesPerView={5}
-        centeredSlides={true}
         loop={true}
         navigation
         breakpoints={{
           0: {
             slidesPerView: 1,
           },
-          1280: {
+          640: {
+            slidesPerView: 2,
+          },
+          800: {
             slidesPerView: 3,
           },
-          1680: {
-            slidesPerView: 5,
-          },
-          1820: {
-            slidesPerView: 7,
+          1280: {
+            slidesPerView: 4,
           },
         }}
-        className="w-full movie-slide"
+        className="w-full"
       >
         {movies.map((movie) => (
           <SwiperSlide key={movie.movie_id}>

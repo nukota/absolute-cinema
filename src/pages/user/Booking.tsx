@@ -3,6 +3,7 @@ import { Box, Button, Chip, Container, Paper, Typography } from '@mui/material';
 import { EventSeat } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { mockShowtimes, mockProducts } from '../../utils/mockdata';
+import { formatDateLong, formatTime } from '../../utils/helper';
 
 const Booking = () => {
   const { showtimeId } = useParams<{ showtimeId: string }>();
@@ -73,26 +74,14 @@ const Booking = () => {
     navigate('/payment');
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
   return (
-    <Box sx={{ bgcolor: 'grey.50', minHeight: '100vh', py: 6 }}>
+    <Box sx={{ 
+      background: 'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
+      minHeight: '100vh', 
+      py: 6 
+    }}>
       <Container maxWidth="lg">
-        <Typography variant="h3" fontWeight={700} gutterBottom>
+        <Typography variant="h3" fontWeight={700} gutterBottom color="white">
           Select Seats
         </Typography>
         
@@ -116,7 +105,7 @@ const Booking = () => {
             <Box>
               <Typography variant="caption" color="text.secondary">Date & Time</Typography>
               <Typography variant="body1" fontWeight={600}>
-                {formatDate(showtime.start_time)}
+                {formatDateLong(showtime.start_time)}
               </Typography>
               <Typography variant="body2">{formatTime(showtime.start_time)}</Typography>
             </Box>

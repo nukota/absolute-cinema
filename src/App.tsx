@@ -20,6 +20,9 @@ import Booking from './pages/user/Booking';
 import Payment from './pages/user/Payment';
 import Confirmation from './pages/user/Confirmation';
 import Profile from './pages/user/Profile';
+import HelpCenter from './pages/user/HelpCenter';
+import TermsConditions from './pages/user/TermsConditions';
+import PrivacyPolicy from './pages/user/PrivacyPolicy';
 import './App.css';
 
 const App = () => {
@@ -39,6 +42,9 @@ const App = () => {
           <Route path="payment" element={<Payment />} />
           <Route path="confirmation" element={<Confirmation />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="help-center" element={<HelpCenter />} />
+          <Route path="terms-conditions" element={<TermsConditions />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
         </Route>
         
         {/* Admin routes */}

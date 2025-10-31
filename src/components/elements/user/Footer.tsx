@@ -9,63 +9,82 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        bgcolor: 'background.paper',
-        color: 'text.primary',
-        py: 6,
+        background: 'linear-gradient(135deg, #4a148c 0%, #8d6e63 100%)',
+        color: 'white',
+        py: 8,
         mt: 'auto',
+        position: 'relative',
+        overflow: 'hidden',
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
       }}
     >
+      {/* Decorative Cinema Icon */}
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 20,
+          right: 20,
+          opacity: 0.1,
+          zIndex: 1,
+        }}
+      >
+        <MovieFilter sx={{ fontSize: 200 }} />
+      </Box>
       <Container maxWidth="lg">
         <Box
           sx={{
             display: 'grid',
             gridTemplateColumns: { xs: '1fr', md: 'repeat(4, 1fr)' },
-            gap: 4,
-            mb: 4,
+            gap: 6,
+            mb: 6,
+            position: 'relative',
+            zIndex: 2,
           }}
         >
           {/* About */}
           <Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-              <MovieFilter sx={{ fontSize: 32, color: 'primary.main' }} />
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
+              <MovieFilter sx={{ fontSize: 40, color: 'white' }} />
               <Typography
-                variant="h6"
+                variant="h5"
                 sx={{
                   fontFamily: '"Montserrat Alternates", sans-serif',
                   fontWeight: 700,
+                  color: 'white',
                 }}
               >
                 Absolute Cinema
               </Typography>
             </Box>
-            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+            <Typography variant="body1" sx={{ opacity: 0.9, color: 'white', lineHeight: 1.6 }}>
               Your premier destination for the latest movies and unforgettable cinema experiences.
             </Typography>
           </Box>
 
           {/* Quick Links */}
           <Box>
-            <Typography variant="h6" fontWeight={600} gutterBottom>
+            <Typography variant="h5" fontWeight={600} gutterBottom color="white">
               Quick Links
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
               <Typography
-                variant="body2"
-                sx={{ opacity: 0.8, cursor: 'pointer', '&:hover': { opacity: 1 } }}
+                variant="body1"
+                sx={{ opacity: 0.9, color: 'white', cursor: 'pointer', '&:hover': { opacity: 1 } }}
                 onClick={() => navigate('/movies')}
               >
                 Now Showing
               </Typography>
               <Typography
-                variant="body2"
-                sx={{ opacity: 0.8, cursor: 'pointer', '&:hover': { opacity: 1 } }}
+                variant="body1"
+                sx={{ opacity: 0.9, color: 'white', cursor: 'pointer', '&:hover': { opacity: 1 } }}
                 onClick={() => navigate('/movies')}
               >
                 Coming Soon
               </Typography>
               <Typography
-                variant="body2"
-                sx={{ opacity: 0.8, cursor: 'pointer', '&:hover': { opacity: 1 } }}
+                variant="body1"
+                sx={{ opacity: 0.9, color: 'white', cursor: 'pointer', '&:hover': { opacity: 1 } }}
                 onClick={() => navigate('/profile')}
               >
                 My Bookings
@@ -75,17 +94,29 @@ const Footer = () => {
 
           {/* Customer Service */}
           <Box>
-            <Typography variant="h6" fontWeight={600} gutterBottom>
+            <Typography variant="h5" fontWeight={600} gutterBottom color="white">
               Customer Service
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Typography
+                variant="body1"
+                sx={{ opacity: 0.9, color: 'white', cursor: 'pointer', '&:hover': { opacity: 1 } }}
+                onClick={() => navigate('/help-center')}
+              >
                 Help Center
               </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              <Typography
+                variant="body1"
+                sx={{ opacity: 0.9, color: 'white', cursor: 'pointer', '&:hover': { opacity: 1 } }}
+                onClick={() => navigate('/terms-conditions')}
+              >
                 Terms & Conditions
               </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              <Typography
+                variant="body1"
+                sx={{ opacity: 0.9, color: 'white', cursor: 'pointer', '&:hover': { opacity: 1 } }}
+                onClick={() => navigate('/privacy-policy')}
+              >
                 Privacy Policy
               </Typography>
             </Box>
@@ -93,17 +124,17 @@ const Footer = () => {
 
           {/* Contact */}
           <Box>
-            <Typography variant="h6" fontWeight={600} gutterBottom>
+            <Typography variant="h5" fontWeight={600} gutterBottom color="white">
               Contact Us
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              <Typography variant="body1" sx={{ opacity: 0.9, color: 'white' }}>
                 Email: info@absolutecinema.com
               </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              <Typography variant="body1" sx={{ opacity: 0.9, color: 'white' }}>
                 Phone: 1900-1234
               </Typography>
-              <Typography variant="body2" sx={{ opacity: 0.8 }}>
+              <Typography variant="body1" sx={{ opacity: 0.9, color: 'white' }}>
                 Hotline: 0123-456-789
               </Typography>
             </Box>
@@ -114,12 +145,14 @@ const Footer = () => {
         <Box
           sx={{
             borderTop: 1,
-            borderColor: 'divider',
-            pt: 3,
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            pt: 4,
             textAlign: 'center',
+            position: 'relative',
+            zIndex: 2,
           }}
         >
-          <Typography variant="body2" sx={{ opacity: 0.8 }}>
+          <Typography variant="body1" sx={{ opacity: 0.9, color: 'white' }}>
             © 2025 Absolute Cinema. All rights reserved.
           </Typography>
         </Box>
