@@ -1,4 +1,9 @@
-import type { InvoiceStatus, MovieStatus, PaymentMethod, ProductCategory } from "../enum";
+import type {
+  InvoiceStatus,
+  MovieStatus,
+  PaymentMethod,
+  ProductCategory,
+} from '../enum';
 
 export interface CinemaDTO {
   cinema_id: string;
@@ -45,7 +50,7 @@ export interface InvoiceDTO {
   total_amount: number;
   status: InvoiceStatus;
   created_at: string; // timestamp
-};
+}
 
 export interface MovieDTO {
   movie_id: string;
@@ -60,6 +65,8 @@ export interface MovieDTO {
   genre?: any; // JSON (can be array or object)
   created_at?: string; // timestamp
   status: MovieStatus; // IMPORTANT! (calculate this based on release_date)
+  //if release_date <= today => Coming Soon,
+  //if release_date > today + 30 days => Stopped
 }
 
 export interface ProductDTO {
@@ -113,7 +120,7 @@ export interface ShowtimeDTO {
     title: string;
   };
   start_time: string; // timestamp
-  end_time: string;   // timestamp
+  end_time: string; // timestamp
   price: number;
   created_at?: string; // timestamp
 }
