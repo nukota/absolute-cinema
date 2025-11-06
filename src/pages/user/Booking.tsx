@@ -1,9 +1,18 @@
 import { useState } from 'react';
-import { Box, Button, Chip, Container, Paper, Typography } from '@mui/material';
+import { Box, Button, Chip, Container, Paper, Typography, styled } from '@mui/material';
 import { EventSeat } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { mockShowtimes, mockProducts } from '../../utils/mockdata';
 import { formatDateLong, formatTime } from '../../utils/helper';
+
+// Enhanced Paper component with animated gradient background and border
+const EnhancedPaper = styled(Paper)(({ theme }) => ({
+  background: 'linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(99, 102, 241, 0.15) 50%, rgba(236, 72, 153, 0.1) 100%)',
+  backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(156, 39, 176, 0.2)',
+  position: 'relative',
+  overflow: 'hidden',
+}));
 
 const Booking = () => {
   const { showtimeId } = useParams<{ showtimeId: string }>();
@@ -86,7 +95,7 @@ const Booking = () => {
         </Typography>
         
         {/* Movie Info */}
-        <Paper sx={{ p: 3, mb: 4 }}>
+        <EnhancedPaper sx={{ p: 3, mb: 4 }}>
           <Box
             sx={{
               display: 'grid',
@@ -114,7 +123,7 @@ const Booking = () => {
               <Typography variant="body1" fontWeight={600}>{showtime.room.name}</Typography>
             </Box>
           </Box>
-        </Paper>
+        </EnhancedPaper>
 
         <Box
           sx={{
@@ -125,7 +134,7 @@ const Booking = () => {
         >
           {/* Seat Selection */}
           <Box>
-            <Paper sx={{ p: 4 }}>
+            <EnhancedPaper sx={{ p: 4 }}>
               {/* Screen */}
               <Box
                 sx={{
@@ -180,18 +189,18 @@ const Booking = () => {
                             cursor: isOccupied ? 'not-allowed' : 'pointer',
                             borderRadius: 1,
                             bgcolor: isOccupied
-                              ? 'grey.400'
+                              ? 'grey.300'
                               : isSelected
                               ? 'primary.main'
-                              : 'grey.200',
+                              : 'grey.700',
                             color: isOccupied || isSelected ? 'white' : 'text.primary',
                             transition: 'all 0.2s',
                             '&:hover': {
                               bgcolor: isOccupied
-                                ? 'grey.400'
+                                ? 'grey.300'
                                 : isSelected
                                 ? 'primary.dark'
-                                : 'grey.300',
+                                : 'grey.500',
                             },
                           }}
                         >
@@ -213,7 +222,7 @@ const Booking = () => {
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ width: 24, height: 24, bgcolor: 'grey.200', borderRadius: 1 }} />
+                  <Box sx={{ width: 24, height: 24, bgcolor: 'grey.400', borderRadius: 1 }} />
                   <Typography variant="caption">Available</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -221,14 +230,14 @@ const Booking = () => {
                   <Typography variant="caption">Selected</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Box sx={{ width: 24, height: 24, bgcolor: 'grey.400', borderRadius: 1 }} />
+                  <Box sx={{ width: 24, height: 24, bgcolor: 'grey.300', borderRadius: 1 }} />
                   <Typography variant="caption">Occupied</Typography>
                 </Box>
               </Box>
-            </Paper>
+            </EnhancedPaper>
 
             {/* Products */}
-            <Paper sx={{ p: 3, mt: 3 }}>
+            <EnhancedPaper sx={{ p: 3, mt: 3 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>
                 Add Snacks & Drinks
               </Typography>
@@ -280,12 +289,12 @@ const Booking = () => {
                   </Box>
                 ))}
               </Box>
-            </Paper>
+            </EnhancedPaper>
           </Box>
 
           {/* Booking Summary */}
           <Box>
-            <Paper sx={{ p: 3, position: 'sticky', top: 80 }}>
+            <EnhancedPaper sx={{ p: 3, position: 'sticky', top: 80 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>
                 Booking Summary
               </Typography>
@@ -367,7 +376,7 @@ const Booking = () => {
                   Proceed to Payment
                 </Button>
               </Box>
-            </Paper>
+            </EnhancedPaper>
           </Box>
         </Box>
       </Container>

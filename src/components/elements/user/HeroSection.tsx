@@ -1,6 +1,6 @@
 import { Box, Button, Container, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { PlayArrow, LocalActivity, AccessTime, Category, StarRate } from '@mui/icons-material';
+import { PlayArrow, LocalActivity, AccessTime, Category, CalendarToday, Person, People } from '@mui/icons-material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
@@ -214,14 +214,34 @@ const HeroSection = () => {
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <StarRate sx={{ fontSize: 20, color: 'primary.main' }} />
+                        <CalendarToday sx={{ fontSize: 20, color: 'primary.main' }} />
                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
                           <Typography component="span" sx={{ color: '#999', mr: 1 }}>
-                            Rating:
+                            Year:
                           </Typography>
-                          {movie.rating}
+                          {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
                         </Typography>
                       </Box>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <Person sx={{ fontSize: 20, color: 'primary.main' }} />
+                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                          <Typography component="span" sx={{ color: '#999', mr: 1 }}>
+                            Director:
+                          </Typography>
+                          {movie.director || 'N/A'}
+                        </Typography>
+                      </Box>
+                      {movie.actors && (
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <People sx={{ fontSize: 20, color: 'primary.main' }} />
+                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                            <Typography component="span" sx={{ color: '#999', mr: 1 }}>
+                              Cast:
+                            </Typography>
+                            {Array.isArray(movie.actors) ? movie.actors.slice(0, 3).join(', ') + (movie.actors.length > 3 ? '...' : '') : movie.actors}
+                          </Typography>
+                        </Box>
+                      )}
                     </Box>
 
                     <Typography

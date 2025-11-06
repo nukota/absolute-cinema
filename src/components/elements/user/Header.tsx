@@ -5,37 +5,25 @@ import {
   Typography,
   Avatar,
   TextField,
-  Badge,
   InputAdornment,
 } from "@mui/material";
 import {
   MovieFilter,
   SearchRounded,
-  NotificationsRounded,
   Movie,
   ArrowForward,
   BookmarkRounded,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import {
-  mockNotifications,
-  type NotificationDTO,
-} from "../../../utils/mockdata";
 import ProfileMenu from "../../popovers/ProfileMenu";
-import NotificationsMenu from "../../popovers/NotificationsMenu";
 
 const Header = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [notificationAnchorEl, setNotificationAnchorEl] =
-    useState<null | HTMLElement>(null);
-  const [notifications, setNotifications] =
-    useState<NotificationDTO[]>(mockNotifications);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const open = Boolean(anchorEl);
-  const notificationOpen = Boolean(notificationAnchorEl);
 
   // Mock user role - in real app, this would come from authentication context
   const userRole = "admin"; // Change to 'customer' to test customer view
@@ -46,14 +34,6 @@ const Header = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleNotificationClick = (event: React.MouseEvent<HTMLElement>) => {
-    setNotificationAnchorEl(event.currentTarget);
-  };
-
-  const handleNotificationClose = () => {
-    setNotificationAnchorEl(null);
   };
 
   const handleProfile = () => {
@@ -70,14 +50,6 @@ const Header = () => {
     handleClose();
     localStorage.clear();
     navigate("/signin");
-  };
-
-  const handleMarkAllAsRead = () => {
-    setNotifications(notifications.map((n) => ({ ...n, isRead: true })));
-  };
-
-  const handleDeleteNotification = (id: string) => {
-    setNotifications(notifications.filter((n) => n.id !== id));
   };
 
   const handleSearchToggle = () => {
@@ -97,8 +69,6 @@ const Header = () => {
       handleSearch();
     }
   };
-
-  const unreadCount = notifications.filter((n) => !n.isRead).length;
 
   return (
     <Box
@@ -213,22 +183,6 @@ const Header = () => {
               <Movie />
             </IconButton>
 
-            {/* Notifications Button */}
-            <IconButton
-              onClick={handleNotificationClick}
-              sx={{
-                color: "white",
-                "&:hover": {
-                  bgcolor: "rgba(255, 255, 255, 0.1)",
-                },
-                marginRight: 3,
-              }}
-            >
-              <Badge badgeContent={unreadCount} color="error">
-                <NotificationsRounded />
-              </Badge>
-            </IconButton>
-
             {/* User Info and Avatar */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Box
@@ -277,17 +231,6 @@ const Header = () => {
             onAdminPage={handleAdminPage}
             onLogout={handleLogout}
             userRole={userRole}
-          />
-
-          {/* Notifications Menu */}
-          <NotificationsMenu
-            anchorEl={notificationAnchorEl}
-            open={notificationOpen}
-            onClose={handleNotificationClose}
-            notifications={notifications}
-            onMarkAllAsRead={handleMarkAllAsRead}
-            onDeleteNotification={handleDeleteNotification}
-            unreadCount={unreadCount}
           />
         </Box>
       </Container>

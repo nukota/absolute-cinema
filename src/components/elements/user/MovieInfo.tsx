@@ -1,10 +1,10 @@
-import { Box, Container, Typography, Button } from "@mui/material";
+import { Box, Container, Typography, Button, Rating } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import {
   AccessTime,
   CalendarToday,
   Person,
-  Star,
+  ThumbUp,
   Movie,
   People,
   PlayArrow,
@@ -130,7 +130,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                 </Typography>
               </Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Star fontSize="small" color="secondary" />
+                <ThumbUp fontSize="small" color="secondary" />
                 <Typography
                   sx={{
                     opacity: 0.8,
@@ -141,11 +141,24 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                 >
                   Rating:
                 </Typography>
-                <Typography
-                  sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "1.1rem" }}
-                >
-                  {movie.rating || "N/A"}
-                </Typography>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <Rating
+                    value={movie.rating ? Math.round(movie.rating * 2) / 2 : 0}
+                    readOnly
+                    size="small"
+                    precision={0.5}
+                    sx={{
+                      '& .MuiRating-icon': {
+                        color: 'secondary.main',
+                      },
+                    }}
+                  />
+                  <Typography
+                    sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "1.1rem" }}
+                  >
+                    ({movie.rating ? movie.rating.toFixed(1) : 'N/A'})
+                  </Typography>
+                </Box>
               </Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <CalendarToday fontSize="small" color="secondary" />

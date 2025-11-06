@@ -6,6 +6,8 @@ import {
   Movie,
   Star,
   Bookmark,
+  CalendarToday,
+  Person,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import type { MovieDTO } from '../../utils/dtos/admin';
@@ -219,7 +221,39 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
                   textOverflow: 'ellipsis',
                 }}
               >
-                Rating: {movie.rating || 'N/A'}
+                Rating: {movie.rating ? movie.rating.toFixed(1) : 'N/A'}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CalendarToday sx={{ fontSize: 16, color: 'primary.main' }} />
+              <Typography
+                sx={{
+                  fontSize: 14,
+                  color: 'white',
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Year: {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Person sx={{ fontSize: 16, color: 'primary.main' }} />
+              <Typography
+                sx={{
+                  fontSize: 14,
+                  color: 'white',
+                  overflow: 'hidden',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Director: {movie.director || 'N/A'}
               </Typography>
             </Box>
           </Box>
