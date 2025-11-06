@@ -6,7 +6,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import { mockMovies } from '../../../utils/mockdata';
 import { MovieStatus } from '../../../utils/enum';
-import type { MovieDTO } from '../../../utils/types';
+import type { MovieDTO } from '../../../utils/dtos/admin';
 
 const HeroSection = () => {
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ const HeroSection = () => {
       }}
     >
       {/* Static "Welcome to Absolute Cinema" text */}
-      <Container maxWidth="lg" sx={{ position: 'absolute', top: '120px', left: 0, right: 0, zIndex: 10, display: { xs: 'none', md: 'block' } }}>
+      <Container maxWidth="lg" sx={{ position: 'absolute', top: '80px', left: 0, right: 0, zIndex: 10, display: { xs: 'none', md: 'block' } }}>
         <Typography
           variant="h3"
           fontWeight={700}
@@ -57,12 +57,12 @@ const HeroSection = () => {
             fontFamily: '"Montserrat Alternates", sans-serif',
             fontSize: { xs: '2rem', md: '3rem' },
             mb: 2,
-            opacity: 0.5,
+            opacity: 0.75,
             color: 'white',
             textAlign: { xs: 'center', md: 'left' },
           }}
         >
-          Book ticket at Absolute Cinema now!
+          Showing movies on Absolute Cinema!
         </Typography>
       </Container>
 

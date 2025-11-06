@@ -266,14 +266,6 @@ const Profile = () => {
                       '& .MuiInput-underline:after': { borderBottomColor: 'white' },
                     }}
                   />
-                  <Box>
-                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>
-                      Member Status
-                    </Typography>
-                    <Typography variant="body1" fontWeight={600} sx={{ color: '#ffd700' }}>
-                      Gold Member
-                    </Typography>
-                  </Box>
                 </Box>
               </Box>
             </TabPanel>

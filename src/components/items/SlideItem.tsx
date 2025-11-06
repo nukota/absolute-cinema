@@ -1,42 +1,29 @@
 import { useState } from 'react';
-import { Box, Button, Dialog, DialogContent, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import {
   AccessTime,
-  PlayCircle,
   LocalActivity,
   Movie,
   Star,
+  Bookmark,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import type { MovieDTO } from '../../utils/types';
+import type { MovieDTO } from '../../utils/dtos/admin';
 
 interface SlideItemProps {
   movie: MovieDTO;
 }
 
 const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
-  const [open, setOpen] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const navigate = useNavigate();
 
-  const handlePlayTrailerClicked = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+  const handleSaveClicked = () => {
+    setIsSaved(!isSaved);
   };
 
   const handleBuyTicketClicked = () => {
     navigate(`/movie/${movie.movie_id}`);
-  };
-
-  const getEmbedUrl = (url: string) => {
-    if (!url) return '';
-    const videoIdMatch = url.match(
-      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-    );
-    const videoId = videoIdMatch ? videoIdMatch[1] : null;
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
   };
 
   if (!movie) {
@@ -115,12 +102,18 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
         <Button
           variant="text"
           fullWidth
-          color="secondary"
-          startIcon={<PlayCircle sx={{ fontSize: 10 }} />}
-          sx={{ fontSize: 12, fontWeight: 600, flex: 1 }}
-          onClick={handlePlayTrailerClicked}
+          color={isSaved ? "inherit" : "secondary"}
+          startIcon={<Bookmark sx={{ fontSize: 10 }} />}
+          sx={{
+            fontSize: 12,
+            fontWeight: 600,
+            flex: 1,
+            opacity: isSaved ? 0.6 : 1,
+            color: isSaved ? 'grey.400' : undefined,
+          }}
+          onClick={handleSaveClicked}
         >
-          Trailer
+          {isSaved ? 'Unsave' : 'Save'}
         </Button>
         <Button
           variant="contained"
@@ -232,33 +225,6 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
           </Box>
         </Box>
       </Box>
-      <Dialog open={open} onClose={handleClose} maxWidth="lg">
-        <DialogContent sx={{ p: 0, bgcolor: 'black' }}>
-          {getEmbedUrl(movie.poster_url || '') ? (
-            <iframe
-              width="1000"
-              height="562"
-              src={getEmbedUrl(movie.poster_url || '')}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              title="Trailer"
-            />
-          ) : (
-            <Box
-              sx={{
-                width: 1000,
-                height: 562,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'white',
-              }}
-            >
-              <Typography variant="h6">Trailer not available</Typography>
-            </Box>
-          )}
-        </DialogContent>
-      </Dialog>
     </Box>
   );
 };

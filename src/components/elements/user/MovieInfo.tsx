@@ -9,7 +9,7 @@ import {
   People,
   PlayArrow,
 } from "@mui/icons-material";
-import type { MovieDTO } from "../../../utils/types";
+import type { MovieDTO } from "../../../utils/dtos/admin";
 import { MovieStatus } from "../../../utils/enum";
 
 interface MovieInfoProps {

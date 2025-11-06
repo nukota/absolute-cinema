@@ -1,4 +1,4 @@
-import type { InvoiceStatus, MovieStatus, PaymentMethod, ProductCategory } from "./enum";
+import type { InvoiceStatus, MovieStatus, PaymentMethod, ProductCategory } from "../enum";
 
 export interface CinemaDTO {
   cinema_id: string;
@@ -53,7 +53,7 @@ export interface MovieDTO {
   description?: string;
   duration_min: number;
   release_date: string; // date
-  rating?: string;
+  rating?: number;
   poster_url?: string;
   director?: string;
   actors?: any; // JSON (can be array or object)

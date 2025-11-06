@@ -285,7 +285,7 @@ const Booking = () => {
 
           {/* Booking Summary */}
           <Box>
-            <Paper sx={{ p: 3, position: 'sticky', top: 24 }}>
+            <Paper sx={{ p: 3, position: 'sticky', top: 80 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>
                 Booking Summary
               </Typography>

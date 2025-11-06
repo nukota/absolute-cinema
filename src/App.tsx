@@ -15,6 +15,7 @@ import Signup from './pages/user/Signup';
 import UserLayout from './pages/user';
 import Home from './pages/user/Home';
 import MoviesPage from './pages/user/MoviesPage';
+import SavedMoviesPage from './pages/user/SavedMoviesPage';
 import MovieDetail from './pages/user/MovieDetail';
 import Booking from './pages/user/Booking';
 import Payment from './pages/user/Payment';
@@ -37,6 +38,7 @@ const App = () => {
         <Route path="/" element={<UserLayout />}>
           <Route index element={<Home />} />
           <Route path="movies" element={<MoviesPage />} />
+          <Route path="saved-movies" element={<SavedMoviesPage />} />
           <Route path="movie/:id" element={<MovieDetail />} />
           <Route path="booking/:showtimeId" element={<Booking />} />
           <Route path="payment" element={<Payment />} />

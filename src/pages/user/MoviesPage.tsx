@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Box, Checkbox, Container, FormControlLabel, TextField, Typography } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { mockMovies } from '../../utils/mockdata';
@@ -6,9 +7,18 @@ import { MovieStatus } from '../../utils/enum';
 import SlideItem from '../../components/items/SlideItem';
 
 const Movies = () => {
+  const [searchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [showNowShowing, setShowNowShowing] = useState(true);
   const [showComingSoon, setShowComingSoon] = useState(true);
+
+  // Initialize search term from URL query parameter
+  useEffect(() => {
+    const searchQuery = searchParams.get('search');
+    if (searchQuery) {
+      setSearchTerm(searchQuery);
+    }
+  }, [searchParams]);
 
   // Filter movies based on search and status
   const filteredMovies = mockMovies.filter(movie => {

@@ -7,7 +7,7 @@ import type {
   RatingDTO,
   RoomDTO,
   ShowtimeDTO,
-} from "./types";
+} from "./dtos/admin";
 import {
   InvoiceStatus,
   PaymentMethod,
@@ -42,7 +42,7 @@ export type {
   RatingDTO,
   RoomDTO,
   ShowtimeDTO,
-} from "./types";
+} from "./dtos/admin";
 
 export const mockCustomers: CustomerDTO[] = [
   {
@@ -721,7 +721,7 @@ export const mockMovies: MovieDTO[] = [
       "After the devastating events of Avengers: Infinity War, the universe is in ruins.",
     duration_min: 181,
     release_date: "2019-04-26",
-    rating: "PG-13",
+    rating: 4.5,
     poster_url: movie1,
     director: "Anthony Russo, Joe Russo",
     actors: ["Robert Downey Jr.", "Chris Evans", "Mark Ruffalo"],
@@ -736,7 +736,7 @@ export const mockMovies: MovieDTO[] = [
       "When a sadistic serial killer begins murdering key political figures in Gotham.",
     duration_min: 176,
     release_date: "2022-03-04",
-    rating: "PG-13",
+    rating: 4.5,
     poster_url: movie2,
     director: "Matt Reeves",
     actors: ["Robert Pattinson", "Zoë Kravitz", "Jeffrey Wright"],
@@ -751,7 +751,7 @@ export const mockMovies: MovieDTO[] = [
       "With Spider-Man's identity now revealed, Peter asks Doctor Strange for help.",
     duration_min: 148,
     release_date: "2021-12-17",
-    rating: "PG-13",
+    rating: 4.5,
     poster_url: movie3,
     director: "Jon Watts",
     actors: ["Tom Holland", "Zendaya", "Benedict Cumberbatch"],
@@ -766,7 +766,7 @@ export const mockMovies: MovieDTO[] = [
       "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
     duration_min: 169,
     release_date: "2014-11-07",
-    rating: "PG-13",
+    rating: 4.5,
     poster_url: movie4,
     director: "Christopher Nolan",
     actors: ["Matthew McConaughey", "Anne Hathaway", "Jessica Chastain"],
@@ -781,7 +781,7 @@ export const mockMovies: MovieDTO[] = [
       "A thief who steals corporate secrets through the use of dream-sharing technology.",
     duration_min: 148,
     release_date: "2010-07-16",
-    rating: "PG-13",
+    rating: 4.5,
     poster_url: movie5,
     director: "Christopher Nolan",
     actors: ["Leonardo DiCaprio", "Marion Cotillard", "Tom Hardy"],
@@ -796,7 +796,7 @@ export const mockMovies: MovieDTO[] = [
       "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham.",
     duration_min: 152,
     release_date: "2008-07-18",
-    rating: "PG-13",
+    rating: 4.5,
     poster_url: movie6,
     director: "Christopher Nolan",
     actors: ["Christian Bale", "Heath Ledger", "Aaron Eckhart"],
@@ -811,7 +811,7 @@ export const mockMovies: MovieDTO[] = [
       "A computer hacker learns from mysterious rebels about the true nature of his reality.",
     duration_min: 136,
     release_date: "1999-03-31",
-    rating: "R",
+    rating: 4,
     poster_url: movie7,
     director: "Lana Wachowski, Lilly Wachowski",
     actors: ["Keanu Reeves", "Laurence Fishburne", "Carrie-Anne Moss"],
@@ -826,7 +826,7 @@ export const mockMovies: MovieDTO[] = [
       "The lives of two mob hitmen, a boxer, a gangster and his wife intertwine in four tales of violence and redemption.",
     duration_min: 154,
     release_date: "1994-10-14",
-    rating: "R",
+    rating: 4,
     poster_url: movie8,
     director: "Quentin Tarantino",
     actors: ["John Travolta", "Uma Thurman", "Samuel L. Jackson"],
@@ -841,7 +841,7 @@ export const mockMovies: MovieDTO[] = [
       "The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal and other historical events unfold from the perspective of an Alabama man with an IQ of 75.",
     duration_min: 142,
     release_date: "1994-07-06",
-    rating: "PG-13",
+    rating: 4.5,
     poster_url: movie9,
     director: "Robert Zemeckis",
     actors: ["Tom Hanks", "Robin Wright", "Gary Sinise"],
@@ -856,7 +856,7 @@ export const mockMovies: MovieDTO[] = [
       "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
     duration_min: 142,
     release_date: "1994-09-23",
-    rating: "R",
+    rating: 4,
     poster_url: movie10,
     director: "Frank Darabont",
     actors: ["Tim Robbins", "Morgan Freeman", "Bob Gunton"],
@@ -871,7 +871,7 @@ export const mockMovies: MovieDTO[] = [
       "An insomniac office worker and a devil-may-care soapmaker form an underground fight club that evolves into something much, much more.",
     duration_min: 139,
     release_date: "1999-10-15",
-    rating: "R",
+    rating: 4,
     poster_url: movie11,
     director: "David Fincher",
     actors: ["Brad Pitt", "Edward Norton", "Helena Bonham Carter"],
@@ -886,7 +886,7 @@ export const mockMovies: MovieDTO[] = [
       "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.",
     duration_min: 178,
     release_date: "2001-12-19",
-    rating: "PG-13",
+    rating: 4.5,
     poster_url: movie12,
     director: "Peter Jackson",
     actors: ["Elijah Wood", "Ian McKellen", "Orlando Bloom"],
@@ -901,7 +901,7 @@ export const mockMovies: MovieDTO[] = [
       "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station.",
     duration_min: 121,
     release_date: "1977-05-25",
-    rating: "PG",
+    rating: 4,
     poster_url: movie13,
     director: "George Lucas",
     actors: ["Mark Hamill", "Harrison Ford", "Carrie Fisher"],
@@ -916,7 +916,7 @@ export const mockMovies: MovieDTO[] = [
       "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.",
     duration_min: 175,
     release_date: "1972-03-24",
-    rating: "R",
+    rating: 4,
     poster_url: movie14,
     director: "Francis Ford Coppola",
     actors: ["Marlon Brando", "Al Pacino", "James Caan"],
@@ -931,7 +931,7 @@ export const mockMovies: MovieDTO[] = [
       "A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.",
     duration_min: 194,
     release_date: "1997-12-19",
-    rating: "PG-13",
+    rating: 4.5,
     poster_url: movie15,
     director: "James Cameron",
     actors: ["Leonardo DiCaprio", "Kate Winslet", "Billy Zane"],
@@ -946,7 +946,7 @@ export const mockMovies: MovieDTO[] = [
       "A pragmatic paleontologist visiting an almost complete theme park is tasked with protecting a couple of kids after a power failure causes the park's cloned dinosaurs to run loose.",
     duration_min: 127,
     release_date: "1993-06-11",
-    rating: "PG-13",
+    rating: 4.5,
     poster_url: movie16,
     director: "Steven Spielberg",
     actors: ["Sam Neill", "Laura Dern", "Jeff Goldblum"],
@@ -1154,5 +1154,58 @@ export const mockBookingHistory = [
     seats: ["C1", "C2", "C3"],
     total: 270000,
     status: "Completed",
+  },
+];
+
+// Mock notifications
+export interface NotificationDTO {
+  id: string;
+  title: string;
+  message: string;
+  type: 'booking' | 'promotion' | 'system' | 'reminder';
+  isRead: boolean;
+  createdAt: string;
+}
+
+export const mockNotifications: NotificationDTO[] = [
+  {
+    id: "N001",
+    title: "Booking Confirmed",
+    message: "Your booking for 'Avengers: Endgame' has been confirmed. Show starts at 7:00 PM.",
+    type: "booking",
+    isRead: false,
+    createdAt: "2025-11-06T10:30:00Z",
+  },
+  {
+    id: "N002",
+    title: "Special Offer",
+    message: "Get 20% off on all bookings this weekend! Use code: WEEKEND20",
+    type: "promotion",
+    isRead: false,
+    createdAt: "2025-11-05T14:00:00Z",
+  },
+  {
+    id: "N003",
+    title: "Showtime Reminder",
+    message: "Don't forget! Your movie 'The Batman' starts in 2 hours.",
+    type: "reminder",
+    isRead: true,
+    createdAt: "2025-11-04T16:45:00Z",
+  },
+  {
+    id: "N004",
+    title: "New Movie Release",
+    message: "Spider-Man: No Way Home is now showing! Book your tickets now.",
+    type: "system",
+    isRead: false,
+    createdAt: "2025-11-03T09:00:00Z",
+  },
+  {
+    id: "N005",
+    title: "Payment Successful",
+    message: "Your payment of 340,000 VND has been processed successfully.",
+    type: "booking",
+    isRead: true,
+    createdAt: "2025-11-02T18:20:00Z",
   },
 ];

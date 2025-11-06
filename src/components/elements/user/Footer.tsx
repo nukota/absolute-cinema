@@ -49,6 +49,7 @@ const Footer = () => {
               <Typography
                 variant="h5"
                 sx={{
+                  width: 240,
                   fontFamily: '"Montserrat Alternates", sans-serif',
                   fontWeight: 700,
                   color: 'white',
