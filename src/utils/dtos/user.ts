@@ -1,4 +1,4 @@
-import type { MovieStatus } from '../enum';
+import type { MovieStatus, PaymentMethod } from '../enum';
 
 // API: return array of UserMovieDTO (GET with user_id param)
 export interface UserMovieDTO {
@@ -36,14 +36,33 @@ export interface BookingHistoryDTO {
   showtime: string;
   seats: string[];
   total_price: number;
-  status: 'Pending' | 'Confirmed' | 'Cancelled' | 'Completed';
-  booking_time: string;
 }
 
 // API:
 export interface UserProfileDTO {
-  // ....
-  member_since: string; // timestamp
+  customer_id: string;
+  full_name: string;
+  email: string;
+  dob: string;
+  phone_number?: string;
+  CCCD?: string;
+  member_since?: string; // this is created_at timestamp
   total_bookings: number;
   booking_history: BookingHistoryDTO[];
+}
+
+// API: POST request body for creating an order
+export interface CreateInvoiceDTO {
+  customer_id: string;
+  amount: number;
+  products: {
+    product_id: string;
+    quantity: number;
+  }[];
+  tickets: {
+    showtime_id: string;
+    seats: string[]; // array of seat IDs
+  };
+  payment_method: PaymentMethod;
+  total_amount: number;
 }
