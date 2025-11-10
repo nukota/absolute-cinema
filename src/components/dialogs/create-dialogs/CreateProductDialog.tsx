@@ -114,6 +114,7 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
       sections={sections}
       onAdd={handleAdd}
       error={error}
+      showImage="image"
     />
   );
 };
