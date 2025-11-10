@@ -4,14 +4,15 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CustomDataGrid from '../../components/layouts/DataGrid';
 import { mockCustomers } from '../../utils/mockdata';
 import type { GridColDef } from '@mui/x-data-grid';
+import CreateCustomerDialog from '../../components/dialogs/create-dialogs/CreateCustomerDialog';
 
 const Customers = () => {
   const [loading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
   const handleAddNewCustomer = () => {
-    console.log('Add new customer');
-    // Navigate to add customer page or open a modal
+    setOpenCreateDialog(true);
   };
 
   const handleViewDetails = (id: string) => {
@@ -85,21 +86,27 @@ const Customers = () => {
   };
 
   return (
-    <CustomDataGrid
-      title="Customers Management"
-      loading={loading}
-      rows={mockCustomers}
-      columns={columns}
-      onAddNew={handleAddNewCustomer}
-      addButtonText="Add New Customer"
-      selectedRows={selectedRows}
-      onRowSelectionChange={setSelectedRows}
-      onDeleteSelected={handleDeleteSelected}
-      showCheckboxSelection={true}
-      getRowId={(row) => row.customer_id}
-      pageSize={10}
-      pageSizeOptions={[10, 20, 50]}
-    />
+    <>
+      <CustomDataGrid
+        title="Customers Management"
+        loading={loading}
+        rows={mockCustomers}
+        columns={columns}
+        onAddNew={handleAddNewCustomer}
+        addButtonText="Add New Customer"
+        selectedRows={selectedRows}
+        onRowSelectionChange={setSelectedRows}
+        onDeleteSelected={handleDeleteSelected}
+        showCheckboxSelection={true}
+        getRowId={(row) => row.customer_id}
+        pageSize={10}
+        pageSizeOptions={[10, 20, 50]}
+      />
+      <CreateCustomerDialog
+        open={openCreateDialog}
+        onClose={() => setOpenCreateDialog(false)}
+      />
+    </>
   );
 };
 

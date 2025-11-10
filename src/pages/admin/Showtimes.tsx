@@ -4,14 +4,15 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CustomDataGrid from '../../components/layouts/DataGrid';
 import { mockShowtimes } from '../../utils/mockdata';
 import type { GridColDef } from '@mui/x-data-grid';
+import CreateShowtimeDialog from '../../components/dialogs/create-dialogs/CreateShowtimeDialog';
 
 const Showtimes = () => {
   const [loading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
 
   const handleAddNewShowtime = () => {
-    console.log('Add new showtime');
-    // Navigate to add showtime page or open a modal
+    setOpenCreateDialog(true);
   };
 
   const handleViewDetails = (id: string) => {
@@ -162,21 +163,27 @@ const Showtimes = () => {
   };
 
   return (
-    <CustomDataGrid
-      title="Showtimes Management"
-      loading={loading}
-      rows={mockShowtimes}
-      columns={columns}
-      onAddNew={handleAddNewShowtime}
-      addButtonText="Add New Showtime"
-      selectedRows={selectedRows}
-      onRowSelectionChange={setSelectedRows}
-      onDeleteSelected={handleDeleteSelected}
-      showCheckboxSelection={true}
-      getRowId={(row) => row.showtime_id}
-      pageSize={10}
-      pageSizeOptions={[10, 20, 50]}
-    />
+    <>
+      <CustomDataGrid
+        title="Showtimes Management"
+        loading={loading}
+        rows={mockShowtimes}
+        columns={columns}
+        onAddNew={handleAddNewShowtime}
+        addButtonText="Add New Showtime"
+        selectedRows={selectedRows}
+        onRowSelectionChange={setSelectedRows}
+        onDeleteSelected={handleDeleteSelected}
+        showCheckboxSelection={true}
+        getRowId={(row) => row.showtime_id}
+        pageSize={10}
+        pageSizeOptions={[10, 20, 50]}
+      />
+      <CreateShowtimeDialog
+        open={openCreateDialog}
+        onClose={() => setOpenCreateDialog(false)}
+      />
+    </>
   );
 };
 
