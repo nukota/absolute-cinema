@@ -6,7 +6,7 @@ import { mockShowtimes, mockProducts } from '../../utils/mockdata';
 import { formatDateLong, formatTime } from '../../utils/helper';
 
 // Enhanced Paper component with animated gradient background and border
-const EnhancedPaper = styled(Paper)(({ theme }) => ({
+const EnhancedPaper = styled(Paper)(() => ({
   background: 'linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(99, 102, 241, 0.15) 50%, rgba(236, 72, 153, 0.1) 100%)',
   backdropFilter: 'blur(10px)',
   border: '1px solid rgba(156, 39, 176, 0.2)',

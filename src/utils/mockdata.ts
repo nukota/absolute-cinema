@@ -1,13 +1,11 @@
-import type {
-  CinemaDTO,
-  CustomerDTO,
-  InvoiceDTO,
-  MovieDTO,
-  ProductDTO,
-  RatingDTO,
-  RoomDTO,
-  ShowtimeDTO,
-} from "./dtos/admin";
+import type { CinemaDTO } from "./dtos/cinemaDTO";
+import type { CustomerDTO } from "./dtos/customerDTO";
+import type { InvoiceDTO } from "./dtos/invoiceDTO";
+import type { MovieDTO } from "./dtos/movieDTO";
+import type { ProductDTO } from "./dtos/productDTO";
+import type { RatingDTO } from "./dtos/ratingDTO";
+import type { RoomDTO } from "./dtos/roomDTO";
+import type { ShowtimeDTO } from "./dtos/showtimeDTO";
 import {
   InvoiceStatus,
   PaymentMethod,
@@ -42,7 +40,7 @@ export type {
   RatingDTO,
   RoomDTO,
   ShowtimeDTO,
-} from "./dtos/admin";
+};
 
 export const mockCustomers: CustomerDTO[] = [
   {
@@ -973,28 +971,24 @@ export const mockCinemas: CinemaDTO[] = [
     cinema_id: "C001",
     name: "Starlight Cinema",
     address: "123 Nguyen Hue Street",
-    employee_count: 50,
     room_count: 8,
   },
   {
     cinema_id: "C002",
     name: "Galaxy Movies",
     address: "456 Le Van Sy Street",
-    employee_count: 40,
     room_count: 6,
   },
   {
     cinema_id: "C003",
     name: "Premier Cinema",
     address: "789 Nguyen Van Linh Boulevard",
-    employee_count: 60,
     room_count: 10,
   },
   {
     cinema_id: "C004",
     name: "Elite Films Binh Thanh",
     address: "321 Xo Viet Nghe Tinh Street",
-    employee_count: 30,
     room_count: 5,
   },
 ];

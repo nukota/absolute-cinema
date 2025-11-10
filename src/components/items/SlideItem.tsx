@@ -10,7 +10,7 @@ import {
   Person,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import type { MovieDTO } from '../../utils/dtos/admin';
+import type { MovieDTO } from '../../utils/dtos/movieDTO';
 
 interface SlideItemProps {
   movie: MovieDTO;

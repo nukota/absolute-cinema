@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import MeetingRoomOutlinedIcon from '@mui/icons-material/MeetingRoomOutlined';
-import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 
 interface CinemaProps {
   cinema: CinemaDTO;
@@ -22,7 +21,7 @@ const Cinema: React.FC<CinemaProps> = ({ cinema, handleInfoClick }) => {
     <Card
       sx={{
         width: 300,
-        height: 220,
+        height: 200,
         display: 'flex',
         flexDirection: 'column',
         border: '2px solid #7c3aed',
@@ -93,16 +92,6 @@ const Cinema: React.FC<CinemaProps> = ({ cinema, handleInfoClick }) => {
               Rooms:{' '}
               <span style={{ fontWeight: 700, color: '#7c3aed' }}>
                 {cinema.room_count}
-              </span>
-            </Typography>
-          </Box>
-
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <GroupOutlinedIcon sx={{ fontSize: 18, color: '#1a1a1a' }} />
-            <Typography variant="body1" sx={{ color: '#1a1a1a' }}>
-              Staff:{' '}
-              <span style={{ fontWeight: 700, color: '#7c3aed' }}>
-                {cinema.employee_count}
               </span>
             </Typography>
           </Box>

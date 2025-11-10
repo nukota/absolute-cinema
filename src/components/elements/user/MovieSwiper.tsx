@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Mousewheel, Navigation } from 'swiper/modules';
-import type { MovieDTO } from '../../../utils/dtos/admin';
+import type { MovieDTO } from '../../../utils/dtos/movieDTO';
 import SlideItem from '../../items/SlideItem';
 import 'swiper/swiper-bundle.css';
 

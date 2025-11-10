@@ -6,7 +6,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import { mockMovies } from '../../../utils/mockdata';
 import { MovieStatus } from '../../../utils/enum';
-import type { MovieDTO } from '../../../utils/dtos/admin';
+import type { MovieDTO } from '../../../utils/dtos/movieDTO';
 
 const HeroSection = () => {
   const navigate = useNavigate();
