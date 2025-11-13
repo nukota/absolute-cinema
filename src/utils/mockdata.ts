@@ -1056,6 +1056,32 @@ export const mockRooms: RoomDTO[] = [
   },
 ];
 
+// Mock seat data for rooms
+export const mockRoomSeats: Record<string, Array<{ row: number; column: number; seat_label: string }>> = {
+  R001: generateSeats(15, 20), // IMAX - 15 rows x 20 columns = 300 seats
+  R002: generateSeats(10, 15), // Standard - 10 rows x 15 columns = 150 seats
+  R003: generateSeats(8, 10),  // VIP - 8 rows x 10 columns = 80 seats
+  R004: generateSeats(10, 12), // 4DX - 10 rows x 12 columns = 120 seats
+  R005: generateSeats(10, 10), // Premium - 10 rows x 10 columns = 100 seats
+  R006: generateSeats(14, 25), // IMAX - 14 rows x 25 columns = 350 seats
+};
+
+function generateSeats(rows: number, cols: number) {
+  const seats = [];
+  for (let row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+      const rowLetter = String.fromCharCode(65 + row); // A=65
+      const colNumber = col + 1;
+      seats.push({
+        row: row + 1,
+        column: col + 1,
+        seat_label: `${rowLetter}${colNumber.toString().padStart(2, '0')}`,
+      });
+    }
+  }
+  return seats;
+}
+
 export const mockProducts: ProductDTO[] = [
   {
     product_id: "P001",

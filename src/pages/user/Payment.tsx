@@ -13,11 +13,21 @@ import {
   RadioGroup,
   TextField,
   Typography,
+  styled,
 } from '@mui/material';
 import { CreditCard, AccountBalance, Smartphone } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { PaymentMethod } from '../../utils/enum';
 import { formatDateLong, formatTime } from '../../utils/helper';
+
+// Enhanced Paper component with animated gradient background and border
+const EnhancedPaper = styled(Paper)(() => ({
+  background: 'linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(99, 102, 241, 0.15) 50%, rgba(236, 72, 153, 0.1) 100%)',
+  backdropFilter: 'blur(10px)',
+  border: '1px solid rgba(156, 39, 176, 0.2)',
+  position: 'relative',
+  overflow: 'hidden',
+}));
 
 const Payment = () => {
   const navigate = useNavigate();
@@ -97,7 +107,7 @@ const Payment = () => {
             {/* Payment Form */}
             <Box>
               {/* Customer Information */}
-              <Paper sx={{ p: 3, mb: 3 }}>
+              <EnhancedPaper sx={{ p: 3, mb: 3 }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   Customer Information
                 </Typography>
@@ -149,10 +159,10 @@ const Payment = () => {
                     }}
                   />
                 </Box>
-              </Paper>
+              </EnhancedPaper>
 
               {/* Payment Method */}
-              <Paper sx={{ p: 3 }}>
+              <EnhancedPaper sx={{ p: 3 }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   Payment Method
                 </Typography>
@@ -163,99 +173,102 @@ const Payment = () => {
                   >
                     <Card
                       sx={{
-                        mb: 2,
-                        border: 2,
-                        borderColor:
-                          paymentMethod === PaymentMethod.Card
-                            ? 'primary.main'
-                            : 'divider',
-                        cursor: 'pointer',
+                      mb: 2,
+                      border: 2,
+                      borderColor:
+                        paymentMethod === PaymentMethod.Card
+                        ? 'primary.main'
+                        : 'divider',
+                      cursor: 'pointer',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
                       }}
                       onClick={() => setPaymentMethod(PaymentMethod.Card)}
                     >
                       <CardContent
-                        sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+                      sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
                       >
-                        <FormControlLabel
-                          value={PaymentMethod.Card}
-                          control={<Radio />}
-                          label=""
-                          sx={{ m: 0 }}
-                        />
-                        <CreditCard color="primary" />
-                        <Box>
-                          <Typography variant="body1" fontWeight={600}>
-                            Credit/Debit Card
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Visa, Mastercard, JCB
-                          </Typography>
-                        </Box>
+                      <FormControlLabel
+                        value={PaymentMethod.Card}
+                        control={<Radio />}
+                        label=""
+                        sx={{ m: 0 }}
+                      />
+                      <CreditCard color="primary" />
+                      <Box>
+                        <Typography variant="body1" fontWeight={600}>
+                        Credit/Debit Card
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                        Visa, Mastercard, JCB
+                        </Typography>
+                      </Box>
                       </CardContent>
                     </Card>
 
                     <Card
                       sx={{
-                        mb: 2,
-                        border: 2,
-                        borderColor:
-                          paymentMethod === PaymentMethod.Banking
-                            ? 'primary.main'
-                            : 'divider',
-                        cursor: 'pointer',
+                      mb: 2,
+                      border: 2,
+                      borderColor:
+                        paymentMethod === PaymentMethod.Banking
+                        ? 'primary.main'
+                        : 'divider',
+                      cursor: 'pointer',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
                       }}
                       onClick={() => setPaymentMethod(PaymentMethod.Banking)}
                     >
                       <CardContent
-                        sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+                      sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
                       >
-                        <FormControlLabel
-                          value={PaymentMethod.Banking}
-                          control={<Radio />}
-                          label=""
-                          sx={{ m: 0 }}
-                        />
-                        <AccountBalance color="primary" />
-                        <Box>
-                          <Typography variant="body1" fontWeight={600}>
-                            Internet Banking
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            All major banks
-                          </Typography>
-                        </Box>
+                      <FormControlLabel
+                        value={PaymentMethod.Banking}
+                        control={<Radio />}
+                        label=""
+                        sx={{ m: 0 }}
+                      />
+                      <AccountBalance color="primary" />
+                      <Box>
+                        <Typography variant="body1" fontWeight={600}>
+                        Internet Banking
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                        All major banks
+                        </Typography>
+                      </Box>
                       </CardContent>
                     </Card>
 
                     <Card
                       sx={{
-                        border: 2,
-                        borderColor:
-                          paymentMethod === PaymentMethod.Momo
-                            ? 'primary.main'
-                            : 'divider',
-                        cursor: 'pointer',
+                      border: 2,
+                      borderColor:
+                        paymentMethod === PaymentMethod.Momo
+                        ? 'primary.main'
+                        : 'divider',
+                      cursor: 'pointer',
+                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
                       }}
                       onClick={() => setPaymentMethod(PaymentMethod.Momo)}
                     >
                       <CardContent
-                        sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+                      sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
                       >
-                        <FormControlLabel
-                          value={PaymentMethod.Momo}
-                          control={<Radio />}
-                          label=""
-                          sx={{ m: 0 }}
-                        />
-                        <Smartphone color="primary" />
-                        <Box>
-                          <Typography variant="body1" fontWeight={600}>
-                            MoMo E-Wallet
-                          </Typography>
-                          <Typography variant="caption" color="text.secondary">
-                            Fast and secure
-                          </Typography>
-                        </Box>
+                      <FormControlLabel
+                        value={PaymentMethod.Momo}
+                        control={<Radio />}
+                        label=""
+                        sx={{ m: 0 }}
+                      />
+                      <Smartphone color="primary" />
+                      <Box>
+                        <Typography variant="body1" fontWeight={600}>
+                        MoMo E-Wallet
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                        Fast and secure
+                        </Typography>
+                      </Box>
                       </CardContent>
                     </Card>
                   </RadioGroup>
@@ -294,12 +307,12 @@ const Payment = () => {
                     <TextField label="Cardholder Name" required fullWidth />
                   </Box>
                 )}
-              </Paper>
+              </EnhancedPaper>
             </Box>
 
             {/* Order Summary */}
             <Box>
-              <Paper sx={{ p: 3, position: 'sticky', top: 24 }}>
+              <EnhancedPaper sx={{ p: 3, position: 'sticky', top: 24 }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   Order Summary
                 </Typography>
@@ -447,7 +460,7 @@ const Payment = () => {
                 >
                   Back
                 </Button>
-              </Paper>
+              </EnhancedPaper>
             </Box>
           </Box>
         </form>

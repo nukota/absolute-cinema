@@ -2,14 +2,33 @@ import { useState } from 'react';
 import CustomTabs from '../../components/layouts/Tabs';
 import Room from '../../components/items/Room';
 import { mockRooms, mockCinemas } from '../../utils/mockdata';
+import type { RoomDTO } from '../../utils/dtos/roomDTO';
 import CreateRoomDialog from '../../components/dialogs/create-dialogs/CreateRoomDialog';
+import DetailRoomDialog from '../../components/dialogs/detail-dialogs/DetailRoomDialog';
 
 const Rooms = () => {
   const [loading] = useState(false);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<RoomDTO | null>(null);
 
   const handleAddNew = () => {
     setOpenCreateDialog(true);
+  };
+
+  const handleInfoClick = (room: RoomDTO) => {
+    setSelectedRoom(room);
+    setOpenDetailDialog(true);
+  };
+
+  const handleSave = (room: RoomDTO) => {
+    console.log('Saving room:', room);
+    setOpenDetailDialog(false);
+  };
+
+  const handleDelete = () => {
+    console.log('Deleting room:', selectedRoom?.room_id);
+    setOpenDetailDialog(false);
   };
 
   // Generate cinema options from mockCinemas
@@ -42,7 +61,7 @@ const Rooms = () => {
             <Room
               key={room.room_id}
               room={room}
-              handleInfoClick={() => console.log('Room clicked:', room.room_id)}
+              handleInfoClick={() => handleInfoClick(room)}
             />
           ))
         }
@@ -50,6 +69,13 @@ const Rooms = () => {
       <CreateRoomDialog
         open={openCreateDialog}
         onClose={() => setOpenCreateDialog(false)}
+      />
+      <DetailRoomDialog
+        open={openDetailDialog}
+        onClose={() => setOpenDetailDialog(false)}
+        room={selectedRoom}
+        onSave={handleSave}
+        onDelete={handleDelete}
       />
     </>
   );

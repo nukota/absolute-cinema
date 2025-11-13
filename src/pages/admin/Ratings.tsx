@@ -10,14 +10,26 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CustomDataGrid from '../../components/layouts/DataGrid';
 import { mockRatings } from '../../utils/mockdata';
 import type { GridColDef } from '@mui/x-data-grid';
+import type { RatingDTO } from '../../utils/dtos/ratingDTO';
+import DetailRatingDialog from '../../components/dialogs/detail-dialogs/DetailRatingDialog';
 
 const Ratings = () => {
   const [loading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedRating, setSelectedRating] = useState<RatingDTO | null>(null);
 
   const handleViewDetails = (id: string) => {
-    console.log('View details for rating:', id);
-    // Navigate to rating details page or open a modal
+    const rating = mockRatings.find((r) => r.rating_id === id);
+    if (rating) {
+      setSelectedRating(rating);
+      setOpenDetailDialog(true);
+    }
+  };
+
+  const handleDelete = () => {
+    console.log('Deleting rating:', selectedRating?.rating_id);
+    setOpenDetailDialog(false);
   };
 
   const columns: GridColDef[] = [
@@ -140,19 +152,27 @@ const Ratings = () => {
   };
 
   return (
-    <CustomDataGrid
-      title="Ratings Management"
-      loading={loading}
-      rows={mockRatings}
-      columns={columns}
-      selectedRows={selectedRows}
-      onRowSelectionChange={setSelectedRows}
-      onDeleteSelected={handleDeleteSelected}
-      showCheckboxSelection={true}
-      getRowId={(row) => row.rating_id}
-      pageSize={10}
-      pageSizeOptions={[10, 20, 50]}
-    />
+    <>
+      <CustomDataGrid
+        title="Ratings Management"
+        loading={loading}
+        rows={mockRatings}
+        columns={columns}
+        selectedRows={selectedRows}
+        onRowSelectionChange={setSelectedRows}
+        onDeleteSelected={handleDeleteSelected}
+        showCheckboxSelection={true}
+        getRowId={(row) => row.rating_id}
+        pageSize={10}
+        pageSizeOptions={[10, 20, 50]}
+      />
+      <DetailRatingDialog
+        open={openDetailDialog}
+        onClose={() => setOpenDetailDialog(false)}
+        rating={selectedRating}
+        onDelete={handleDelete}
+      />
+    </>
   );
 };
 

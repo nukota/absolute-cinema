@@ -4,14 +4,31 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CustomDataGrid from '../../components/layouts/DataGrid';
 import { mockInvoices } from '../../utils/mockdata';
 import type { GridColDef } from '@mui/x-data-grid';
+import type { InvoiceDTO } from '../../utils/dtos/invoiceDTO';
+import DetailInvoiceDialog from '../../components/dialogs/detail-dialogs/DetailInvoiceDialog';
 
 const Invoices = () => {
   const [loading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<InvoiceDTO | null>(null);
 
   const handleViewDetails = (id: string) => {
-    console.log('View details for invoice:', id);
-    // Navigate to invoice details page or open a modal
+    const invoice = mockInvoices.find((i) => i.invoice_id === id);
+    if (invoice) {
+      setSelectedInvoice(invoice);
+      setOpenDetailDialog(true);
+    }
+  };
+
+  const handleSave = (invoice: InvoiceDTO) => {
+    console.log('Saving invoice:', invoice);
+    setOpenDetailDialog(false);
+  };
+
+  const handleDelete = () => {
+    console.log('Deleting invoice:', selectedInvoice?.invoice_id);
+    setOpenDetailDialog(false);
   };
 
   const columns: GridColDef[] = [
@@ -111,19 +128,28 @@ const Invoices = () => {
   };
 
   return (
-    <CustomDataGrid
-      title="Invoices Management"
-      loading={loading}
-      rows={mockInvoices}
-      columns={columns}
-      selectedRows={selectedRows}
-      onRowSelectionChange={setSelectedRows}
-      onDeleteSelected={handleDeleteSelected}
-      showCheckboxSelection={true}
-      getRowId={(row) => row.invoice_id}
-      pageSize={10}
-      pageSizeOptions={[10, 20, 50]}
-    />
+    <>
+      <CustomDataGrid
+        title="Invoices Management"
+        loading={loading}
+        rows={mockInvoices}
+        columns={columns}
+        selectedRows={selectedRows}
+        onRowSelectionChange={setSelectedRows}
+        onDeleteSelected={handleDeleteSelected}
+        showCheckboxSelection={true}
+        getRowId={(row) => row.invoice_id}
+        pageSize={10}
+        pageSizeOptions={[10, 20, 50]}
+      />
+      <DetailInvoiceDialog
+        open={openDetailDialog}
+        onClose={() => setOpenDetailDialog(false)}
+        invoice={selectedInvoice}
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
+    </>
   );
 };
 

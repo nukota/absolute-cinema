@@ -4,20 +4,37 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CustomDataGrid from '../../components/layouts/DataGrid';
 import { mockCustomers } from '../../utils/mockdata';
 import type { GridColDef } from '@mui/x-data-grid';
+import type { CustomerDTO } from '../../utils/dtos/customerDTO';
 import CreateCustomerDialog from '../../components/dialogs/create-dialogs/CreateCustomerDialog';
+import DetailCustomerDialog from '../../components/dialogs/detail-dialogs/DetailCustomerDialog';
 
 const Customers = () => {
   const [loading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerDTO | null>(null);
 
   const handleAddNewCustomer = () => {
     setOpenCreateDialog(true);
   };
 
   const handleViewDetails = (id: string) => {
-    console.log('View details for customer:', id);
-    // Navigate to customer details page or open a modal
+    const customer = mockCustomers.find((c) => c.customer_id === id);
+    if (customer) {
+      setSelectedCustomer(customer);
+      setOpenDetailDialog(true);
+    }
+  };
+
+  const handleSave = (customer: CustomerDTO) => {
+    console.log('Saving customer:', customer);
+    setOpenDetailDialog(false);
+  };
+
+  const handleDelete = () => {
+    console.log('Deleting customer:', selectedCustomer?.customer_id);
+    setOpenDetailDialog(false);
   };
 
   const columns: GridColDef[] = [
@@ -105,6 +122,13 @@ const Customers = () => {
       <CreateCustomerDialog
         open={openCreateDialog}
         onClose={() => setOpenCreateDialog(false)}
+      />
+      <DetailCustomerDialog
+        open={openDetailDialog}
+        onClose={() => setOpenDetailDialog(false)}
+        customer={selectedCustomer}
+        onSave={handleSave}
+        onDelete={handleDelete}
       />
     </>
   );

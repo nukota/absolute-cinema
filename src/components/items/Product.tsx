@@ -4,12 +4,14 @@ import TextureImg from '../../assets/images/texture.png';
 
 interface ProductProps {
   product: ProductDTO;
+  handleInfoClick?: (product: ProductDTO) => void;
 }
 
-const Product = ({ product }: ProductProps) => {
-  const handleInfoClick = () => {
-    console.log('Product clicked:', product.product_id);
-    // Handle product click
+const Product = ({ product, handleInfoClick }: ProductProps) => {
+  const handleClick = () => {
+    if (handleInfoClick) {
+      handleInfoClick(product);
+    }
   };
 
   return (
@@ -19,7 +21,7 @@ const Product = ({ product }: ProductProps) => {
         height: 240,
         cursor: 'pointer',
       }}
-      onClick={handleInfoClick}
+      onClick={handleClick}
     >
       <Box
         sx={{

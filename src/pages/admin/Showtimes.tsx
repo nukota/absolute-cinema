@@ -4,20 +4,37 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CustomDataGrid from '../../components/layouts/DataGrid';
 import { mockShowtimes } from '../../utils/mockdata';
 import type { GridColDef } from '@mui/x-data-grid';
+import type { ShowtimeDTO } from '../../utils/dtos/showtimeDTO';
 import CreateShowtimeDialog from '../../components/dialogs/create-dialogs/CreateShowtimeDialog';
+import DetailShowtimeDialog from '../../components/dialogs/detail-dialogs/DetailShowtimeDialog';
 
 const Showtimes = () => {
   const [loading] = useState(false);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedShowtime, setSelectedShowtime] = useState<ShowtimeDTO | null>(null);
 
   const handleAddNewShowtime = () => {
     setOpenCreateDialog(true);
   };
 
   const handleViewDetails = (id: string) => {
-    console.log('View details for showtime:', id);
-    // Navigate to showtime details page or open a modal
+    const showtime = mockShowtimes.find((s) => s.showtime_id === id);
+    if (showtime) {
+      setSelectedShowtime(showtime);
+      setOpenDetailDialog(true);
+    }
+  };
+
+  const handleSave = (showtime: ShowtimeDTO) => {
+    console.log('Saving showtime:', showtime);
+    setOpenDetailDialog(false);
+  };
+
+  const handleDelete = () => {
+    console.log('Deleting showtime:', selectedShowtime?.showtime_id);
+    setOpenDetailDialog(false);
   };
 
   const columns: GridColDef[] = [
@@ -182,6 +199,13 @@ const Showtimes = () => {
       <CreateShowtimeDialog
         open={openCreateDialog}
         onClose={() => setOpenCreateDialog(false)}
+      />
+      <DetailShowtimeDialog
+        open={openDetailDialog}
+        onClose={() => setOpenDetailDialog(false)}
+        showtime={selectedShowtime}
+        onSave={handleSave}
+        onDelete={handleDelete}
       />
     </>
   );

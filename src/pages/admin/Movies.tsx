@@ -2,12 +2,16 @@ import { useState } from 'react';
 import CustomTabs from '../../components/layouts/Tabs';
 import Movie from '../../components/items/Movie';
 import { mockMovies } from '../../utils/mockdata';
+import type { MovieDTO } from '../../utils/dtos/movieDTO';
 import CreateMovieDialog from '../../components/dialogs/create-dialogs/CreateMovieDialog';
+import DetailMovieDialog from '../../components/dialogs/detail-dialogs/DetailMovieDialog';
 
 const Movies = () => {
   const [activeTab, setActiveTab] = useState('All');
   const [loading] = useState(false);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openDetailDialog, setOpenDetailDialog] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState<MovieDTO | null>(null);
 
   const tabs = [
     { label: 'All', value: 'All' },
@@ -19,6 +23,21 @@ const Movies = () => {
 
   const handleAddNew = () => {
     setOpenCreateDialog(true);
+  };
+
+  const handleInfoClick = (movie: MovieDTO) => {
+    setSelectedMovie(movie);
+    setOpenDetailDialog(true);
+  };
+
+  const handleSave = (movie: MovieDTO) => {
+    console.log('Saving movie:', movie);
+    setOpenDetailDialog(false);
+  };
+
+  const handleDelete = () => {
+    console.log('Deleting movie:', selectedMovie?.movie_id);
+    setOpenDetailDialog(false);
   };
 
   return (
@@ -42,9 +61,7 @@ const Movies = () => {
             <Movie
               key={movie.movie_id}
               movie={movie}
-              handleInfoClick={() =>
-                console.log('Movie clicked:', movie.movie_id)
-              }
+              handleInfoClick={() => handleInfoClick(movie)}
             />
           ))
         }
@@ -52,6 +69,13 @@ const Movies = () => {
       <CreateMovieDialog
         open={openCreateDialog}
         onClose={() => setOpenCreateDialog(false)}
+      />
+      <DetailMovieDialog
+        open={openDetailDialog}
+        onClose={() => setOpenDetailDialog(false)}
+        movie={selectedMovie}
+        onSave={handleSave}
+        onDelete={handleDelete}
       />
     </>
   );

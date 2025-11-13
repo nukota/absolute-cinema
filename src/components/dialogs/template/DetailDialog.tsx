@@ -16,6 +16,7 @@ interface DetailDialogProps {
   onSave?: () => void;
   onCancel?: () => void;
   onDelete?: () => void;
+  showImage?: string;
 }
 
 const DetailDialog: React.FC<DetailDialogProps> = ({
@@ -29,6 +30,7 @@ const DetailDialog: React.FC<DetailDialogProps> = ({
   onSave,
   onCancel,
   onDelete,
+  showImage,
 }) => {
   const actions: DialogAction[] = [
     {
@@ -85,6 +87,7 @@ const DetailDialog: React.FC<DetailDialogProps> = ({
       sections={sectionsWithReadOnlyState}
       actions={actions}
       error={error}
+      showImage={showImage}
     />
   );
 };
