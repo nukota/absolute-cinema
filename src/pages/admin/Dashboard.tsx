@@ -6,6 +6,8 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Paper,
+  styled,
 } from '@mui/material';
 import {
   TrendingUpOutlined,
@@ -15,6 +17,16 @@ import {
 } from '@mui/icons-material';
 import { LineChart, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, Line, PieChart, Cell, Pie } from 'recharts';
 import StatCard from '../../components/items/StatCard';
+
+// Enhanced Paper component with gradient background
+const EnhancedPaper = styled(Paper)(({ theme }) => ({
+  background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%)',
+  backdropFilter: 'blur(10px)',
+  borderRadius: theme.spacing(2),
+  border: '1px solid rgba(0, 0, 0, 0.08)',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
+  transition: 'all 0.3s ease',
+}));
 
 const Dashboard = () => {
   const [selectedMonth, setSelectedMonth] = useState('10');
@@ -166,39 +178,78 @@ const Dashboard = () => {
         }}
       >
         {/* Revenue Line Chart */}
-        <Box
-          sx={{
-            p: 3,
-            borderRadius: 3,
-            backgroundColor: 'white',
-          }}
-        >
-          <Typography variant="h6" fontWeight={600} mb={2}>
-            Revenue Overview
-          </Typography>
+        <EnhancedPaper sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: 2,
+                background: 'linear-gradient(135deg, #4caf50 0%, #81c784 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 2,
+              }}
+            >
+              <AttachMoneyOutlined sx={{ color: 'white' }} />
+            </Box>
+            <Typography variant="h6" fontWeight={700}>
+              Revenue Overview
+            </Typography>
+          </Box>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={revenueLineData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="week" />
-              <YAxis />
-              <Tooltip />
+              <defs>
+                <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#4caf50" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#4caf50" stopOpacity={0.1}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+              <XAxis dataKey="week" stroke="#666" />
+              <YAxis stroke="#666" />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: 8,
+                }}
+              />
               <Legend />
-              <Line type="monotone" dataKey="revenue" stroke="#4caf50" />
+              <Line 
+                type="monotone" 
+                dataKey="revenue" 
+                stroke="#4caf50" 
+                strokeWidth={3}
+                dot={{ fill: '#4caf50', r: 5 }}
+                activeDot={{ r: 7 }}
+              />
             </LineChart>
           </ResponsiveContainer>
-        </Box>
+        </EnhancedPaper>
 
         {/* Genre Distribution Pie Chart */}
-        <Box
-          sx={{
-            p: 3,
-            borderRadius: 3,
-            backgroundColor: 'white',
-          }}
-        >
-          <Typography variant="h6" fontWeight={600} mb={2}>
-            Genre Distribution
-          </Typography>
+        <EnhancedPaper sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: 2,
+                background: 'linear-gradient(135deg, #ff9800 0%, #ffb74d 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 2,
+              }}
+            >
+              <MovieOutlined sx={{ color: 'white' }} />
+            </Box>
+            <Typography variant="h6" fontWeight={700}>
+              Genre Distribution
+            </Typography>
+          </Box>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -213,13 +264,19 @@ const Dashboard = () => {
                 cornerRadius={7}
               >
                 {genrePieData.map((_, index) => (
-                  <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'][index % 5]} />
+                  <Cell key={`cell-${index}`} fill={['#667eea', '#00d4ff', '#f093fb', '#4facfe', '#fa709a'][index % 5]} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: 8,
+                }}
+              />
             </PieChart>
           </ResponsiveContainer>
-        </Box>
+        </EnhancedPaper>
       </Box>
 
       <Box
@@ -230,50 +287,106 @@ const Dashboard = () => {
         }}
       >
         {/* Top Movies Bar Chart */}
-        <Box
-          sx={{
-            p: 3,
-            borderRadius: 3,
-            backgroundColor: 'white',
-          }}
-        >
-          <Typography variant="h6" fontWeight={600} mb={2}>
-            Top Movies
-          </Typography>
+        <EnhancedPaper sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: 2,
+                background: 'linear-gradient(135deg, #9c27b0 0%, #ba68c8 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 2,
+              }}
+            >
+              <TrendingUpOutlined sx={{ color: 'white' }} />
+            </Box>
+            <Typography variant="h6" fontWeight={700}>
+              Top Movies
+            </Typography>
+          </Box>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={topMoviesData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="movie" />
-              <YAxis />
-              <Tooltip />
+              <defs>
+                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#9c27b0" stopOpacity={0.9}/>
+                  <stop offset="95%" stopColor="#ce93d8" stopOpacity={0.6}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+              <XAxis dataKey="movie" stroke="#666" />
+              <YAxis stroke="#666" />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: 8,
+                }}
+              />
               <Legend />
-              <Bar dataKey="tickets" fill="#9c27b0" radius={[4, 4, 0, 0]} maxBarSize={40} />
+              <Bar 
+                dataKey="tickets" 
+                fill="url(#barGradient)" 
+                radius={[8, 8, 0, 0]} 
+                maxBarSize={30}
+              />
             </BarChart>
           </ResponsiveContainer>
-        </Box>
+        </EnhancedPaper>
 
         {/* Tickets Sold Line Chart */}
-        <Box
-          sx={{
-            p: 3,
-            borderRadius: 3,
-            backgroundColor: 'white',
-          }}
-        >
-          <Typography variant="h6" fontWeight={600} mb={2}>
-            Tickets Sold
-          </Typography>
+        <EnhancedPaper sx={{ p: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+            <Box
+              sx={{
+                width: 40,
+                height: 40,
+                borderRadius: 2,
+                background: 'linear-gradient(135deg, #2196f3 0%, #64b5f6 100%)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                mr: 2,
+              }}
+            >
+              <PeopleOutlined sx={{ color: 'white' }} />
+            </Box>
+            <Typography variant="h6" fontWeight={700}>
+              Tickets Sold
+            </Typography>
+          </Box>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={lineData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="week" />
-              <YAxis />
-              <Tooltip />
+              <defs>
+                <linearGradient id="ticketsGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#2196f3" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#2196f3" stopOpacity={0.1}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+              <XAxis dataKey="week" stroke="#666" />
+              <YAxis stroke="#666" />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  border: '1px solid #e0e0e0',
+                  borderRadius: 8,
+                }}
+              />
               <Legend />
-              <Line type="monotone" dataKey="tickets" stroke="#2196f3" strokeWidth={2} />
+              <Line 
+                type="monotone" 
+                dataKey="tickets" 
+                stroke="#2196f3" 
+                strokeWidth={3}
+                dot={{ fill: '#2196f3', r: 5 }}
+                activeDot={{ r: 7 }}
+              />
             </LineChart>
           </ResponsiveContainer>
-        </Box>
+        </EnhancedPaper>
       </Box>
     </Box>
   );

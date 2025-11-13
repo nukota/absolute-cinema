@@ -8,6 +8,8 @@ import {
   Divider,
   ListItemIcon,
   Badge,
+  Popover,
+  Paper,
 } from "@mui/material";
 import {
   NotificationsRounded,
@@ -18,10 +20,16 @@ import {
   CalendarTodayRounded,
 } from "@mui/icons-material";
 import { useState } from "react";
+import { LocalizationProvider, DateCalendar } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [calendarAnchor, setCalendarAnchor] = useState<null | HTMLElement>(null);
+  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const open = Boolean(anchorEl);
+  const calendarOpen = Boolean(calendarAnchor);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -29,6 +37,18 @@ export const Header = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleCalendarClick = (event: React.MouseEvent<HTMLElement>) => {
+    setCalendarAnchor(event.currentTarget);
+  };
+
+  const handleCalendarClose = () => {
+    setCalendarAnchor(null);
+  };
+
+  const handleDateChange = (newDate: Dayjs | null) => {
+    setSelectedDate(newDate);
   };
 
   return (
@@ -52,7 +72,7 @@ export const Header = () => {
         }}
       >
         {/* Icon Buttons */}
-        <IconButton color="default" sx={{ p: 1.25 }}>
+        <IconButton color="default" sx={{ p: 1.25 }} onClick={handleCalendarClick}>
           <CalendarTodayRounded sx={{ fontSize: 24 }} />
         </IconButton>
 
@@ -95,6 +115,30 @@ export const Header = () => {
             </Avatar>
           </IconButton>
         </Box>
+
+        {/* Calendar Popover */}
+        <Popover
+          open={calendarOpen}
+          anchorEl={calendarAnchor}
+          onClose={handleCalendarClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <Paper elevation={3}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateCalendar
+                value={selectedDate}
+                onChange={handleDateChange}
+              />
+            </LocalizationProvider>
+          </Paper>
+        </Popover>
 
         {/* Profile Menu */}
         <Menu
