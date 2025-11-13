@@ -6,6 +6,8 @@ import type { ProductDTO } from "./dtos/productDTO";
 import type { RatingDTO } from "./dtos/ratingDTO";
 import type { RoomDTO } from "./dtos/roomDTO";
 import type { ShowtimeDTO } from "./dtos/showtimeDTO";
+import type { DashboardData } from "./dtos/dashboardDTO";
+import { generateDailyDataPoints } from "./helper";
 import {
   InvoiceStatus,
   PaymentMethod,
@@ -1188,3 +1190,51 @@ export const mockBookingHistory = [
     status: "Completed",
   },
 ];
+
+// Mock dashboard data generator
+export const generateMockDashboardData = (yearMonth: string): DashboardData => {
+  const [year, month] = yearMonth.split('-').map(Number);
+  const datePoints = generateDailyDataPoints(year, month);
+  
+  // Generate realistic data for each 2-day period
+  const dailyData = datePoints.map((date) => {
+    const baseRevenue = 4000 + Math.random() * 2000;
+    const baseTickets = 300 + Math.random() * 150;
+    
+    // Add some variation - weekends are busier
+    const dayOfWeek = new Date(date).getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    const multiplier = isWeekend ? 1.3 : 1.0;
+    
+    return {
+      date,
+      revenue: Math.round(baseRevenue * multiplier),
+      tickets: Math.round(baseTickets * multiplier),
+    };
+  });
+
+  return {
+    stats: {
+      total_revenue: dailyData.reduce((sum, d) => sum + d.revenue, 0),
+      total_customers: 1234 + Math.floor(Math.random() * 500),
+      movies_showing: 24,
+      tickets_sold: dailyData.reduce((sum, d) => sum + d.tickets, 0),
+    },
+    daily_data: dailyData,
+    genre_distribution: [
+      { genre: 'Action', percentage: 35 },
+      { genre: 'Drama', percentage: 25 },
+      { genre: 'Comedy', percentage: 20 },
+      { genre: 'Sci-Fi', percentage: 15 },
+      { genre: 'Horror', percentage: 5 },
+    ],
+    top_movies: [
+      { movie_name: 'Avengers: Endgame', tickets_sold: 450 },
+      { movie_name: 'Spider-Man: No Way Home', tickets_sold: 380 },
+      { movie_name: 'The Batman', tickets_sold: 320 },
+      { movie_name: 'Inception', tickets_sold: 280 },
+      { movie_name: 'Interstellar', tickets_sold: 250 },
+    ],
+    month: yearMonth,
+  };
+};

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Box,
   Typography,
@@ -17,6 +17,8 @@ import {
 } from '@mui/icons-material';
 import { LineChart, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Bar, Line, PieChart, Cell, Pie } from 'recharts';
 import StatCard from '../../components/items/StatCard';
+import { generateLast12Months, formatDateRange } from '../../utils/helper';
+import { generateMockDashboardData } from '../../utils/mockdata';
 
 // Enhanced Paper component with gradient background
 const EnhancedPaper = styled(Paper)(({ theme }) => ({
@@ -29,85 +31,61 @@ const EnhancedPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const Dashboard = () => {
-  const [selectedMonth, setSelectedMonth] = useState('10');
+  // Generate last 12 months
+  const months = useMemo(() => generateLast12Months(), []);
+  
+  // Set default to current month
+  const [selectedMonth, setSelectedMonth] = useState(months[0].value);
+
+  // Generate dashboard data based on selected month
+  const dashboardData = useMemo(() => generateMockDashboardData(selectedMonth), [selectedMonth]);
 
   const stats = [
     {
       title: 'Total Revenue',
-      value: '$45,231',
+      value: `$${(dashboardData.stats.total_revenue / 1000).toFixed(1)}k`,
       icon: <AttachMoneyOutlined />,
       color: '#4caf50',
     },
     {
       title: 'Total Customers',
-      value: '1,234',
+      value: dashboardData.stats.total_customers.toLocaleString(),
       icon: <PeopleOutlined />,
       color: '#2196f3',
     },
     {
       title: 'Movies Showing',
-      value: '24',
+      value: dashboardData.stats.movies_showing.toString(),
       icon: <MovieOutlined />,
       color: '#ff9800',
     },
     {
       title: 'Tickets Sold',
-      value: '3,456',
+      value: dashboardData.stats.tickets_sold.toLocaleString(),
       icon: <TrendingUpOutlined />,
       color: '#9c27b0',
     },
   ];
 
-  const months = [
-    { value: '1', label: 'January' },
-    { value: '2', label: 'February' },
-    { value: '3', label: 'March' },
-    { value: '4', label: 'April' },
-    { value: '5', label: 'May' },
-    { value: '6', label: 'June' },
-    { value: '7', label: 'July' },
-    { value: '8', label: 'August' },
-    { value: '9', label: 'September' },
-    { value: '10', label: 'October' },
-    { value: '11', label: 'November' },
-    { value: '12', label: 'December' },
-  ];
-
-  // Chart data
-  const revenueData = [4200, 3800, 4500, 5200, 4800, 5500, 6200];
-  const ticketsData = [320, 280, 340, 390, 360, 410, 450];
-  const xLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7'];
-
-  const genreData = [
-    { id: 0, value: 35, label: 'Action' },
-    { id: 1, value: 25, label: 'Drama' },
-    { id: 2, value: 20, label: 'Comedy' },
-    { id: 3, value: 15, label: 'Sci-Fi' },
-    { id: 4, value: 5, label: 'Horror' },
-  ];
-
-  const topMoviesData = [
-    { movie: 'Avengers', tickets: 450 },
-    { movie: 'Spider-Man', tickets: 380 },
-    { movie: 'Batman', tickets: 320 },
-    { movie: 'Inception', tickets: 280 },
-    { movie: 'Interstellar', tickets: 250 },
-  ];
-
-  // Prepare data for Recharts
-  const lineData = xLabels.map((label, index) => ({
-    week: label,
-    tickets: ticketsData[index],
+  // Prepare data for line charts (one point per 2 days)
+  const lineData = dashboardData.daily_data.map((data) => ({
+    date: formatDateRange(data.date),
+    tickets: data.tickets,
   }));
 
-  const revenueLineData = xLabels.map((label, index) => ({
-    week: label,
-    revenue: revenueData[index],
+  const revenueLineData = dashboardData.daily_data.map((data) => ({
+    date: formatDateRange(data.date),
+    revenue: data.revenue,
   }));
 
-  const genrePieData = genreData.map(item => ({
-    name: item.label,
-    value: item.value,
+  const genrePieData = dashboardData.genre_distribution.map(item => ({
+    name: item.genre,
+    value: item.percentage,
+  }));
+
+  const topMoviesData = dashboardData.top_movies.map(movie => ({
+    movie: movie.movie_name,
+    tickets: movie.tickets_sold,
   }));
 
   return (
@@ -207,7 +185,7 @@ const Dashboard = () => {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-              <XAxis dataKey="week" stroke="#666" />
+              <XAxis dataKey="date" stroke="#666" />
               <YAxis stroke="#666" />
               <Tooltip 
                 contentStyle={{
@@ -222,8 +200,8 @@ const Dashboard = () => {
                 dataKey="revenue" 
                 stroke="#4caf50" 
                 strokeWidth={3}
-                dot={{ fill: '#4caf50', r: 5 }}
-                activeDot={{ r: 7 }}
+                dot={{ fill: '#4caf50', r: 3 }}
+                activeDot={{ r: 5 }}
               />
             </LineChart>
           </ResponsiveContainer>
@@ -366,7 +344,7 @@ const Dashboard = () => {
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-              <XAxis dataKey="week" stroke="#666" />
+              <XAxis dataKey="date" stroke="#666" />
               <YAxis stroke="#666" />
               <Tooltip 
                 contentStyle={{
@@ -381,8 +359,8 @@ const Dashboard = () => {
                 dataKey="tickets" 
                 stroke="#2196f3" 
                 strokeWidth={3}
-                dot={{ fill: '#2196f3', r: 5 }}
-                activeDot={{ r: 7 }}
+                dot={{ fill: '#2196f3', r: 3 }}
+                activeDot={{ r: 5 }}
               />
             </LineChart>
           </ResponsiveContainer>
