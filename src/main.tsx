@@ -4,6 +4,7 @@ import './index.css'
 import App from './App.tsx'
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from '@mui/material';
+import { FeedbackProvider } from './provider/FeedbackProvider';
 
 const theme = createTheme({
   palette: {
@@ -21,9 +22,11 @@ const theme = createTheme({
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-   <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline /> {/* ensures consistent base styles */}
-      <App />
+      <FeedbackProvider>
+        <App />
+      </FeedbackProvider>
     </ThemeProvider>
   </StrictMode>,
 )

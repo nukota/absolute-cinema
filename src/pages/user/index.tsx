@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { Outlet } from 'react-router-dom';
 import Header from '../../components/elements/user/Header';
 import Footer from '../../components/elements/user/Footer';
+import Chatbot from '../../components/elements/user/Chatbot';
 import userTheme from '../../theme/userTheme';
 
 const UserLayout = () => {
@@ -20,6 +21,9 @@ const UserLayout = () => {
 
         {/* Footer */}
         <Footer />
+
+        {/* Chatbot */}
+        <Chatbot />
       </Box>
     </ThemeProvider>
   );
