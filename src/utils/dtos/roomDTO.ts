@@ -15,7 +15,7 @@ export interface CreateRoomDTO {
   name: string;
   seats: {
     row: number;
-    column: number;
+    col: number;
     seat_label: string;
   }[];
 }
@@ -26,18 +26,17 @@ export interface UpdateRoomDTO {
   // nếu đổi cả hai thì coi như tạo lại từ đầu :v
   seats?: {
     row: number;
-    column: number;
+    col: number;
     seat_label: string;
   }[]; // Coi như tạo lại các seats từ đầu
 }
-
 
 // API: GET with room_id param
 export interface SeatsDTO {
   seats: {
     seat_id: number;
     row: number;
-    column: number;
+    col: number;
     seat_label: string;
     available: boolean;
   }[];

@@ -4,3 +4,10 @@ export interface CinemaDTO {
   address: string;
   room_count: number;
 }
+
+export interface CreateCinemaDTO {
+  name: string;
+  address: string;
+}
+
+export interface UpdateCinemaDTO extends Partial<CreateCinemaDTO> {}

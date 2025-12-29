@@ -1,4 +1,4 @@
-import type { MovieStatus } from '../enum';
+import type { MovieStatus } from "../enum";
 
 export interface MovieDTO {
   movie_id: string;
@@ -32,4 +32,30 @@ export interface UserMovieDTO {
   created_at?: string; // timestamp
   status: MovieStatus;
   isSaved?: boolean;
+}
+
+// Create Movie DTO
+export interface CreateMovieDTO {
+  title: string;
+  description?: string;
+  duration_min: number;
+  release_date: string;
+  rating?: string;
+  poster_url: string;
+  director?: string;
+  actors?: Array<{ name: string; role: string }>;
+  genre?: string[];
+}
+
+// Update Movie DTO (partial update)
+export interface UpdateMovieDTO {
+  title?: string;
+  description?: string;
+  duration_min?: number;
+  release_date?: string;
+  rating?: string;
+  poster_url?: string;
+  director?: string;
+  actors?: Array<{ name: string; role: string }>;
+  genre?: string[];
 }

@@ -18,4 +18,22 @@ export interface ShowtimeDTO {
   created_at?: string; // timestamp
 }
 
+// Create Showtime DTO
+export interface CreateShowtimeDto {
+  movie_id: string;
+  room_id: string;
+  start_time: string;
+  end_time: string;
+  price: number;
+}
+
+// Update Showtime DTO (partial update)
+export interface UpdateShowtimeDTO {
+  movie_id?: string;
+  room_id?: string;
+  start_time?: string;
+  end_time?: string;
+  price?: number;
+}
+
 // API: return array of ShowtimeDTO but only return near future showtimes (within 7 days) (GET with movie_id param)

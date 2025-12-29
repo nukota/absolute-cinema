@@ -139,27 +139,53 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                     fontSize: "1.1rem",
                   }}
                 >
-                  Rating:
+                  Quality:
                 </Typography>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Rating
-                    value={movie.rating ? Math.round(movie.rating * 2) / 2 : 0}
+                    value={4.5}
                     readOnly
                     size="small"
                     precision={0.5}
                     sx={{
-                      '& .MuiRating-icon': {
-                        color: 'secondary.main',
+                      "& .MuiRating-icon": {
+                        color: "secondary.main",
                       },
                     }}
                   />
                   <Typography
-                    sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "1.1rem" }}
+                    sx={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      fontSize: "1.1rem",
+                    }}
                   >
-                    ({movie.rating ? movie.rating.toFixed(1) : 'N/A'})
+                    (4.5/5)
                   </Typography>
                 </Box>
               </Box>
+              {movie.rating && (
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <ThumbUp fontSize="small" color="secondary" />
+                  <Typography
+                    sx={{
+                      opacity: 0.8,
+                      minWidth: 60,
+                      color: "rgba(255, 255, 255, 0.8)",
+                      fontSize: "1.1rem",
+                    }}
+                  >
+                    Advisory:
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      fontSize: "1.1rem",
+                    }}
+                  >
+                    {movie.rating}
+                  </Typography>
+                </Box>
+              )}
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <CalendarToday fontSize="small" color="secondary" />
                 <Typography
@@ -212,7 +238,10 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                     Director:
                   </Typography>
                   <Typography
-                    sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "1.1rem" }}
+                    sx={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      fontSize: "1.1rem",
+                    }}
                   >
                     {movie.director}
                   </Typography>
@@ -232,7 +261,10 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                     Cast:
                   </Typography>
                   <Typography
-                    sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "1.1rem" }}
+                    sx={{
+                      color: "rgba(255, 255, 255, 0.8)",
+                      fontSize: "1.1rem",
+                    }}
                   >
                     {Array.isArray(movie.actors)
                       ? movie.actors.join(", ")
@@ -240,19 +272,19 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                   </Typography>
                 </Box>
               )}
-              
-            <Button
-              variant="outlined"
-              color="secondary"
-              startIcon={<PlayArrow />}
-              sx={{
-                maxWidth: 160,
-                mt: 2,
-                backgroundColor: 'rgba(255, 215, 0, 0.1)',
-              }}
-            >
-              Play Trailer
-            </Button>
+
+              <Button
+                variant="outlined"
+                color="secondary"
+                startIcon={<PlayArrow />}
+                sx={{
+                  maxWidth: 160,
+                  mt: 2,
+                  backgroundColor: "rgba(255, 215, 0, 0.1)",
+                }}
+              >
+                Play Trailer
+              </Button>
             </Box>
           </Box>
         </Box>

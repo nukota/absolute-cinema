@@ -8,15 +8,14 @@ export interface BookingHistoryDTO {
   total_price: number;
 }
 
-// API:
+// API: GET /invoices/customer/:customer_id
 export interface UserProfileDTO {
   customer_id: string;
   full_name: string;
   email: string;
-  dob: string;
-  phone_number?: string;
-  CCCD?: string;
-  member_since?: string; // this is created_at timestamp
+  phone?: string;
+  date_of_birth?: string;
+  member_since: string;
   total_bookings: number;
   booking_history: BookingHistoryDTO[];
 }

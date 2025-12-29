@@ -6,5 +6,19 @@ export interface CustomerDTO {
   password_hash: string;
   phone_number?: string;
   created_at?: string; // timestamp
-  CCCD?: string;
+  cccd?: string;
 }
+
+export type CreateCustomerDTO = Omit<
+  CustomerDTO,
+  "customer_id" | "password_hash"
+> & {
+  password: string;
+};
+
+export type UpdateCustomerDTO = Partial<
+  Pick<
+    CreateCustomerDTO,
+    "full_name" | "email" | "phone_number" | "cccd" | "dob"
+  >
+>;
