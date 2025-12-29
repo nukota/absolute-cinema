@@ -18,7 +18,6 @@ import {
   ReceiptRounded,
   LocationOnRounded,
   CalendarViewDayRounded,
-  StarRounded,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -41,7 +40,6 @@ const navItems: NavItem[] = [
   { text: "Customers", icon: <PeopleRounded />, path: "/admin/customers" },
   { text: "Products", icon: <ShoppingCartRounded />, path: "/admin/products" },
   { text: "Invoices", icon: <ReceiptRounded />, path: "/admin/invoices" },
-  { text: "Ratings", icon: <StarRounded />, path: "/admin/ratings" },
 ];
 
 const settingsItem: NavItem = {
@@ -173,7 +171,7 @@ export const NavBar = () => {
               primary={settingsItem.text}
               primaryTypographyProps={{
                 fontSize: "1.125rem",
-                  fontWeight: isActive(settingsItem.path) ? 800 : 700,
+                fontWeight: isActive(settingsItem.path) ? 800 : 700,
               }}
             />
           </ListItemButton>
