@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import CreateDialog from '../template/CreateDialog';
-import type { FormSection } from '../template/CreateDialog';
-import { MovieStatus } from '../../../utils/enum';
+import { useState } from "react";
+import CreateDialog from "../template/CreateDialog";
+import type { FormSection } from "../template/CreateDialog";
+import { MovieStatus } from "../../../utils/enum";
 
 interface CreateMovieDialogProps {
   open: boolean;
@@ -12,28 +12,29 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
   open,
   onClose,
 }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [duration, setDuration] = useState('');
-  const [releaseDate, setReleaseDate] = useState('');
-  const [posterUrl, setPosterUrl] = useState('');
-  const [director, setDirector] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [duration, setDuration] = useState("");
+  const [releaseDate, setReleaseDate] = useState("");
+  const [posterUrl, setPosterUrl] = useState("");
+  const [director, setDirector] = useState("");
   const [actors, setActors] = useState<string[]>([]);
   const [genre, setGenre] = useState<string[]>([]);
-  const [error, setError] = useState('');
+  const [rating, setRating] = useState("");
+  const [error, setError] = useState("");
 
   const handleAdd = () => {
     // Validation
     if (!title.trim()) {
-      setError('Movie title is required');
+      setError("Movie title is required");
       return;
     }
     if (!duration || parseInt(duration) <= 0) {
-      setError('Valid duration is required');
+      setError("Valid duration is required");
       return;
     }
     if (!releaseDate) {
-      setError('Release date is required');
+      setError("Release date is required");
       return;
     }
 
@@ -53,11 +54,12 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
     }
 
     // TODO: Add movie logic here
-    console.log('Creating movie:', {
+    console.log("Creating movie:", {
       title,
       description,
       duration: parseInt(duration),
       releaseDate,
+      rating,
       posterUrl,
       director,
       actors,
@@ -70,85 +72,94 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
   };
 
   const handleClose = () => {
-    setTitle('');
-    setDescription('');
-    setDuration('');
-    setReleaseDate('');
-    setPosterUrl('');
-    setDirector('');
+    setTitle("");
+    setDescription("");
+    setDuration("");
+    setReleaseDate("");
+    setRating("");
+    setPosterUrl("");
+    setDirector("");
     setActors([]);
     setGenre([]);
-    setError('');
+    setError("");
     onClose();
   };
 
   const sections: FormSection[] = [
     {
-      title: 'Movie Information',
+      title: "Movie Information",
       fields: [
         {
-          name: 'title',
-          label: 'Title',
-          type: 'text',
-          placeholder: 'Enter movie title',
+          name: "title",
+          label: "Title",
+          type: "text",
+          placeholder: "Enter movie title",
           required: true,
           value: title,
           onChange: setTitle,
         },
         {
-          name: 'description',
-          label: 'Description',
-          type: 'longtext',
-          placeholder: 'Enter movie description',
+          name: "description",
+          label: "Description",
+          type: "longtext",
+          placeholder: "Enter movie description",
           value: description,
           onChange: setDescription,
         },
         {
-          name: 'duration',
-          label: 'Duration (minutes)',
-          type: 'number',
-          placeholder: 'Enter duration in minutes',
+          name: "duration",
+          label: "Duration (minutes)",
+          type: "number",
+          placeholder: "Enter duration in minutes",
           required: true,
           value: duration,
           onChange: setDuration,
         },
         {
-          name: 'releaseDate',
-          label: 'Release Date',
-          type: 'date',
+          name: "releaseDate",
+          label: "Release Date",
+          type: "date",
           required: true,
           value: releaseDate,
           onChange: setReleaseDate,
         },
         {
-          name: 'posterUrl',
-          label: 'Poster URL',
-          type: 'text',
-          placeholder: 'Enter poster image URL',
+          name: "rating",
+          label: "Advisory",
+          type: "text",
+          placeholder: "Enter content rating (e.g., PG-13, R)",
+          value: rating,
+          onChange: setRating,
+        },
+        {
+          name: "poster_url",
+          label: "Poster URL",
+          type: "text",
+          placeholder: "Enter poster image URL",
           value: posterUrl,
           onChange: setPosterUrl,
         },
         {
-          name: 'director',
-          label: 'Director',
-          type: 'text',
-          placeholder: 'Enter director name',
+          name: "director",
+          label: "Director",
+          type: "text",
+          placeholder: "Enter director name",
           value: director,
           onChange: setDirector,
         },
         {
-          name: 'actors',
-          label: 'Actors',
-          type: 'list',
-          placeholder: 'Enter actor names (comma-separated)',
+          name: "actors",
+          label: "Actors",
+          type: "list",
+          placeholder: "Enter actor names (comma-separated)",
           value: actors,
           onChange: setActors,
         },
         {
-          name: 'genre',
-          label: 'Genre',
-          type: 'list',
-          placeholder: 'Enter genres (comma-separated)',
+          name: "genre",
+          label: "Genre",
+          type: "list",
+          placeholder: "Enter genres (comma-separated)",
           value: genre,
           onChange: setGenre,
         },

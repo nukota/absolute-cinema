@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import DetailDialog from '../template/DetailDialog';
-import type { FormSection } from '../template/DetailDialog';
-import type { MovieDTO } from '../../../utils/dtos/movieDTO';
-import { MovieStatus } from '../../../utils/enum';
+import { useState } from "react";
+import DetailDialog from "../template/DetailDialog";
+import type { FormSection } from "../template/DetailDialog";
+import type { MovieDTO } from "../../../utils/dtos/movieDTO";
+import { MovieStatus } from "../../../utils/enum";
 
 interface DetailMovieDialogProps {
   open: boolean;
@@ -21,7 +21,7 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedMovie, setEditedMovie] = useState<MovieDTO | null>(movie);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -33,68 +33,68 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
 
     // Validation
     if (!editedMovie.title.trim()) {
-      setError('Movie title is required');
+      setError("Movie title is required");
       return;
     }
     if (editedMovie.duration_min <= 0) {
-      setError('Duration must be greater than 0');
+      setError("Duration must be greater than 0");
       return;
     }
     if (!editedMovie.release_date) {
-      setError('Release date is required');
+      setError("Release date is required");
       return;
     }
 
     onSave?.(editedMovie);
     setIsEditing(false);
-    setError('');
+    setError("");
   };
 
   const handleCancel = () => {
     if (isEditing) {
       setIsEditing(false);
       setEditedMovie(movie);
-      setError('');
+      setError("");
     } else {
       onClose();
     }
   };
 
   const statusOptions = [
-    { value: MovieStatus.NowShowing, label: 'Now Showing' },
-    { value: MovieStatus.ComingSoon, label: 'Coming Soon' },
-    { value: MovieStatus.Stopped, label: 'Stopped' },
+    { value: MovieStatus.NowShowing, label: "Now Showing" },
+    { value: MovieStatus.ComingSoon, label: "Coming Soon" },
+    { value: MovieStatus.Stopped, label: "Stopped" },
   ];
 
   const sections: FormSection[] = [
     {
-      title: 'Movie Information',
+      title: "Movie Information",
       fields: [
         {
-          name: 'title',
-          label: 'Title',
-          type: 'text',
-          placeholder: 'Enter movie title',
-          value: editedMovie?.title || '',
+          name: "title",
+          label: "Title",
+          type: "text",
+          placeholder: "Enter movie title",
+          value: editedMovie?.title || "",
           onChange: (value) =>
             setEditedMovie((prev) => (prev ? { ...prev, title: value } : null)),
         },
         {
-          name: 'description',
-          label: 'Description',
-          type: 'longtext',
-          placeholder: 'Enter movie description',
-          value: editedMovie?.description || '',
+          name: "description",
+          label: "Description",
+          type: "longtext",
+          placeholder: "Enter movie description",
+          value: editedMovie?.description || "",
           onChange: (value) =>
             setEditedMovie((prev) =>
               prev ? { ...prev, description: value } : null
             ),
         },
         {
-          name: 'duration_min',
-          label: 'Duration (minutes)',
-          type: 'number',
-          placeholder: 'Enter duration',
+          name: "duration_min",
+          label: "Duration (minutes)",
+          type: "number",
+          placeholder: "Enter duration",
           value: editedMovie?.duration_min || 0,
           onChange: (value) =>
             setEditedMovie((prev) =>
@@ -102,61 +102,63 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
             ),
         },
         {
-          name: 'release_date',
-          label: 'Release Date',
-          type: 'date',
-          placeholder: 'Select release date',
-          value: editedMovie?.release_date || '',
+          name: "release_date",
+          label: "Release Date",
+          type: "date",
+          placeholder: "Select release date",
+          value: editedMovie?.release_date || "",
           onChange: (value) =>
             setEditedMovie((prev) =>
               prev ? { ...prev, release_date: value } : null
             ),
         },
         {
-          name: 'rating',
-          label: 'Rating',
-          type: 'number',
-          placeholder: 'Enter rating',
-          value: editedMovie?.rating || 0,
+          name: "rating",
+          label: "Advisory",
+          type: "text",
+          placeholder: "Enter content rating (e.g., PG-13, R)",
+          value: editedMovie?.rating || "",
           onChange: (value) =>
             setEditedMovie((prev) =>
-              prev ? { ...prev, rating: Number(value) } : null
+              prev ? { ...prev, rating: value } : null
             ),
         },
         {
-          name: 'director',
-          label: 'Director',
-          type: 'text',
-          placeholder: 'Enter director name',
-          value: editedMovie?.director || '',
+          name: "director",
+          label: "Director",
+          type: "text",
+          placeholder: "Enter director name",
+          value: editedMovie?.director || "",
           onChange: (value) =>
             setEditedMovie((prev) =>
               prev ? { ...prev, director: value } : null
             ),
         },
         {
-          name: 'actors',
-          label: 'Actors',
-          type: 'list',
-          placeholder: 'Enter actors (comma-separated)',
+          name: "actors",
+          label: "Actors",
+          type: "list",
+          placeholder: "Enter actors (comma-separated)",
           value: editedMovie?.actors || [],
           onChange: (value) =>
-            setEditedMovie((prev) => (prev ? { ...prev, actors: value } : null)),
+            setEditedMovie((prev) =>
+              prev ? { ...prev, actors: value } : null
+            ),
         },
         {
-          name: 'genre',
-          label: 'Genre',
-          type: 'list',
-          placeholder: 'Enter genres (comma-separated)',
+          name: "genre",
+          label: "Genre",
+          type: "list",
+          placeholder: "Enter genres (comma-separated)",
           value: editedMovie?.genre || [],
           onChange: (value) =>
             setEditedMovie((prev) => (prev ? { ...prev, genre: value } : null)),
         },
         {
-          name: 'status',
-          label: 'Status',
-          type: 'autocomplete',
-          placeholder: 'Select status',
+          name: "status",
+          label: "Status",
+          type: "autocomplete",
+          placeholder: "Select status",
           value:
             statusOptions.find((opt) => opt.value === editedMovie?.status) ||
             null,
@@ -168,11 +170,11 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
             ),
         },
         {
-          name: 'poster_url',
-          label: 'Poster URL',
-          type: 'text',
-          placeholder: 'Enter poster URL',
-          value: editedMovie?.poster_url || '',
+          name: "poster_url",
+          label: "Poster URL",
+          type: "text",
+          placeholder: "Enter poster URL",
+          value: editedMovie?.poster_url || "",
           onChange: (value) =>
             setEditedMovie((prev) =>
               prev ? { ...prev, poster_url: value } : null

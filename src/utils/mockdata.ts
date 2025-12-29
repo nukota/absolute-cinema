@@ -3,7 +3,6 @@ import type { CustomerDTO } from "./dtos/customerDTO";
 import type { InvoiceDTO } from "./dtos/invoiceDTO";
 import type { MovieDTO } from "./dtos/movieDTO";
 import type { ProductDTO } from "./dtos/productDTO";
-import type { RatingDTO } from "./dtos/ratingDTO";
 import type { RoomDTO } from "./dtos/roomDTO";
 import type { ShowtimeDTO } from "./dtos/showtimeDTO";
 import type { DashboardData } from "./dtos/dashboardDTO";
@@ -39,7 +38,6 @@ export type {
   InvoiceDTO,
   MovieDTO,
   ProductDTO,
-  RatingDTO,
   RoomDTO,
   ShowtimeDTO,
 };
@@ -52,7 +50,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1990-05-15",
     password_hash: "hashed_password_1",
     phone_number: "0901234567",
-    CCCD: "001090012345",
+    cccd: "001090012345",
     created_at: "2023-01-15T10:00:00Z",
   },
   {
@@ -62,7 +60,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1988-03-22",
     password_hash: "hashed_password_2",
     phone_number: "0902345678",
-    CCCD: "001085067890",
+    cccd: "001085067890",
     created_at: "2023-02-20T10:00:00Z",
   },
   {
@@ -72,7 +70,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1992-11-08",
     password_hash: "hashed_password_3",
     phone_number: "0903456789",
-    CCCD: "001095023456",
+    cccd: "001095023456",
     created_at: "2023-03-10T10:00:00Z",
   },
   {
@@ -82,7 +80,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1985-07-30",
     password_hash: "hashed_password_4",
     phone_number: "0904567890",
-    CCCD: "001088045678",
+    cccd: "001088045678",
     created_at: "2023-04-05T10:00:00Z",
   },
   {
@@ -92,7 +90,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1995-12-03",
     password_hash: "hashed_password_5",
     phone_number: "0905678901",
-    CCCD: "001092034567",
+    cccd: "001092034567",
     created_at: "2023-05-12T10:00:00Z",
   },
   {
@@ -102,7 +100,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1987-09-14",
     password_hash: "hashed_password_6",
     phone_number: "0906789012",
-    CCCD: "001087056789",
+    cccd: "001087056789",
     created_at: "2023-06-18T10:00:00Z",
   },
   {
@@ -112,7 +110,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1993-04-25",
     password_hash: "hashed_password_7",
     phone_number: "0907890123",
-    CCCD: "001093078901",
+    cccd: "001093078901",
     created_at: "2023-07-22T10:00:00Z",
   },
   {
@@ -122,7 +120,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1989-01-17",
     password_hash: "hashed_password_8",
     phone_number: "0908901234",
-    CCCD: "001091089012",
+    cccd: "001091089012",
     created_at: "2023-08-30T10:00:00Z",
   },
   {
@@ -132,7 +130,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1991-06-09",
     password_hash: "hashed_password_9",
     phone_number: "0909012345",
-    CCCD: "001089090123",
+    cccd: "001089090123",
     created_at: "2023-09-14T10:00:00Z",
   },
   {
@@ -142,7 +140,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1986-08-21",
     password_hash: "hashed_password_10",
     phone_number: "0900123456",
-    CCCD: "001094012345",
+    cccd: "001094012345",
     created_at: "2023-10-08T10:00:00Z",
   },
   {
@@ -152,7 +150,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1994-02-12",
     password_hash: "hashed_password_11",
     phone_number: "0911234567",
-    CCCD: "001086023456",
+    cccd: "001086023456",
     created_at: "2023-11-15T10:00:00Z",
   },
   {
@@ -162,7 +160,7 @@ export const mockCustomers: CustomerDTO[] = [
     dob: "1984-10-05",
     password_hash: "hashed_password_12",
     phone_number: "0912345678",
-    CCCD: "001096034567",
+    cccd: "001096034567",
     created_at: "2023-12-20T10:00:00Z",
   },
 ];
@@ -308,189 +306,6 @@ export const mockInvoices: InvoiceDTO[] = [
     total_amount: 535000,
     status: InvoiceStatus.Completed,
     created_at: "2025-10-26T16:30:00Z",
-  },
-];
-
-export const mockRatings: RatingDTO[] = [
-  {
-    rating_id: "1",
-    customer: {
-      customer_id: "1",
-      full_name: "Nguyễn Văn An",
-      email: "nguyenvanan@example.com",
-    },
-    movie: {
-      movie_id: "M001",
-      title: "Avengers: Endgame",
-    },
-    rating_value: 5,
-    review: "Phim rất hay và cảm động, diễn xuất tuyệt vời!",
-    created_at: "2025-10-28T10:30:00",
-  },
-  {
-    rating_id: "2",
-    customer: {
-      customer_id: "2",
-      full_name: "Trần Thị Bình",
-      email: "tranthibinh@example.com",
-    },
-    movie: {
-      movie_id: "M002",
-      title: "The Batman",
-    },
-    rating_value: 4,
-    review: "Phim hay nhưng hơi dài, đáng xem!",
-    created_at: "2025-10-27T14:20:00",
-  },
-  {
-    rating_id: "3",
-    customer: {
-      customer_id: "3",
-      full_name: "Lê Hoàng Cường",
-      email: "lehoangcuong@example.com",
-    },
-    movie: {
-      movie_id: "M003",
-      title: "Spider-Man: No Way Home",
-    },
-    rating_value: 5,
-    review: "Tuyệt vời! Không thể tin được!",
-    created_at: "2025-10-27T16:45:00",
-  },
-  {
-    rating_id: "4",
-    customer: {
-      customer_id: "4",
-      full_name: "Phạm Minh Đức",
-      email: "phamminhduc@example.com",
-    },
-    movie: {
-      movie_id: "M001",
-      title: "Avengers: Endgame",
-    },
-    rating_value: 4,
-    review: "Phim hay, đáng xem nhiều lần.",
-    created_at: "2025-10-26T18:30:00",
-  },
-  {
-    rating_id: "5",
-    customer: {
-      customer_id: "5",
-      full_name: "Võ Thu Hà",
-      email: "vothuha@example.com",
-    },
-    movie: {
-      movie_id: "M004",
-      title: "Interstellar",
-    },
-    rating_value: 5,
-    review: "Kiệt tác điện ảnh, cảnh quay đẹp!",
-    created_at: "2025-10-26T20:15:00",
-  },
-  {
-    rating_id: "6",
-    customer: {
-      customer_id: "6",
-      full_name: "Đặng Quốc Hùng",
-      email: "dangquochung@example.com",
-    },
-    movie: {
-      movie_id: "M002",
-      title: "The Batman",
-    },
-    rating_value: 3,
-    review: "Phim ổn nhưng không đặc sắc lắm.",
-    created_at: "2025-10-25T15:00:00",
-  },
-  {
-    rating_id: "7",
-    customer: {
-      customer_id: "7",
-      full_name: "Hoàng Thị Lan",
-      email: "hoangthilan@example.com",
-    },
-    movie: {
-      movie_id: "M005",
-      title: "Inception",
-    },
-    rating_value: 5,
-    review: "Phim hay, cốt truyện phức tạp nhưng hấp dẫn!",
-    created_at: "2025-10-25T19:30:00",
-  },
-  {
-    rating_id: "8",
-    customer: {
-      customer_id: "8",
-      full_name: "Bùi Văn Long",
-      email: "buivanlong@example.com",
-    },
-    movie: {
-      movie_id: "M003",
-      title: "Spider-Man: No Way Home",
-    },
-    rating_value: 4,
-    review: "Phim hay, nhiều bất ngờ!",
-    created_at: "2025-10-24T14:45:00",
-  },
-  {
-    rating_id: "9",
-    customer: {
-      customer_id: "9",
-      full_name: "Dương Thị Mai",
-      email: "duongthimai@example.com",
-    },
-    movie: {
-      movie_id: "M004",
-      title: "Interstellar",
-    },
-    rating_value: 5,
-    review: "Xuất sắc! Âm nhạc và hình ảnh tuyệt vời!",
-    created_at: "2025-10-24T17:20:00",
-  },
-  {
-    rating_id: "10",
-    customer: {
-      customer_id: "10",
-      full_name: "Lý Minh Nam",
-      email: "lyminhnam@example.com",
-    },
-    movie: {
-      movie_id: "M001",
-      title: "Avengers: Endgame",
-    },
-    rating_value: 5,
-    review: "Phim kết thúc hoàn hảo cho series!",
-    created_at: "2025-10-23T16:00:00",
-  },
-  {
-    rating_id: "11",
-    customer: {
-      customer_id: "11",
-      full_name: "Ngô Thị Phương",
-      email: "ngothiphuong@example.com",
-    },
-    movie: {
-      movie_id: "M005",
-      title: "Inception",
-    },
-    rating_value: 4,
-    review: "Phim hay nhưng hơi khó hiểu một chút.",
-    created_at: "2025-10-23T19:45:00",
-  },
-  {
-    rating_id: "12",
-    customer: {
-      customer_id: "12",
-      full_name: "Trịnh Văn Quân",
-      email: "trinhvanquan@example.com",
-    },
-    movie: {
-      movie_id: "M002",
-      title: "The Batman",
-    },
-    rating_value: 4,
-    review: "Diễn xuất tốt, cốt truyện thú vị.",
-    created_at: "2025-10-22T15:30:00",
   },
 ];
 
@@ -1059,10 +874,13 @@ export const mockRooms: RoomDTO[] = [
 ];
 
 // Mock seat data for rooms
-export const mockRoomSeats: Record<string, Array<{ row: number; column: number; seat_label: string }>> = {
+export const mockRoomSeats: Record<
+  string,
+  Array<{ row: number; column: number; seat_label: string }>
+> = {
   R001: generateSeats(15, 20), // IMAX - 15 rows x 20 columns = 300 seats
   R002: generateSeats(10, 15), // Standard - 10 rows x 15 columns = 150 seats
-  R003: generateSeats(8, 10),  // VIP - 8 rows x 10 columns = 80 seats
+  R003: generateSeats(8, 10), // VIP - 8 rows x 10 columns = 80 seats
   R004: generateSeats(10, 12), // 4DX - 10 rows x 12 columns = 120 seats
   R005: generateSeats(10, 10), // Premium - 10 rows x 10 columns = 100 seats
   R006: generateSeats(14, 25), // IMAX - 14 rows x 25 columns = 350 seats
@@ -1077,7 +895,7 @@ function generateSeats(rows: number, cols: number) {
       seats.push({
         row: row + 1,
         column: col + 1,
-        seat_label: `${rowLetter}${colNumber.toString().padStart(2, '0')}`,
+        seat_label: `${rowLetter}${colNumber.toString().padStart(2, "0")}`,
       });
     }
   }
@@ -1193,19 +1011,19 @@ export const mockBookingHistory = [
 
 // Mock dashboard data generator
 export const generateMockDashboardData = (yearMonth: string): DashboardData => {
-  const [year, month] = yearMonth.split('-').map(Number);
+  const [year, month] = yearMonth.split("-").map(Number);
   const datePoints = generateDailyDataPoints(year, month);
-  
+
   // Generate realistic data for each 2-day period
   const dailyData = datePoints.map((date) => {
     const baseRevenue = 4000 + Math.random() * 2000;
     const baseTickets = 300 + Math.random() * 150;
-    
+
     // Add some variation - weekends are busier
     const dayOfWeek = new Date(date).getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     const multiplier = isWeekend ? 1.3 : 1.0;
-    
+
     return {
       date,
       revenue: Math.round(baseRevenue * multiplier),
@@ -1222,18 +1040,18 @@ export const generateMockDashboardData = (yearMonth: string): DashboardData => {
     },
     daily_data: dailyData,
     genre_distribution: [
-      { genre: 'Action', percentage: 35 },
-      { genre: 'Drama', percentage: 25 },
-      { genre: 'Comedy', percentage: 20 },
-      { genre: 'Sci-Fi', percentage: 15 },
-      { genre: 'Horror', percentage: 5 },
+      { genre: "Action", percentage: 35 },
+      { genre: "Drama", percentage: 25 },
+      { genre: "Comedy", percentage: 20 },
+      { genre: "Sci-Fi", percentage: 15 },
+      { genre: "Horror", percentage: 5 },
     ],
     top_movies: [
-      { movie_name: 'Avengers: Endgame', tickets_sold: 450 },
-      { movie_name: 'Spider-Man: No Way Home', tickets_sold: 380 },
-      { movie_name: 'The Batman', tickets_sold: 320 },
-      { movie_name: 'Inception', tickets_sold: 280 },
-      { movie_name: 'Interstellar', tickets_sold: 250 },
+      { movie_name: "Avengers: Endgame", tickets_sold: 450 },
+      { movie_name: "Spider-Man: No Way Home", tickets_sold: 380 },
+      { movie_name: "The Batman", tickets_sold: 320 },
+      { movie_name: "Inception", tickets_sold: 280 },
+      { movie_name: "Interstellar", tickets_sold: 250 },
     ],
     month: yearMonth,
   };
