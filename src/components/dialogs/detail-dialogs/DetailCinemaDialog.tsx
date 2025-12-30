@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import DetailDialog from '../template/DetailDialog';
-import type { FormSection } from '../template/DetailDialog';
-import type { CinemaDTO } from '../../../utils/dtos/cinemaDTO';
+import { useState } from "react";
+import DetailDialog from "../template/DetailDialog";
+import type { FormSection } from "../template/DetailDialog";
+import type { CinemaDTO } from "../../../utils/dtos/cinemaDTO";
 
 interface DetailCinemaDialogProps {
   open: boolean;
   onClose: () => void;
   cinema: CinemaDTO | null;
-  onSave?: (cinema: CinemaDTO) => void;
+  onUpdate: (id: string, data: { name: string; address: string }) => void;
   onDelete?: () => void;
 }
 
@@ -15,12 +15,12 @@ const DetailCinemaDialog: React.FC<DetailCinemaDialogProps> = ({
   open,
   onClose,
   cinema,
-  onSave,
+  onUpdate,
   onDelete,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedCinema, setEditedCinema] = useState<CinemaDTO | null>(cinema);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -32,28 +32,32 @@ const DetailCinemaDialog: React.FC<DetailCinemaDialogProps> = ({
 
     // Validation
     if (!editedCinema.name.trim()) {
-      setError('Cinema name is required');
+      setError("Cinema name is required");
       return;
     }
     if (!editedCinema.address.trim()) {
-      setError('Address is required');
+      setError("Address is required");
       return;
     }
     if (editedCinema.room_count < 0) {
-      setError('Room count must be a positive number');
+      setError("Room count must be a positive number");
       return;
     }
 
-    onSave?.(editedCinema);
+    onUpdate(editedCinema.cinema_id, {
+      name: editedCinema.name.trim(),
+      address: editedCinema.address.trim(),
+    });
+
     setIsEditing(false);
-    setError('');
+    setError("");
   };
 
   const handleCancel = () => {
     if (isEditing) {
       setIsEditing(false);
       setEditedCinema(cinema);
-      setError('');
+      setError("");
     } else {
       onClose();
     }
@@ -61,23 +65,23 @@ const DetailCinemaDialog: React.FC<DetailCinemaDialogProps> = ({
 
   const sections: FormSection[] = [
     {
-      title: 'Cinema Information',
+      title: "Cinema Information",
       fields: [
         {
-          name: 'name',
-          label: 'Cinema Name',
-          type: 'text',
-          placeholder: 'Enter cinema name',
-          value: editedCinema?.name || '',
+          name: "name",
+          label: "Cinema Name",
+          type: "text",
+          placeholder: "Enter cinema name",
+          value: editedCinema?.name || "",
           onChange: (value) =>
             setEditedCinema((prev) => (prev ? { ...prev, name: value } : null)),
         },
         {
-          name: 'address',
-          label: 'Address',
-          type: 'text',
-          placeholder: 'Enter address',
-          value: editedCinema?.address || '',
+          name: "address",
+          label: "Address",
+          type: "text",
+          placeholder: "Enter address",
+          value: editedCinema?.address || "",
           onChange: (value) =>
             setEditedCinema((prev) =>
               prev ? { ...prev, address: value } : null

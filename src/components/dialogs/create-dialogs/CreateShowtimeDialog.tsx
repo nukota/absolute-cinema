@@ -1,24 +1,34 @@
-import { useState } from 'react';
-import CreateDialog from '../template/CreateDialog';
-import type { FormSection } from '../template/CreateDialog';
-import { mockCinemas, mockRooms, mockMovies } from '../../../utils/mockdata';
+import { useState } from "react";
+import CreateDialog from "../template/CreateDialog";
+import type { FormSection } from "../template/CreateDialog";
+import { mockCinemas, mockRooms, mockMovies } from "../../../utils/mockdata";
 
 interface CreateShowtimeDialogProps {
   open: boolean;
   onClose: () => void;
+  onCreate: (data: any) => void;
 }
 
 const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
   open,
   onClose,
+  onCreate,
 }) => {
-  const [cinema, setCinema] = useState<{ cinema_id: string; name: string } | null>(null);
-  const [room, setRoom] = useState<{ room_id: string; name: string } | null>(null);
-  const [movie, setMovie] = useState<{ movie_id: string; title: string } | null>(null);
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [price, setPrice] = useState('');
-  const [error, setError] = useState('');
+  const [cinema, setCinema] = useState<{
+    cinema_id: string;
+    name: string;
+  } | null>(null);
+  const [room, setRoom] = useState<{ room_id: string; name: string } | null>(
+    null
+  );
+  const [movie, setMovie] = useState<{
+    movie_id: string;
+    title: string;
+  } | null>(null);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [price, setPrice] = useState("");
+  const [error, setError] = useState("");
 
   const cinemaOptions = mockCinemas.map((c) => ({
     cinema_id: c.cinema_id,
@@ -40,7 +50,9 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
     title: m.title,
   }));
 
-  const handleCinemaChange = (newCinema: { cinema_id: string; name: string } | null) => {
+  const handleCinemaChange = (
+    newCinema: { cinema_id: string; name: string } | null
+  ) => {
     setCinema(newCinema);
     // Reset room when cinema changes
     setRoom(null);
@@ -49,43 +61,43 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
   const handleAdd = () => {
     // Validation
     if (!cinema) {
-      setError('Cinema is required');
+      setError("Cinema is required");
       return;
     }
     if (!room) {
-      setError('Room is required');
+      setError("Room is required");
       return;
     }
     if (!movie) {
-      setError('Movie is required');
+      setError("Movie is required");
       return;
     }
     if (!startTime) {
-      setError('Start time is required');
+      setError("Start time is required");
       return;
     }
     if (!endTime) {
-      setError('End time is required');
+      setError("End time is required");
       return;
     }
     if (!price || parseFloat(price) <= 0) {
-      setError('Valid price is required');
+      setError("Valid price is required");
       return;
     }
 
     // Validate that end time is after start time
     if (new Date(endTime) <= new Date(startTime)) {
-      setError('End time must be after start time');
+      setError("End time must be after start time");
       return;
     }
 
     // TODO: Add showtime logic here
-    console.log('Creating showtime:', {
-      cinema,
-      room,
-      movie,
-      startTime,
-      endTime,
+    onCreate({
+      cinema_id: cinema.cinema_id,
+      room_id: room.room_id,
+      movie_id: movie.movie_id,
+      start_time: startTime,
+      end_time: endTime,
       price: parseFloat(price),
     });
 
@@ -97,22 +109,22 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
     setCinema(null);
     setRoom(null);
     setMovie(null);
-    setStartTime('');
-    setEndTime('');
-    setPrice('');
-    setError('');
+    setStartTime("");
+    setEndTime("");
+    setPrice("");
+    setError("");
     onClose();
   };
 
   const sections: FormSection[] = [
     {
-      title: 'Showtime Information',
+      title: "Showtime Information",
       fields: [
         {
-          name: 'cinema',
-          label: 'Cinema',
-          type: 'autocomplete',
-          placeholder: 'Select cinema',
+          name: "cinema",
+          label: "Cinema",
+          type: "autocomplete",
+          placeholder: "Select cinema",
           required: true,
           options: cinemaOptions,
           getOptionLabel: (option: any) => option.name,
@@ -120,10 +132,10 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
           onChange: handleCinemaChange,
         },
         {
-          name: 'room',
-          label: 'Room',
-          type: 'autocomplete',
-          placeholder: 'Select room',
+          name: "room",
+          label: "Room",
+          type: "autocomplete",
+          placeholder: "Select room",
           required: true,
           options: roomOptions,
           getOptionLabel: (option: any) => option.name,
@@ -132,10 +144,10 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
           disabled: !cinema,
         },
         {
-          name: 'movie',
-          label: 'Movie',
-          type: 'autocomplete',
-          placeholder: 'Select movie',
+          name: "movie",
+          label: "Movie",
+          type: "autocomplete",
+          placeholder: "Select movie",
           required: true,
           options: movieOptions,
           getOptionLabel: (option: any) => option.title,
@@ -143,26 +155,26 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
           onChange: setMovie,
         },
         {
-          name: 'startTime',
-          label: 'Start Time',
-          type: 'datetime-local',
+          name: "startTime",
+          label: "Start Time",
+          type: "datetime-local",
           required: true,
           value: startTime,
           onChange: setStartTime,
         },
         {
-          name: 'endTime',
-          label: 'End Time',
-          type: 'datetime-local',
+          name: "endTime",
+          label: "End Time",
+          type: "datetime-local",
           required: true,
           value: endTime,
           onChange: setEndTime,
         },
         {
-          name: 'price',
-          label: 'Price (VND)',
-          type: 'number',
-          placeholder: 'Enter ticket price',
+          name: "price",
+          label: "Price (VND)",
+          type: "number",
+          placeholder: "Enter ticket price",
           required: true,
           value: price,
           onChange: setPrice,

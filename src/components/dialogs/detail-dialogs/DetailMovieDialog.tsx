@@ -8,7 +8,7 @@ interface DetailMovieDialogProps {
   open: boolean;
   onClose: () => void;
   movie: MovieDTO | null;
-  onSave?: (movie: MovieDTO) => void;
+  onUpdate: (id: string, data: any) => void;
   onDelete?: () => void;
 }
 
@@ -16,7 +16,7 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
   open,
   onClose,
   movie,
-  onSave,
+  onUpdate,
   onDelete,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -45,7 +45,19 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
       return;
     }
 
-    onSave?.(editedMovie);
+    onUpdate(editedMovie.movie_id, {
+      title: editedMovie.title.trim(),
+      description: editedMovie.description?.trim() || "",
+      duration: editedMovie.duration_min,
+      release_date: editedMovie.release_date,
+      rating: editedMovie.rating || 0,
+      poster_url: editedMovie.poster_url?.trim() || "",
+      director: editedMovie.director?.trim() || "",
+      actors: editedMovie.actors || [],
+      genre: editedMovie.genre || [],
+      status: editedMovie.status,
+    });
+
     setIsEditing(false);
     setError("");
   };

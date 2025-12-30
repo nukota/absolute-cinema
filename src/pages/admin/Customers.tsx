@@ -1,83 +1,164 @@
-import { useState } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import CustomDataGrid from '../../components/layouts/DataGrid';
-import { mockCustomers } from '../../utils/mockdata';
-import type { GridColDef } from '@mui/x-data-grid';
-import type { CustomerDTO } from '../../utils/dtos/customerDTO';
-import CreateCustomerDialog from '../../components/dialogs/create-dialogs/CreateCustomerDialog';
-import DetailCustomerDialog from '../../components/dialogs/detail-dialogs/DetailCustomerDialog';
+import { useState } from "react";
+import { IconButton, Tooltip } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import CustomDataGrid from "../../components/layouts/DataGrid";
+import {
+  useAllCustomers,
+  useDeleteCustomer,
+  useCreateCustomer,
+  useUpdateCustomer,
+} from "../../services/usersService";
+import { useFeedback } from "../../provider/FeedbackProvider";
+import type { GridColDef } from "@mui/x-data-grid";
+import type { CustomerDTO } from "../../utils/dtos/customerDTO";
+import CreateCustomerDialog from "../../components/dialogs/create-dialogs/CreateCustomerDialog";
+import DetailCustomerDialog from "../../components/dialogs/detail-dialogs/DetailCustomerDialog";
 
 const Customers = () => {
-  const [loading] = useState(false);
+  const { data: customers, isLoading: loading } = useAllCustomers();
+  const deleteCustomerMutation = useDeleteCustomer();
+  const createCustomerMutation = useCreateCustomer();
+  const updateCustomerMutation = useUpdateCustomer();
+  const { showSnackbar } = useFeedback();
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState<CustomerDTO | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerDTO | null>(
+    null
+  );
 
   const handleAddNewCustomer = () => {
     setOpenCreateDialog(true);
   };
 
   const handleViewDetails = (id: string) => {
-    const customer = mockCustomers.find((c) => c.customer_id === id);
+    const customer = customers?.find((c) => c.customer_id === id);
     if (customer) {
       setSelectedCustomer(customer);
       setOpenDetailDialog(true);
     }
   };
 
-  const handleSave = (customer: CustomerDTO) => {
-    console.log('Saving customer:', customer);
-    setOpenDetailDialog(false);
+  const handleCreateCustomer = (data: {
+    full_name: string;
+    email: string;
+    dob: string;
+    phone_number?: string;
+    cccd?: string;
+    password: string;
+  }) => {
+    createCustomerMutation.mutate(data, {
+      onSuccess: () => {
+        setOpenCreateDialog(false);
+        showSnackbar({
+          message: "Customer created successfully!",
+          severity: "success",
+        });
+      },
+      onError: (error) => {
+        console.error("Create customer error:", error);
+        showSnackbar({
+          message: "Failed to create customer. Please try again.",
+          severity: "error",
+        });
+      },
+    });
+  };
+
+  const handleUpdateCustomer = (
+    id: string,
+    data: {
+      full_name?: string;
+      email?: string;
+      dob?: string;
+      phone_number?: string;
+      cccd?: string;
+      password_hash?: string;
+    }
+  ) => {
+    updateCustomerMutation.mutate(
+      { id, data },
+      {
+        onSuccess: () => {
+          setOpenDetailDialog(false);
+          showSnackbar({
+            message: "Customer updated successfully!",
+            severity: "success",
+          });
+        },
+        onError: (error) => {
+          console.error("Update customer error:", error);
+          showSnackbar({
+            message: "Failed to update customer. Please try again.",
+            severity: "error",
+          });
+        },
+      }
+    );
   };
 
   const handleDelete = () => {
-    console.log('Deleting customer:', selectedCustomer?.customer_id);
-    setOpenDetailDialog(false);
+    if (selectedCustomer) {
+      deleteCustomerMutation.mutate(selectedCustomer.customer_id, {
+        onSuccess: () => {
+          setOpenDetailDialog(false);
+          showSnackbar({
+            message: "Customer deleted successfully!",
+            severity: "success",
+          });
+        },
+        onError: (error) => {
+          console.error("Delete customer error:", error);
+          showSnackbar({
+            message: "Failed to delete customer. Please try again.",
+            severity: "error",
+          });
+        },
+      });
+    }
   };
 
   const columns: GridColDef[] = [
     {
-      field: 'customer_id',
-      headerName: 'ID',
+      field: "customer_id",
+      headerName: "ID",
       width: 80,
       sortable: true,
     },
     {
-      field: 'full_name',
-      headerName: 'Full Name',
+      field: "full_name",
+      headerName: "Full Name",
       flex: 1,
       minWidth: 160,
       sortable: true,
     },
     {
-      field: 'dob',
-      headerName: 'Date of Birth',
+      field: "dob",
+      headerName: "Date of Birth",
       width: 130,
       sortable: true,
       valueFormatter: (value) => {
-        if (!value) return '';
+        if (!value) return "";
         const date = new Date(value);
-        return date.toLocaleDateString('en-GB');
+        return date.toLocaleDateString("en-GB");
       },
     },
     {
-      field: 'CCCD',
-      headerName: 'CCCD',
+      field: "cccd",
+      headerName: "CCCD",
       width: 140,
       sortable: true,
     },
     {
-      field: 'email',
-      headerName: 'Email',
+      field: "email",
+      headerName: "Email",
       flex: 1,
       minWidth: 200,
       sortable: true,
     },
     {
-      field: 'actions',
-      headerName: 'Actions',
+      field: "actions",
+      headerName: "Actions",
       width: 100,
       sortable: false,
       renderCell: (params) => (
@@ -98,8 +179,27 @@ const Customers = () => {
   ];
 
   const handleDeleteSelected = () => {
-    console.log('Delete selected customers:', selectedRows);
-    // Implement delete logic here
+    if (selectedRows.length === 0) return;
+
+    // For now, just delete the first selected item
+    // In a real implementation, you might want to handle bulk delete
+    const customerId = selectedRows[0];
+    deleteCustomerMutation.mutate(customerId, {
+      onSuccess: () => {
+        setSelectedRows([]);
+        showSnackbar({
+          message: `${selectedRows.length} customer(s) deleted successfully!`,
+          severity: "success",
+        });
+      },
+      onError: (error) => {
+        console.error("Delete customers error:", error);
+        showSnackbar({
+          message: "Failed to delete customers. Please try again.",
+          severity: "error",
+        });
+      },
+    });
   };
 
   return (
@@ -107,7 +207,7 @@ const Customers = () => {
       <CustomDataGrid
         title="Customers Management"
         loading={loading}
-        rows={mockCustomers}
+        rows={customers || []}
         columns={columns}
         onAddNew={handleAddNewCustomer}
         addButtonText="Add New Customer"
@@ -122,12 +222,13 @@ const Customers = () => {
       <CreateCustomerDialog
         open={openCreateDialog}
         onClose={() => setOpenCreateDialog(false)}
+        onCreate={handleCreateCustomer}
       />
       <DetailCustomerDialog
         open={openDetailDialog}
         onClose={() => setOpenDetailDialog(false)}
         customer={selectedCustomer}
-        onSave={handleSave}
+        onUpdate={handleUpdateCustomer}
         onDelete={handleDelete}
       />
     </>

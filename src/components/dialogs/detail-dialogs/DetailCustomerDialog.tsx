@@ -1,13 +1,23 @@
-import { useState } from 'react';
-import DetailDialog from '../template/DetailDialog';
-import type { FormSection } from '../template/DetailDialog';
-import type { CustomerDTO } from '../../../utils/dtos/customerDTO';
+import { useState } from "react";
+import DetailDialog from "../template/DetailDialog";
+import type { FormSection } from "../template/DetailDialog";
+import type { CustomerDTO } from "../../../utils/dtos/customerDTO";
 
 interface DetailCustomerDialogProps {
   open: boolean;
   onClose: () => void;
   customer: CustomerDTO | null;
-  onSave?: (customer: CustomerDTO) => void;
+  onUpdate: (
+    id: string,
+    data: {
+      full_name?: string;
+      email?: string;
+      dob?: string;
+      phone_number?: string;
+      cccd?: string;
+      password_hash?: string;
+    }
+  ) => void;
   onDelete?: () => void;
 }
 
@@ -15,12 +25,14 @@ const DetailCustomerDialog: React.FC<DetailCustomerDialogProps> = ({
   open,
   onClose,
   customer,
-  onSave,
+  onUpdate,
   onDelete,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedCustomer, setEditedCustomer] = useState<CustomerDTO | null>(customer);
-  const [error, setError] = useState('');
+  const [editedCustomer, setEditedCustomer] = useState<CustomerDTO | null>(
+    customer
+  );
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleEdit = () => {
@@ -33,28 +45,36 @@ const DetailCustomerDialog: React.FC<DetailCustomerDialogProps> = ({
 
     // Validation
     if (!editedCustomer.full_name.trim()) {
-      setError('Full name is required');
+      setError("Full name is required");
       return;
     }
     if (!editedCustomer.email.trim()) {
-      setError('Email is required');
+      setError("Email is required");
       return;
     }
     if (!editedCustomer.dob) {
-      setError('Date of birth is required');
+      setError("Date of birth is required");
       return;
     }
 
-    onSave?.(editedCustomer);
+    onUpdate(editedCustomer.customer_id, {
+      full_name: editedCustomer.full_name.trim(),
+      email: editedCustomer.email.trim(),
+      dob: editedCustomer.dob,
+      phone_number: editedCustomer.phone_number?.trim() || undefined,
+      cccd: editedCustomer.cccd?.trim() || undefined,
+      password_hash: editedCustomer.password_hash?.trim() || undefined,
+    });
+
     setIsEditing(false);
-    setError('');
+    setError("");
   };
 
   const handleCancel = () => {
     if (isEditing) {
       setIsEditing(false);
       setEditedCustomer(customer);
-      setError('');
+      setError("");
     } else {
       onClose();
     }
@@ -62,68 +82,74 @@ const DetailCustomerDialog: React.FC<DetailCustomerDialogProps> = ({
 
   const sections: FormSection[] = [
     {
-      title: 'Personal Information',
+      title: "Personal Information",
       fields: [
         {
-          name: 'full_name',
-          label: 'Full Name',
-          type: 'text',
-          placeholder: 'Enter full name',
-          value: editedCustomer?.full_name || '',
+          name: "full_name",
+          label: "Full Name",
+          type: "text",
+          placeholder: "Enter full name",
+          value: editedCustomer?.full_name || "",
           onChange: (value) =>
             setEditedCustomer((prev) =>
               prev ? { ...prev, full_name: value } : null
             ),
         },
         {
-          name: 'email',
-          label: 'Email',
-          type: 'email',
-          placeholder: 'Enter email',
-          value: editedCustomer?.email || '',
+          name: "email",
+          label: "Email",
+          type: "email",
+          placeholder: "Enter email",
+          value: editedCustomer?.email || "",
           onChange: (value) =>
-            setEditedCustomer((prev) => (prev ? { ...prev, email: value } : null)),
+            setEditedCustomer((prev) =>
+              prev ? { ...prev, email: value } : null
+            ),
         },
         {
-          name: 'dob',
-          label: 'Date of Birth',
-          type: 'date',
-          placeholder: 'Select date of birth',
-          value: editedCustomer?.dob || '',
+          name: "dob",
+          label: "Date of Birth",
+          type: "date",
+          placeholder: "Select date of birth",
+          value: editedCustomer?.dob || "",
           onChange: (value) =>
-            setEditedCustomer((prev) => (prev ? { ...prev, dob: value } : null)),
+            setEditedCustomer((prev) =>
+              prev ? { ...prev, dob: value } : null
+            ),
         },
         {
-          name: 'phone_number',
-          label: 'Phone Number',
-          type: 'tel',
-          placeholder: 'Enter phone number',
-          value: editedCustomer?.phone_number || '',
+          name: "phone_number",
+          label: "Phone Number",
+          type: "tel",
+          placeholder: "Enter phone number",
+          value: editedCustomer?.phone_number || "",
           onChange: (value) =>
             setEditedCustomer((prev) =>
               prev ? { ...prev, phone_number: value } : null
             ),
         },
         {
-          name: 'CCCD',
-          label: 'CCCD',
-          type: 'text',
-          placeholder: 'Enter CCCD',
-          value: editedCustomer?.CCCD || '',
+          name: "cccd",
+          label: "CCCD",
+          type: "text",
+          placeholder: "Enter CCCD",
+          value: editedCustomer?.cccd || "",
           onChange: (value) =>
-            setEditedCustomer((prev) => (prev ? { ...prev, CCCD: value } : null)),
+            setEditedCustomer((prev) =>
+              prev ? { ...prev, cccd: value } : null
+            ),
         },
       ],
     },
     {
-      title: 'Account Information',
+      title: "Account Information",
       fields: [
         {
-          name: 'password_hash',
-          label: 'Password',
-          type: 'password',
-          placeholder: 'Enter password',
-          value: editedCustomer?.password_hash || '',
+          name: "password_hash",
+          label: "Password",
+          type: "password",
+          placeholder: "Enter password",
+          value: editedCustomer?.password_hash || "",
           onChange: (value) =>
             setEditedCustomer((prev) =>
               prev ? { ...prev, password_hash: value } : null

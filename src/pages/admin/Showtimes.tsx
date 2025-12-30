@@ -1,117 +1,181 @@
-import { useState } from 'react';
-import { Box, IconButton, Tooltip, Typography } from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import CustomDataGrid from '../../components/layouts/DataGrid';
-import { mockShowtimes } from '../../utils/mockdata';
-import type { GridColDef } from '@mui/x-data-grid';
-import type { ShowtimeDTO } from '../../utils/dtos/showtimeDTO';
-import CreateShowtimeDialog from '../../components/dialogs/create-dialogs/CreateShowtimeDialog';
-import DetailShowtimeDialog from '../../components/dialogs/detail-dialogs/DetailShowtimeDialog';
+import { useState } from "react";
+import { Box, IconButton, Tooltip, Typography } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import CustomDataGrid from "../../components/layouts/DataGrid";
+import {
+  useAllShowtimes,
+  useDeleteShowtime,
+  useCreateShowtime,
+  useUpdateShowtime,
+} from "../../services/showtimesSerivce";
+import type { GridColDef } from "@mui/x-data-grid";
+import type { ShowtimeDTO } from "../../utils/dtos/showtimeDTO";
+import CreateShowtimeDialog from "../../components/dialogs/create-dialogs/CreateShowtimeDialog";
+import DetailShowtimeDialog from "../../components/dialogs/detail-dialogs/DetailShowtimeDialog";
+import { useFeedback } from "../../provider/FeedbackProvider";
 
 const Showtimes = () => {
-  const [loading] = useState(false);
+  const { data: showtimes, isLoading: loading } = useAllShowtimes();
+  const deleteShowtimeMutation = useDeleteShowtime();
+  const createShowtimeMutation = useCreateShowtime();
+  const updateShowtimeMutation = useUpdateShowtime();
+  const { showSnackbar } = useFeedback();
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
-  const [selectedShowtime, setSelectedShowtime] = useState<ShowtimeDTO | null>(null);
+  const [selectedShowtime, setSelectedShowtime] = useState<ShowtimeDTO | null>(
+    null
+  );
 
   const handleAddNewShowtime = () => {
     setOpenCreateDialog(true);
   };
 
   const handleViewDetails = (id: string) => {
-    const showtime = mockShowtimes.find((s) => s.showtime_id === id);
+    const showtime = showtimes?.find((s) => s.showtime_id === id);
     if (showtime) {
       setSelectedShowtime(showtime);
       setOpenDetailDialog(true);
     }
   };
 
-  const handleSave = (showtime: ShowtimeDTO) => {
-    console.log('Saving showtime:', showtime);
-    setOpenDetailDialog(false);
+  const handleCreateShowtime = (data: any) => {
+    createShowtimeMutation.mutate(data, {
+      onSuccess: () => {
+        setOpenCreateDialog(false);
+        showSnackbar({
+          message: "Showtime created successfully!",
+          severity: "success",
+        });
+      },
+      onError: (error) => {
+        console.error("Create showtime error:", error);
+        showSnackbar({
+          message: "Failed to create showtime. Please try again.",
+          severity: "error",
+        });
+      },
+    });
+  };
+
+  const handleUpdateShowtime = (id: string, data: any) => {
+    updateShowtimeMutation.mutate(
+      { id, data },
+      {
+        onSuccess: () => {
+          setOpenDetailDialog(false);
+          showSnackbar({
+            message: "Showtime updated successfully!",
+            severity: "success",
+          });
+        },
+        onError: (error) => {
+          console.error("Update showtime error:", error);
+          showSnackbar({
+            message: "Failed to update showtime. Please try again.",
+            severity: "error",
+          });
+        },
+      }
+    );
   };
 
   const handleDelete = () => {
-    console.log('Deleting showtime:', selectedShowtime?.showtime_id);
-    setOpenDetailDialog(false);
+    if (selectedShowtime) {
+      deleteShowtimeMutation.mutate(selectedShowtime.showtime_id, {
+        onSuccess: () => {
+          setOpenDetailDialog(false);
+          showSnackbar({
+            message: "Showtime deleted successfully!",
+            severity: "success",
+          });
+        },
+        onError: (error) => {
+          console.error("Delete showtime error:", error);
+          showSnackbar({
+            message: "Failed to delete showtime. Please try again.",
+            severity: "error",
+          });
+        },
+      });
+    }
   };
 
   const columns: GridColDef[] = [
     {
-      field: 'showtime_id',
-      headerName: 'ID',
+      field: "showtime_id",
+      headerName: "ID",
       width: 70,
       sortable: true,
     },
     {
-      field: 'movie',
-      headerName: 'Movie',
+      field: "movie",
+      headerName: "Movie",
       flex: 1,
       minWidth: 200,
       sortable: true,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
           <Typography
             sx={{
               maxWidth: 100,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
             }}
             variant="caption"
             color="text.secondary"
           >
-            ID: {params.row.movie.movie_id}
+            ID: {params.row.movie?.movie_id || "N/A"}
           </Typography>
           <Typography variant="body2" fontWeight={500}>
-            {params.row.movie.title}
+            {params.row.movie?.title || "Unknown Movie"}
           </Typography>
         </Box>
       ),
     },
     {
-      field: 'cinema',
-      headerName: 'Cinema',
+      field: "cinema",
+      headerName: "Cinema",
       flex: 1,
       minWidth: 180,
       sortable: true,
-      valueGetter: (_value, row) => row.cinema.name,
+      valueGetter: (_value, row) => row.cinema?.name || "Unknown Cinema",
       renderCell: (params) => (
         <Typography variant="body2">
-          {params.row.cinema.name}
+          {params.row.cinema?.name || "Unknown Cinema"}
         </Typography>
       ),
     },
     {
-      field: 'room',
-      headerName: 'Room',
+      field: "room",
+      headerName: "Room",
       flex: 1,
       minWidth: 150,
       sortable: true,
       renderCell: (params) => (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
           <Typography
             sx={{
               maxWidth: 100,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
             }}
             variant="caption"
             color="text.secondary"
           >
-            ID: {params.row.room.room_id}
+            ID: {params.row.room?.room_id || "N/A"}
           </Typography>
           <Typography variant="body2" fontWeight={500}>
-            {params.row.room.name}
+            {params.row.room?.name || "Unknown Room"}
           </Typography>
         </Box>
       ),
     },
     {
-      field: 'time',
-      headerName: 'Time',
+      field: "time",
+      headerName: "Time",
       flex: 1,
       minWidth: 200,
       sortable: true,
@@ -119,18 +183,18 @@ const Showtimes = () => {
         const startDate = new Date(params.row.start_time);
         const endDate = new Date(params.row.end_time);
 
-        const startTime = startDate.toLocaleTimeString('en-GB', {
-          hour: '2-digit',
-          minute: '2-digit',
+        const startTime = startDate.toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
         });
-        const endTime = endDate.toLocaleTimeString('en-GB', {
-          hour: '2-digit',
-          minute: '2-digit',
+        const endTime = endDate.toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
         });
-        const date = startDate.toLocaleDateString('en-GB', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
+        const date = startDate.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
         });
 
         return (
@@ -141,20 +205,20 @@ const Showtimes = () => {
       },
     },
     {
-      field: 'price',
-      headerName: 'Price',
+      field: "price",
+      headerName: "Price",
       width: 140,
       sortable: true,
       valueFormatter: (value) => {
-        return new Intl.NumberFormat('vi-VN', {
-          style: 'currency',
-          currency: 'VND',
+        return new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
         }).format(value);
       },
     },
     {
-      field: 'actions',
-      headerName: 'Actions',
+      field: "actions",
+      headerName: "Actions",
       width: 100,
       sortable: false,
       renderCell: (params) => (
@@ -175,8 +239,26 @@ const Showtimes = () => {
   ];
 
   const handleDeleteSelected = () => {
-    console.log('Delete selected showtimes:', selectedRows);
-    // Implement delete logic here
+    if (selectedRows.length > 0) {
+      // For now, just delete the first selected showtime
+      // In a real implementation, you might want to delete all selected
+      deleteShowtimeMutation.mutate(selectedRows[0], {
+        onSuccess: () => {
+          setSelectedRows([]);
+          showSnackbar({
+            message: "Selected showtime deleted successfully!",
+            severity: "success",
+          });
+        },
+        onError: (error) => {
+          console.error("Delete showtime error:", error);
+          showSnackbar({
+            message: "Failed to delete showtime. Please try again.",
+            severity: "error",
+          });
+        },
+      });
+    }
   };
 
   return (
@@ -184,7 +266,7 @@ const Showtimes = () => {
       <CustomDataGrid
         title="Showtimes Management"
         loading={loading}
-        rows={mockShowtimes}
+        rows={showtimes || []}
         columns={columns}
         onAddNew={handleAddNewShowtime}
         addButtonText="Add New Showtime"
@@ -199,12 +281,13 @@ const Showtimes = () => {
       <CreateShowtimeDialog
         open={openCreateDialog}
         onClose={() => setOpenCreateDialog(false)}
+        onCreate={handleCreateShowtime}
       />
       <DetailShowtimeDialog
         open={openDetailDialog}
         onClose={() => setOpenDetailDialog(false)}
         showtime={selectedShowtime}
-        onSave={handleSave}
+        onUpdate={handleUpdateShowtime}
         onDelete={handleDelete}
       />
     </>

@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import DetailDialog from '../template/DetailDialog';
-import type { FormSection } from '../template/DetailDialog';
-import type { ShowtimeDTO } from '../../../utils/dtos/showtimeDTO';
+import { useState } from "react";
+import DetailDialog from "../template/DetailDialog";
+import type { FormSection } from "../template/DetailDialog";
+import type { ShowtimeDTO } from "../../../utils/dtos/showtimeDTO";
 
 interface DetailShowtimeDialogProps {
   open: boolean;
   onClose: () => void;
   showtime: ShowtimeDTO | null;
-  onSave?: (showtime: ShowtimeDTO) => void;
+  onUpdate: (id: string, data: any) => void;
   onDelete?: () => void;
 }
 
@@ -15,12 +15,14 @@ const DetailShowtimeDialog: React.FC<DetailShowtimeDialogProps> = ({
   open,
   onClose,
   showtime,
-  onSave,
+  onUpdate,
   onDelete,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedShowtime, setEditedShowtime] = useState<ShowtimeDTO | null>(showtime);
-  const [error, setError] = useState('');
+  const [editedShowtime, setEditedShowtime] = useState<ShowtimeDTO | null>(
+    showtime
+  );
+  const [error, setError] = useState("");
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -32,28 +34,36 @@ const DetailShowtimeDialog: React.FC<DetailShowtimeDialogProps> = ({
 
     // Validation
     if (!editedShowtime.start_time) {
-      setError('Start time is required');
+      setError("Start time is required");
       return;
     }
     if (!editedShowtime.end_time) {
-      setError('End time is required');
+      setError("End time is required");
       return;
     }
     if (editedShowtime.price <= 0) {
-      setError('Price must be greater than 0');
+      setError("Price must be greater than 0");
       return;
     }
 
-    onSave?.(editedShowtime);
+    onUpdate(editedShowtime.showtime_id, {
+      cinema_id: editedShowtime.cinema.cinema_id,
+      room_id: editedShowtime.room.room_id,
+      movie_id: editedShowtime.movie.movie_id,
+      start_time: editedShowtime.start_time,
+      end_time: editedShowtime.end_time,
+      price: editedShowtime.price,
+    });
+
     setIsEditing(false);
-    setError('');
+    setError("");
   };
 
   const handleCancel = () => {
     if (isEditing) {
       setIsEditing(false);
       setEditedShowtime(showtime);
-      setError('');
+      setError("");
     } else {
       onClose();
     }
@@ -61,71 +71,73 @@ const DetailShowtimeDialog: React.FC<DetailShowtimeDialogProps> = ({
 
   const sections: FormSection[] = [
     {
-      title: 'Cinema & Room Information',
+      title: "Cinema & Room Information",
       fields: [
         {
-          name: 'cinema_name',
-          label: 'Cinema',
-          type: 'text',
-          value: editedShowtime?.cinema.name || '',
+          name: "cinema_name",
+          label: "Cinema",
+          type: "text",
+          value: editedShowtime?.cinema.name || "",
           onChange: () => {},
           disabled: true,
         },
         {
-          name: 'room_name',
-          label: 'Room',
-          type: 'text',
-          value: editedShowtime?.room.name || '',
-          onChange: () => {},
-          disabled: true,
-        },
-      ],
-    },
-    {
-      title: 'Movie Information',
-      fields: [
-        {
-          name: 'movie_title',
-          label: 'Movie Title',
-          type: 'text',
-          value: editedShowtime?.movie.title || '',
+          name: "room_name",
+          label: "Room",
+          type: "text",
+          value: editedShowtime?.room.name || "",
           onChange: () => {},
           disabled: true,
         },
       ],
     },
     {
-      title: 'Showtime Details',
+      title: "Movie Information",
       fields: [
         {
-          name: 'start_time',
-          label: 'Start Time',
-          type: 'datetime-local',
+          name: "movie_title",
+          label: "Movie Title",
+          type: "text",
+          value: editedShowtime?.movie.title || "",
+          onChange: () => {},
+          disabled: true,
+        },
+      ],
+    },
+    {
+      title: "Showtime Details",
+      fields: [
+        {
+          name: "start_time",
+          label: "Start Time",
+          type: "datetime-local",
           value: editedShowtime?.start_time
             ? new Date(editedShowtime.start_time).toISOString().slice(0, 16)
-            : '',
+            : "",
           onChange: (value) =>
             setEditedShowtime((prev) =>
-              prev ? { ...prev, start_time: new Date(value).toISOString() } : null
+              prev
+                ? { ...prev, start_time: new Date(value).toISOString() }
+                : null
             ),
         },
         {
-          name: 'end_time',
-          label: 'End Time',
-          type: 'datetime-local',
+          name: "end_time",
+          label: "End Time",
+          type: "datetime-local",
           value: editedShowtime?.end_time
             ? new Date(editedShowtime.end_time).toISOString().slice(0, 16)
-            : '',
+            : "",
           onChange: (value) =>
             setEditedShowtime((prev) =>
               prev ? { ...prev, end_time: new Date(value).toISOString() } : null
             ),
         },
         {
-          name: 'price',
-          label: 'Price',
-          type: 'number',
-          placeholder: 'Enter price',
+          name: "price",
+          label: "Price",
+          type: "number",
+          placeholder: "Enter price",
           value: editedShowtime?.price || 0,
           onChange: (value) =>
             setEditedShowtime((prev) =>

@@ -6,11 +6,13 @@ import { MovieStatus } from "../../../utils/enum";
 interface CreateMovieDialogProps {
   open: boolean;
   onClose: () => void;
+  onCreate: (data: any) => void;
 }
 
 const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
   open,
   onClose,
+  onCreate,
 }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -54,14 +56,14 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
     }
 
     // TODO: Add movie logic here
-    console.log("Creating movie:", {
-      title,
-      description,
+    onCreate({
+      title: title.trim(),
+      description: description.trim(),
       duration: parseInt(duration),
-      releaseDate,
-      rating,
-      posterUrl,
-      director,
+      release_date: releaseDate,
+      rating: parseFloat(rating) || 0,
+      poster_url: posterUrl.trim(),
+      director: director.trim(),
       actors,
       genre,
       status,

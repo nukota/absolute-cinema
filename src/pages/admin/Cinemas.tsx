@@ -1,13 +1,23 @@
-import { useState } from 'react';
-import CustomTabs from '../../components/layouts/Tabs';
-import Cinema from '../../components/items/Cinema';
-import { mockCinemas } from '../../utils/mockdata';
-import type { CinemaDTO } from '../../utils/dtos/cinemaDTO';
-import CreateCinemaDialog from '../../components/dialogs/create-dialogs/CreateCinemaDialog';
-import DetailCinemaDialog from '../../components/dialogs/detail-dialogs/DetailCinemaDialog';
+import { useState } from "react";
+import CustomTabs from "../../components/layouts/Tabs";
+import Cinema from "../../components/items/Cinema";
+import {
+  useAllCinemas,
+  useDeleteCinema,
+  useCreateCinema,
+  useUpdateCinema,
+} from "../../services/cinemasService";
+import type { CinemaDTO } from "../../utils/dtos/cinemaDTO";
+import CreateCinemaDialog from "../../components/dialogs/create-dialogs/CreateCinemaDialog";
+import DetailCinemaDialog from "../../components/dialogs/detail-dialogs/DetailCinemaDialog";
+import { useFeedback } from "../../provider/FeedbackProvider";
 
 const Cinemas = () => {
-  const [loading] = useState(false);
+  const { data: cinemas, isLoading: loading } = useAllCinemas();
+  const deleteCinemaMutation = useDeleteCinema();
+  const createCinemaMutation = useCreateCinema();
+  const updateCinemaMutation = useUpdateCinema();
+  const { showSnackbar } = useFeedback();
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
   const [selectedCinema, setSelectedCinema] = useState<CinemaDTO | null>(null);
@@ -21,25 +31,80 @@ const Cinemas = () => {
     setOpenDetailDialog(true);
   };
 
-  const handleSave = (cinema: CinemaDTO) => {
-    console.log('Saving cinema:', cinema);
-    setOpenDetailDialog(false);
+  const handleCreateCinema = (data: { name: string; address: string }) => {
+    createCinemaMutation.mutate(data, {
+      onSuccess: () => {
+        setOpenCreateDialog(false);
+        showSnackbar({
+          message: "Cinema created successfully!",
+          severity: "success",
+        });
+      },
+      onError: (error) => {
+        console.error("Create cinema error:", error);
+        showSnackbar({
+          message: "Failed to create cinema. Please try again.",
+          severity: "error",
+        });
+      },
+    });
+  };
+
+  const handleUpdateCinema = (
+    id: string,
+    data: { name: string; address: string }
+  ) => {
+    updateCinemaMutation.mutate(
+      { id, data },
+      {
+        onSuccess: () => {
+          setOpenDetailDialog(false);
+          showSnackbar({
+            message: "Cinema updated successfully!",
+            severity: "success",
+          });
+        },
+        onError: (error) => {
+          console.error("Update cinema error:", error);
+          showSnackbar({
+            message: "Failed to update cinema. Please try again.",
+            severity: "error",
+          });
+        },
+      }
+    );
   };
 
   const handleDelete = () => {
-    console.log('Deleting cinema:', selectedCinema?.cinema_id);
-    setOpenDetailDialog(false);
+    if (selectedCinema) {
+      deleteCinemaMutation.mutate(selectedCinema.cinema_id, {
+        onSuccess: () => {
+          setOpenDetailDialog(false);
+          showSnackbar({
+            message: "Cinema deleted successfully!",
+            severity: "success",
+          });
+        },
+        onError: (error) => {
+          console.error("Delete cinema error:", error);
+          showSnackbar({
+            message: "Failed to delete cinema. Please try again.",
+            severity: "error",
+          });
+        },
+      });
+    }
   };
 
   return (
     <>
       <CustomTabs
         title="Cinemas"
-        data={mockCinemas}
+        data={cinemas || []}
         loading={loading}
         onAddNew={handleAddNew}
         addButtonText="Add Cinema"
-        searchColumns={['name', 'address', 'city']}
+        searchColumns={["name", "address", "city"]}
         gridCols="grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
         gap="gap-6"
       >
@@ -56,12 +121,13 @@ const Cinemas = () => {
       <CreateCinemaDialog
         open={openCreateDialog}
         onClose={() => setOpenCreateDialog(false)}
+        onCreate={handleCreateCinema}
       />
       <DetailCinemaDialog
         open={openDetailDialog}
         onClose={() => setOpenDetailDialog(false)}
         cinema={selectedCinema}
-        onSave={handleSave}
+        onUpdate={handleUpdateCinema}
         onDelete={handleDelete}
       />
     </>
