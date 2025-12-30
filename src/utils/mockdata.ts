@@ -1,7 +1,7 @@
 import type { CinemaDTO } from "./dtos/cinemaDTO";
 import type { CustomerDTO } from "./dtos/customerDTO";
 import type { InvoiceDTO } from "./dtos/invoiceDTO";
-import type { MovieDTO } from "./dtos/movieDTO";
+import type { MovieDTO, UserMovieDTO } from "./dtos/movieDTO";
 import type { ProductDTO } from "./dtos/productDTO";
 import type { RoomDTO } from "./dtos/roomDTO";
 import type { ShowtimeDTO } from "./dtos/showtimeDTO";
@@ -540,7 +540,7 @@ export const mockShowtimes: ShowtimeDTO[] = [
   },
 ];
 
-export const mockMovies: MovieDTO[] = [
+export const mockMovies: UserMovieDTO[] = [
   {
     movie_id: "M001",
     title: "Avengers: Endgame",
@@ -555,6 +555,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Action", "Adventure", "Sci-Fi"],
     created_at: "2019-04-26T00:00:00Z",
     status: MovieStatus.NowShowing,
+    isSaved: true,
   },
   {
     movie_id: "M002",
@@ -570,6 +571,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Action", "Crime", "Drama"],
     created_at: "2022-03-04T00:00:00Z",
     status: MovieStatus.ComingSoon,
+    isSaved: false,
   },
   {
     movie_id: "M003",
@@ -585,6 +587,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Action", "Adventure", "Fantasy"],
     created_at: "2021-12-17T00:00:00Z",
     status: MovieStatus.NowShowing,
+    isSaved: true,
   },
   {
     movie_id: "M004",
@@ -600,6 +603,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Adventure", "Drama", "Sci-Fi"],
     created_at: "2014-11-07T00:00:00Z",
     status: MovieStatus.NowShowing,
+    isSaved: false,
   },
   {
     movie_id: "M005",
@@ -615,6 +619,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Action", "Sci-Fi", "Thriller"],
     created_at: "2010-07-16T00:00:00Z",
     status: MovieStatus.Stopped,
+    isSaved: true,
   },
   {
     movie_id: "M006",
@@ -630,6 +635,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Action", "Crime", "Drama"],
     created_at: "2008-07-18T00:00:00Z",
     status: MovieStatus.Stopped,
+    isSaved: false,
   },
   {
     movie_id: "M007",
@@ -645,6 +651,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Action", "Sci-Fi"],
     created_at: "1999-03-31T00:00:00Z",
     status: MovieStatus.NowShowing,
+    isSaved: true,
   },
   {
     movie_id: "M008",
@@ -660,6 +667,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Crime", "Drama"],
     created_at: "1994-10-14T00:00:00Z",
     status: MovieStatus.Stopped,
+    isSaved: false,
   },
   {
     movie_id: "M009",
@@ -675,6 +683,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Drama", "Romance"],
     created_at: "1994-07-06T00:00:00Z",
     status: MovieStatus.NowShowing,
+    isSaved: true,
   },
   {
     movie_id: "M010",
@@ -690,6 +699,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Drama"],
     created_at: "1994-09-23T00:00:00Z",
     status: MovieStatus.Stopped,
+    isSaved: false,
   },
   {
     movie_id: "M011",
@@ -705,6 +715,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Drama"],
     created_at: "1999-10-15T00:00:00Z",
     status: MovieStatus.ComingSoon,
+    isSaved: true,
   },
   {
     movie_id: "M012",
@@ -720,6 +731,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Action", "Adventure", "Drama"],
     created_at: "2001-12-19T00:00:00Z",
     status: MovieStatus.NowShowing,
+    isSaved: false,
   },
   {
     movie_id: "M013",
@@ -735,6 +747,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Action", "Adventure", "Fantasy"],
     created_at: "1977-05-25T00:00:00Z",
     status: MovieStatus.Stopped,
+    isSaved: true,
   },
   {
     movie_id: "M014",
@@ -750,6 +763,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Crime", "Drama"],
     created_at: "1972-03-24T00:00:00Z",
     status: MovieStatus.ComingSoon,
+    isSaved: false,
   },
   {
     movie_id: "M015",
@@ -765,6 +779,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Drama", "Romance"],
     created_at: "1997-12-19T00:00:00Z",
     status: MovieStatus.NowShowing,
+    isSaved: true,
   },
   {
     movie_id: "M016",
@@ -780,6 +795,7 @@ export const mockMovies: MovieDTO[] = [
     genre: ["Action", "Adventure", "Sci-Fi"],
     created_at: "1993-06-11T00:00:00Z",
     status: MovieStatus.Stopped,
+    isSaved: false,
   },
 ];
 

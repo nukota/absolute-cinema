@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   TextField,
@@ -9,7 +9,7 @@ import {
   CardContent,
   InputAdornment,
   IconButton,
-} from '@mui/material';
+} from "@mui/material";
 import {
   MovieFilterOutlined,
   Visibility,
@@ -17,21 +17,60 @@ import {
   EmailOutlined,
   LockOutlined,
   PersonOutlined,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
+import { useSignUp } from "../../services/authService";
+import { useFeedback } from "../../provider/FeedbackProvider";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const { showSnackbar } = useFeedback();
+  const signUpMutation = useSignUp();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Navigate to admin dashboard without credential checking
-    navigate('/admin');
+
+    // Validate password match
+    if (password !== confirmPassword) {
+      showSnackbar({
+        message: "Passwords do not match",
+        severity: "error",
+      });
+      return;
+    }
+
+    try {
+      const response = await signUpMutation.mutateAsync({
+        email,
+        password,
+        full_name: fullName,
+      });
+
+      // Store tokens
+      localStorage.setItem("access_token", response.access_token);
+      localStorage.setItem("refresh_token", response.refresh_token);
+      localStorage.setItem("user", JSON.stringify(response.user));
+
+      showSnackbar({
+        message: "Account created successfully!",
+        severity: "success",
+      });
+
+      // Navigate to admin dashboard
+      navigate("/admin");
+    } catch (error: any) {
+      showSnackbar({
+        message:
+          error?.response?.data?.message ||
+          "Failed to create account. Please try again.",
+        severity: "error",
+      });
+    }
   };
 
   const handleTogglePassword = () => {
@@ -45,11 +84,11 @@ const Signup = () => {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f5f5f5',
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f5f5f5",
         p: 2,
       }}
     >
@@ -57,17 +96,17 @@ const Signup = () => {
         elevation={0}
         sx={{
           maxWidth: 450,
-          width: '100%',
+          width: "100%",
           border: 1,
-          borderColor: 'divider',
+          borderColor: "divider",
         }}
       >
         <CardContent sx={{ p: 4 }}>
           {/* Logo and Title */}
-          <Box sx={{ textAlign: 'center', mb: 6 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+          <Box sx={{ textAlign: "center", mb: 6 }}>
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
               <MovieFilterOutlined
-                sx={{ fontSize: 48, color: 'primary.main' }}
+                sx={{ fontSize: 48, color: "primary.main" }}
               />
             </Box>
             <Typography
@@ -124,7 +163,7 @@ const Signup = () => {
             <TextField
               fullWidth
               label="Password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -152,7 +191,7 @@ const Signup = () => {
             <TextField
               fullWidth
               label="Confirm Password"
-              type={showConfirmPassword ? 'text' : 'password'}
+              type={showConfirmPassword ? "text" : "password"}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -182,30 +221,31 @@ const Signup = () => {
               fullWidth
               variant="contained"
               size="large"
+              disabled={signUpMutation.isPending}
               sx={{
                 py: 1.5,
                 fontWeight: 600,
-                textTransform: 'none',
-                fontSize: '1rem',
+                textTransform: "none",
+                fontSize: "1rem",
               }}
             >
-              Sign Up
+              {signUpMutation.isPending ? "Creating Account..." : "Sign Up"}
             </Button>
           </form>
 
           {/* Footer */}
-          <Box sx={{ mt: 3, textAlign: 'center' }}>
+          <Box sx={{ mt: 3, textAlign: "center" }}>
             <Typography variant="body1" color="text.secondary">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <Typography
                 component="span"
-                onClick={() => navigate('/signin')}
+                onClick={() => navigate("/signin")}
                 sx={{
-                  color: 'primary.main',
+                  color: "primary.main",
                   fontWeight: 600,
-                  cursor: 'pointer',
-                  '&:hover': {
-                    textDecoration: 'underline',
+                  cursor: "pointer",
+                  "&:hover": {
+                    textDecoration: "underline",
                   },
                 }}
               >
