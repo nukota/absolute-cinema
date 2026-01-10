@@ -183,8 +183,8 @@ export const Header = () => {
             onClick={() => {
               handleClose();
               signOutMutate(undefined, {
-                onSuccess: () => {
-                  localStorage.removeItem("auth_token");
+                onSettled: () => {
+                  // Navigate to signin after cleanup (handled in authService)
                   navigate("/signin");
                 },
               });

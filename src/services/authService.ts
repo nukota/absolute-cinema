@@ -1,6 +1,30 @@
 import { api } from "../lib/apiClient";
 import type { SignUpDTO, SignInDTO, AuthResponse } from "../utils/dtos/authDTO";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+// Helper function to store authentication data
+export const storeAuthData = (authResponse: AuthResponse, queryClient?: any) => {
+  if (authResponse.access_token) {
+    localStorage.setItem("access_token", authResponse.access_token);
+  }
+  if (authResponse.refresh_token) {
+    localStorage.setItem("refresh_token", authResponse.refresh_token);
+  }
+  localStorage.setItem("user", JSON.stringify(authResponse.user));
+  if (queryClient) {
+    queryClient.setQueryData(authKeys.currentUser(), authResponse.user);
+  }
+};
+
+// Helper function to clear all authentication data
+export const clearAuthData = (queryClient?: any) => {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("user");
+  if (queryClient) {
+    queryClient.clear();
+  }
+};
 
 const signUp = async (data: SignUpDTO): Promise<AuthResponse> => {
   const response = await api.post<AuthResponse>("/auth/signup", data);
@@ -49,6 +73,17 @@ const resetPassword = async (data: {
   return response.data;
 };
 
+const verifyEmail = async (data: {
+  access_token: string;
+  refresh_token: string;
+}): Promise<{ message: string; user: AuthResponse["user"] }> => {
+  const response = await api.post<{ message: string; user: AuthResponse["user"] }>(
+    "/auth/verify",
+    data
+  );
+  return response.data;
+};
+
 export const authKeys = {
   all: ["auth"] as const,
   currentUser: () => [...authKeys.all, "current"] as const,
@@ -67,8 +102,18 @@ export const useSignIn = () => {
 };
 
 export const useSignOut = () => {
+  const queryClient = useQueryClient();
+  
   return useMutation({
     mutationFn: signOut,
+    onSuccess: () => {
+      // Clear all authentication data on successful signout
+      clearAuthData(queryClient);
+    },
+    onError: () => {
+      // Even if server signout fails, clear local data
+      clearAuthData(queryClient);
+    },
   });
 };
 
@@ -106,5 +151,11 @@ export const useForgotPassword = () => {
 export const useResetPassword = () => {
   return useMutation({
     mutationFn: resetPassword,
+  });
+};
+
+export const useVerifyEmail = () => {
+  return useMutation({
+    mutationFn: verifyEmail,
   });
 };

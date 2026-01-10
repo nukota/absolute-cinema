@@ -12,6 +12,7 @@ import Settings from "./pages/admin/Settings";
 import Signin from "./pages/user/Signin";
 import Signup from "./pages/user/Signup";
 import Verify from "./pages/user/Verify";
+import VerifyCallback from "./pages/user/VerifyCallback";
 import UserLayout from "./pages/user";
 import Home from "./pages/user/Home";
 import MoviesPage from "./pages/user/MoviesPage";
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify" element={<Verify />} />
+        <Route path="/verify-email" element={<VerifyCallback />} />
 
         {/* User routes with layout - Protected for customers and admins */}
         <Route element={<ProtectedRoute allowedRoles={[UserRole.Customer, UserRole.Admin]} />}>
