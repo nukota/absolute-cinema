@@ -17,6 +17,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProfileMenu from "../../popovers/ProfileMenu";
+import { useSignOut } from "../../../services/authService";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const open = Boolean(anchorEl);
+  const { mutate: signOutMutate } = useSignOut();
 
   // Mock user role - in real app, this would come from authentication context
   const userRole = "admin"; // Change to 'customer' to test customer view
@@ -48,8 +50,12 @@ const Header = () => {
 
   const handleLogout = () => {
     handleClose();
-    localStorage.clear();
-    navigate("/signin");
+    signOutMutate(undefined, {
+      onSuccess: () => {
+        localStorage.removeItem("auth_token");
+        navigate("/signin");
+      },
+    });
   };
 
   const handleSearchToggle = () => {

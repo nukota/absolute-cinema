@@ -11,11 +11,13 @@ export interface SignInDTO {
 }
 
 export interface AuthResponse {
-  access_token: string;
-  refresh_token: string;
+  access_token?: string;
+  refresh_token?: string;
+  message?: string;
   user: {
     id: string;
     email: string;
     created_at?: string;
   };
+  session?: null;
 }

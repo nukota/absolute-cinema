@@ -51,7 +51,27 @@ const Signup = () => {
         full_name: fullName,
       });
 
-      // Store tokens
+      // Check if email verification is required
+      if (!response.access_token || !response.refresh_token) {
+        // User needs to verify email
+        showSnackbar({
+          message: "Account created! Please verify your email.",
+          severity: "success",
+        });
+
+        // Navigate to verification page
+        navigate("/verify", {
+          state: {
+            message:
+              response.message ||
+              "Please check your email to verify your account.",
+            email: email,
+          },
+        });
+        return;
+      }
+
+      // Store tokens (only if verification not required)
       localStorage.setItem("access_token", response.access_token);
       localStorage.setItem("refresh_token", response.refresh_token);
       localStorage.setItem("user", JSON.stringify(response.user));
