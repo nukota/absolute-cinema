@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -9,6 +9,7 @@ import {
   CardContent,
   InputAdornment,
   IconButton,
+  Chip,
 } from "@mui/material";
 import {
   MovieFilterOutlined,
@@ -17,22 +18,47 @@ import {
   EmailOutlined,
   LockOutlined,
   PersonOutlined,
+  PhoneOutlined,
+  BadgeOutlined,
+  CakeOutlined,
 } from "@mui/icons-material";
 import { useSignUp, authKeys } from "../../services/authService";
 import { useFeedback } from "../../provider/FeedbackProvider";
 import { useQueryClient } from "@tanstack/react-query";
+import { UserRole } from "../../utils/enum";
 
 const Signup = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useFeedback();
   const signUpMutation = useSignUp();
   const queryClient = useQueryClient();
+  const [isAdminMode, setIsAdminMode] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [cccd, setCccd] = useState("");
+  const [dob, setDob] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  // Listen for Ctrl+Shift+A to toggle admin mode
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        e.preventDefault();
+        setIsAdminMode((prev) => !prev);
+        showSnackbar({
+          message: `Switched to ${!isAdminMode ? 'Admin' : 'Customer'} sign up mode`,
+          severity: 'info',
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isAdminMode, showSnackbar]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,11 +73,28 @@ const Signup = () => {
     }
 
     try {
-      const response = await signUpMutation.mutateAsync({
+      const signUpData: any = {
         email,
         password,
-        fullName: fullName,
-      });
+        full_name: fullName,
+        role: isAdminMode ? UserRole.Admin : UserRole.Customer,
+      };
+
+      // Add customer-specific fields if in customer mode
+      if (!isAdminMode) {
+        if (!phoneNumber || !cccd || !dob) {
+          showSnackbar({
+            message: "Please fill in all required customer fields",
+            severity: "error",
+          });
+          return;
+        }
+        signUpData.phone_number = phoneNumber;
+        signUpData.cccd = cccd;
+        signUpData.dob = dob;
+      }
+
+      const response = await signUpMutation.mutateAsync(signUpData);
 
       // Store tokens
       localStorage.setItem("access_token", response.access_token);
@@ -124,9 +167,18 @@ const Signup = () => {
             >
               Absolute Cinema
             </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Create your account
-            </Typography>
+              {isAdminMode && (
+                <Typography
+                  variant="body1"
+                  sx={{
+                    color: "secondary.main",
+                    fontWeight: 500,
+                    fontStyle: "italic",
+                  }}
+                >
+                  Administrative access mode
+                </Typography>
+              )}
           </Box>
 
           {/* Sign Up Form */}
@@ -164,6 +216,67 @@ const Signup = () => {
                 ),
               }}
             />
+
+            {/* Customer-specific fields */}
+            {!isAdminMode && (
+              <>
+                <TextField
+                  fullWidth
+                  label="Phone Number"
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  required
+                  sx={{ mb: 2 }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PhoneOutlined color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  placeholder="0123456789"
+                />
+
+                <TextField
+                  fullWidth
+                  label="CCCD/ID Number"
+                  type="text"
+                  value={cccd}
+                  onChange={(e) => setCccd(e.target.value)}
+                  required
+                  sx={{ mb: 2 }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <BadgeOutlined color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  placeholder="123456789012"
+                />
+
+                <TextField
+                  fullWidth
+                  label="Date of Birth"
+                  type="date"
+                  value={dob}
+                  onChange={(e) => setDob(e.target.value)}
+                  required
+                  sx={{ mb: 2 }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <CakeOutlined color="action" />
+                      </InputAdornment>
+                    ),
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </>
+            )}
 
             <TextField
               fullWidth

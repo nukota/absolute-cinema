@@ -4,7 +4,11 @@ import { UserRole } from "../enum";
 export interface SignUpDTO {
   email: string;
   password: string;
-  fullName?: string;
+  full_name: string;
+  role: UserRole;
+  phone_number?: string;
+  cccd?: string;
+  dob?: string;
 }
 
 export interface SignInDTO {
