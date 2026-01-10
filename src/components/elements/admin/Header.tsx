@@ -24,7 +24,7 @@ import { LocalizationProvider, DateCalendar } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from "react-router-dom";
-import { useSignOut } from "../../../services/authService";
+import { useSignOut, useCurrentUser } from "../../../services/authService";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -37,7 +37,8 @@ export const Header = () => {
   const navigate = useNavigate();
 
   const { mutate: signOutMutate } = useSignOut();
-
+  const { data: user } = useCurrentUser();
+ console.log("Current User in Admin Header:", user);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -108,7 +109,7 @@ export const Header = () => {
                 fontSize: { xs: "0.875rem", sm: "1rem" },
               }}
             >
-              Admin User
+              {user?.full_name || "Admin"}
             </Typography>
             <Typography
               variant="caption"
@@ -117,12 +118,12 @@ export const Header = () => {
                 fontSize: { xs: "0.75rem", sm: "0.85rem" },
               }}
             >
-              admin@absolutecinema.com
+              {user?.email || "admin@absolutecinema.com"}
             </Typography>
           </Box>
           <IconButton onClick={handleClick} size="small">
             <Avatar sx={{ width: 40, height: 40, bgcolor: "primary.main" }}>
-              A
+              {user?.full_name?.charAt(0).toUpperCase() || "A"}
             </Avatar>
           </IconButton>
         </Box>

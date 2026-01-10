@@ -221,7 +221,7 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
                   textOverflow: "ellipsis",
                 }}
               >
-                Rating: {movie.rating ? movie.rating.toFixed(1) : "N/A"}
+                Rating: 4.5
               </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

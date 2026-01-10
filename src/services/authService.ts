@@ -4,15 +4,22 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // Helper function to store authentication data
 export const storeAuthData = (authResponse: AuthResponse, queryClient?: any) => {
+  // Ensure user data has full_name instead of name
+  const userData = { ...authResponse.user };
+  if ((userData as any).name && !(userData as any).full_name) {
+    (userData as any).full_name = (userData as any).name;
+    delete (userData as any).name;
+  }
+
   if (authResponse.access_token) {
     localStorage.setItem("access_token", authResponse.access_token);
   }
   if (authResponse.refresh_token) {
     localStorage.setItem("refresh_token", authResponse.refresh_token);
   }
-  localStorage.setItem("user", JSON.stringify(authResponse.user));
+  localStorage.setItem("user", JSON.stringify(userData));
   if (queryClient) {
-    queryClient.setQueryData(authKeys.currentUser(), authResponse.user);
+    queryClient.setQueryData(authKeys.currentUser(), userData);
   }
 };
 
@@ -43,14 +50,15 @@ const signOut = async (): Promise<{ message: string }> => {
 
 const getCurrentUser = async (): Promise<AuthResponse["user"]> => {
   const response = await api.get<AuthResponse["user"]>("/auth/me");
-  return response.data;
-};
+  const userData = response.data;
 
-const refreshToken = async (data: {
-  refresh_token: string;
-}): Promise<AuthResponse> => {
-  const response = await api.post<AuthResponse>("/auth/refresh", data);
-  return response.data;
+  // Handle legacy data that might have "name" instead of "full_name"
+  if (userData && (userData as any).name && !(userData as any).full_name) {
+    (userData as any).full_name = (userData as any).name;
+    delete (userData as any).name;
+  }
+
+  return userData;
 };
 
 const forgotPassword = async (data: {
@@ -122,7 +130,16 @@ export const useCurrentUser = () => {
   const getInitialUserData = () => {
     try {
       const storedUser = localStorage.getItem("user");
-      return storedUser ? JSON.parse(storedUser) : undefined;
+      if (storedUser) {
+        const userData = JSON.parse(storedUser);
+        // Handle legacy data that might have "name" instead of "full_name"
+        if (userData.name && !userData.full_name) {
+          userData.full_name = userData.name;
+          delete userData.name;
+        }
+        return userData;
+      }
+      return undefined;
     } catch {
       return undefined;
     }
@@ -133,12 +150,6 @@ export const useCurrentUser = () => {
     queryFn: getCurrentUser,
     initialData: getInitialUserData(),
     staleTime: 1000 * 60 * 5, // 5 minutes
-  });
-};
-
-export const useRefreshToken = () => {
-  return useMutation({
-    mutationFn: refreshToken,
   });
 };
 

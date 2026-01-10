@@ -6,7 +6,7 @@ export interface MovieDTO {
   description?: string;
   duration_min: number;
   release_date: string; // date
-  rating?: number;
+  rating?: string;
   poster_url?: string;
   director?: string;
   actors?: any; // JSON (can be array or object)
@@ -24,7 +24,7 @@ export interface UserMovieDTO {
   description?: string;
   duration_min: number;
   release_date: string; // date
-  rating?: number;
+  rating?: string;
   poster_url?: string;
   director?: string;
   actors?: any; // JSON (can be array or object)

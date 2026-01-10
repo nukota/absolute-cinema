@@ -17,7 +17,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProfileMenu from "../../popovers/ProfileMenu";
-import { useSignOut } from "../../../services/authService";
+import { useSignOut, useCurrentUser } from "../../../services/authService";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -26,9 +26,10 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const open = Boolean(anchorEl);
   const { mutate: signOutMutate } = useSignOut();
+  const { data: user } = useCurrentUser();
 
   // Mock user role - in real app, this would come from authentication context
-  const userRole = "admin"; // Change to 'customer' to test customer view
+  const userRole = user?.role || "customer"; // Change to 'customer' to test customer view
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -205,7 +206,7 @@ const Header = () => {
                     fontSize: "0.875rem",
                   }}
                 >
-                  John Doe
+                  {user?.full_name || "User"}
                 </Typography>
                 <Typography
                   variant="caption"
@@ -213,16 +214,15 @@ const Header = () => {
                     color: "rgba(255, 255, 255, 0.7)",
                     fontSize: "0.75rem",
                   }}
-                  textTransform={"uppercase"}
                 >
-                  Customer
+                  {user?.email || ""}
                 </Typography>
               </Box>
               <IconButton onClick={handleClick} size="small">
                 <Avatar
                   sx={{ width: 40, height: 40, bgcolor: "secondary.main" }}
                 >
-                  J
+                  {user?.full_name?.charAt(0).toUpperCase() || "U"}
                 </Avatar>
               </IconButton>
             </Box>

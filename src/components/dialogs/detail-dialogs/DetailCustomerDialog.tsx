@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DetailDialog from "../template/DetailDialog";
 import type { FormSection } from "../template/DetailDialog";
 import type { CustomerDTO } from "../../../utils/dtos/customerDTO";
@@ -34,6 +34,18 @@ const DetailCustomerDialog: React.FC<DetailCustomerDialogProps> = ({
   );
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  // Reset editing state when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setIsEditing(false);
+    }
+  }, [open]);
+
+  // Sync editedCustomer with customer prop when it changes
+  useEffect(() => {
+    setEditedCustomer(customer);
+  }, [customer]);
 
   const handleEdit = () => {
     setIsEditing(true);

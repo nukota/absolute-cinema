@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import DetailDialog from '../template/DetailDialog';
 import type { FormSection } from '../template/DetailDialog';
 import type { InvoiceDTO } from '../../../utils/dtos/invoiceDTO';
@@ -22,6 +22,18 @@ const DetailInvoiceDialog: React.FC<DetailInvoiceDialogProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editedInvoice, setEditedInvoice] = useState<InvoiceDTO | null>(invoice);
   const [error, setError] = useState('');
+
+  // Reset editing state when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setIsEditing(false);
+    }
+  }, [open]);
+
+  // Sync editedInvoice with invoice prop when it changes
+  useEffect(() => {
+    setEditedInvoice(invoice);
+  }, [invoice]);
 
   const handleEdit = () => {
     setIsEditing(true);

@@ -12,13 +12,14 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import type { RoomDTO } from '../../../utils/dtos/roomDTO';
-import { mockRoomSeats } from '../../../utils/mockdata';
+import type { SeatWithBookingStatus } from '../../../utils/dtos/seatDTO';
 
 interface DetailRoomDialogProps {
   open: boolean;
   onClose: () => void;
   room: RoomDTO | null;
-  onSave?: (room: RoomDTO) => void;
+  seatsData?: SeatWithBookingStatus[];
+  onSave?: (roomData: { name: string; seats: { row: number; col: number; isActive: boolean }[] }) => void;
   onDelete?: () => void;
 }
 
@@ -50,49 +51,49 @@ const SeatButton = styled(IconButton)<{ active: boolean }>(({ active }) => ({
   width: 40,
   height: 28,
   borderRadius: 6,
-  backgroundColor: active ? '#1976d2' : '#e0e0e0',
-  fontSize: 11,
+  backgroundColor: active ? "#bbdefb" : "#f5f5f5",
+  fontSize: 14,
   fontWeight: 600,
-  color: active ? '#ffffff' : '#bdbdbd',
-  border: active ? '2px solid #1565c0' : '1px solid #bdbdbd',
-  '&:hover': {
-    backgroundColor: active ? '#1565c0' : '#d0d0d0',
-    transform: 'scale(1.05)',
+  color: active ? "#1976d2" : "#999",
+  "&:hover": {
+    backgroundColor: active ? "#90caf9" : "#eeeeee",
   },
-  transition: 'all 0.2s',
-  cursor: active ? 'pointer' : 'default',
+  transition: "all 0.2s",
 }));
 
 const DetailRoomDialog: React.FC<DetailRoomDialogProps> = ({
   open,
   onClose,
   room,
+  seatsData,
   onSave,
   onDelete,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(room?.name || '');
-  const [seats, setSeats] = useState<Seat[]>([]);
+  const [gridSeats, setGridSeats] = useState<Seat[]>([]);
   const [error, setError] = useState('');
 
-  // Initialize seats when dialog opens or room changes
+  // Reset editing state when dialog closes
   useEffect(() => {
-    if (room && open) {
+    if (!open) {
+      setIsEditing(false);
+    }
+  }, [open]);
+
+  // Initialize seats when dialog opens or room/seats change
+  useEffect(() => {
+    if (room && seatsData && seatsData.length > 0 && open) {
       setName(room.name);
       
-      // Get mock seat data for this room
-      const roomSeats = mockRoomSeats[room.room_id] || [];
-      
-      // Convert to grid format (13x13 grid with center area)
+      // Convert seats data to grid format (13x13 grid with center area)
       const initialSeats: Seat[] = [];
-      const seatMap = new Map(roomSeats.map(s => [`${s.row}-${s.column}`, s.seat_label]));
+      const seatMap = new Map(seatsData.map(s => [`${s.row}-${s.column}`, s.seat_label]));
       
       for (let gridRow = 1; gridRow <= 13; gridRow++) {
         for (let gridCol = -6; gridCol <= 6; gridCol++) {
-          // Map grid position to seat position
-          const seatRow = gridRow - 1;
-          const seatCol = gridCol + 7;
-          const seatKey = `${seatRow}-${seatCol}`;
+          // Use gridCol directly as the column value (matches CreateRoomDialog)
+          const seatKey = `${gridRow}-${gridCol}`;
           const seatLabel = seatMap.get(seatKey);
           const isActive = seatLabel !== undefined;
           
@@ -105,9 +106,9 @@ const DetailRoomDialog: React.FC<DetailRoomDialogProps> = ({
         }
       }
       
-      setSeats(initialSeats);
+      setGridSeats(initialSeats);
     }
-  }, [room, open]);
+  }, [room, seatsData, open]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -122,19 +123,22 @@ const DetailRoomDialog: React.FC<DetailRoomDialogProps> = ({
       return;
     }
 
-    const activeSeats = seats.filter((s) => s.isActive);
+    const activeSeats = gridSeats.filter((s) => s.isActive);
     if (activeSeats.length === 0) {
       setError('Room must have at least one active seat');
       return;
     }
 
-    const updatedRoom: RoomDTO = {
-      ...room,
-      name,
-      capacity: activeSeats.length,
+    const roomData = {
+      name: name.trim(),
+      seats: gridSeats.map(seat => ({
+        row: seat.gridRow,
+        col: seat.gridColumn,
+        isActive: seat.isActive,
+      })),
     };
 
-    onSave?.(updatedRoom);
+    onSave?.(roomData);
     setIsEditing(false);
     setError('');
   };
@@ -152,7 +156,7 @@ const DetailRoomDialog: React.FC<DetailRoomDialogProps> = ({
   const toggleSeat = (gridRow: number, gridColumn: number) => {
     if (!isEditing) return;
     
-    setSeats((prev) =>
+    setGridSeats((prev) =>
       prev.map((seat) => {
         if (seat.gridRow === gridRow && seat.gridColumn === gridColumn) {
           return { ...seat, isActive: !seat.isActive };
@@ -162,11 +166,11 @@ const DetailRoomDialog: React.FC<DetailRoomDialogProps> = ({
     );
   };
 
-  const capacity = seats.filter((s) => s.isActive).length;
+  const capacity = gridSeats.filter((s) => s.isActive).length;
 
   // Group seats by grid row
   const seatsByRow: { [key: number]: Seat[] } = {};
-  seats.forEach((seat) => {
+  gridSeats.forEach((seat) => {
     if (!seatsByRow[seat.gridRow]) {
       seatsByRow[seat.gridRow] = [];
     }

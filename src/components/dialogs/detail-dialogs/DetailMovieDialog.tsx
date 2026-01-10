@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DetailDialog from "../template/DetailDialog";
 import type { FormSection } from "../template/DetailDialog";
 import type { MovieDTO } from "../../../utils/dtos/movieDTO";
@@ -22,6 +22,18 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editedMovie, setEditedMovie] = useState<MovieDTO | null>(movie);
   const [error, setError] = useState("");
+
+  // Reset editing state when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setIsEditing(false);
+    }
+  }, [open]);
+
+  // Sync editedMovie with movie prop when it changes
+  useEffect(() => {
+    setEditedMovie(movie);
+  }, [movie]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -48,14 +60,13 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
     onUpdate(editedMovie.movie_id, {
       title: editedMovie.title.trim(),
       description: editedMovie.description?.trim() || "",
-      duration: editedMovie.duration_min,
+      duration_min: editedMovie.duration_min,
       release_date: editedMovie.release_date,
-      rating: editedMovie.rating || 0,
+      rating: editedMovie.rating?.toString() || undefined,
       poster_url: editedMovie.poster_url?.trim() || "",
       director: editedMovie.director?.trim() || "",
       actors: editedMovie.actors || [],
       genre: editedMovie.genre || [],
-      status: editedMovie.status,
     });
 
     setIsEditing(false);

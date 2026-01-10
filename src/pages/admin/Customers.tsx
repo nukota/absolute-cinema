@@ -7,7 +7,7 @@ import {
   useDeleteCustomer,
   useCreateCustomer,
   useUpdateCustomer,
-} from "../../services/usersService";
+} from "../../services/customersService";
 import { useFeedback } from "../../provider/FeedbackProvider";
 import type { GridColDef } from "@mui/x-data-grid";
 import type { CustomerDTO } from "../../utils/dtos/customerDTO";

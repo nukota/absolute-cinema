@@ -30,14 +30,3 @@ export interface UpdateRoomDTO {
     seat_label: string;
   }[]; // Coi như tạo lại các seats từ đầu
 }
-
-// API: GET with room_id param
-export interface SeatsDTO {
-  seats: {
-    seat_id: number;
-    row: number;
-    col: number;
-    seat_label: string;
-    available: boolean;
-  }[];
-}

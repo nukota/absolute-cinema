@@ -40,33 +40,17 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
       return;
     }
 
-    // Calculate status based on release date
-    const today = new Date();
-    const release = new Date(releaseDate);
-    const thirtyDaysFromNow = new Date(today);
-    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
-
-    let status: string;
-    if (release <= today) {
-      status = MovieStatus.NowShowing;
-    } else if (release > thirtyDaysFromNow) {
-      status = MovieStatus.ComingSoon;
-    } else {
-      status = MovieStatus.Stopped;
-    }
-
     // TODO: Add movie logic here
     onCreate({
       title: title.trim(),
       description: description.trim(),
-      duration: parseInt(duration),
+      duration_min: parseInt(duration),
       release_date: releaseDate,
-      rating: parseFloat(rating) || 0,
+      rating: rating.trim() || undefined,
       poster_url: posterUrl.trim(),
       director: director.trim(),
       actors,
       genre,
-      status,
     });
 
     // Reset form and close

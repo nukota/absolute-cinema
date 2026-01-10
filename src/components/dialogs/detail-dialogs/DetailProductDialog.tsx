@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DetailDialog from "../template/DetailDialog";
 import type { FormSection } from "../template/DetailDialog";
 import type { ProductDTO } from "../../../utils/dtos/productDTO";
@@ -24,6 +24,18 @@ const DetailProductDialog: React.FC<DetailProductDialogProps> = ({
     product
   );
   const [error, setError] = useState("");
+
+  // Reset editing state when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setIsEditing(false);
+    }
+  }, [open]);
+
+  // Sync editedProduct with product prop when it changes
+  useEffect(() => {
+    setEditedProduct(product);
+  }, [product]);
 
   const handleEdit = () => {
     setIsEditing(true);

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DetailDialog from "../template/DetailDialog";
 import type { FormSection } from "../template/DetailDialog";
 import type { CinemaDTO } from "../../../utils/dtos/cinemaDTO";
@@ -18,9 +18,22 @@ const DetailCinemaDialog: React.FC<DetailCinemaDialogProps> = ({
   onUpdate,
   onDelete,
 }) => {
+  console.log("DetailCinemaDialog cinema:", cinema);
   const [isEditing, setIsEditing] = useState(false);
   const [editedCinema, setEditedCinema] = useState<CinemaDTO | null>(cinema);
   const [error, setError] = useState("");
+
+  // Reset editing state when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setIsEditing(false);
+    }
+  }, [open]);
+
+  // Sync editedCinema with cinema prop when it changes
+  useEffect(() => {
+    setEditedCinema(cinema);
+  }, [cinema]);
 
   const handleEdit = () => {
     setIsEditing(true);

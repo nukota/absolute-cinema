@@ -8,6 +8,7 @@ import {
   Movie,
   People,
   PlayArrow,
+  Warning,
 } from "@mui/icons-material";
 import type { MovieDTO } from "../../../utils/dtos/movieDTO";
 import { MovieStatus } from "../../../utils/enum";
@@ -165,7 +166,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
               </Box>
               {movie.rating && (
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <ThumbUp fontSize="small" color="secondary" />
+                  <Warning fontSize="small" color="secondary" />
                   <Typography
                     sx={{
                       opacity: 0.8,

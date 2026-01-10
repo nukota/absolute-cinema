@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DetailDialog from "../template/DetailDialog";
 import type { FormSection } from "../template/DetailDialog";
 import type { ShowtimeDTO } from "../../../utils/dtos/showtimeDTO";
@@ -23,6 +23,18 @@ const DetailShowtimeDialog: React.FC<DetailShowtimeDialogProps> = ({
     showtime
   );
   const [error, setError] = useState("");
+
+  // Reset editing state when dialog closes
+  useEffect(() => {
+    if (!open) {
+      setIsEditing(false);
+    }
+  }, [open]);
+
+  // Sync editedShowtime with showtime prop when it changes
+  useEffect(() => {
+    setEditedShowtime(showtime);
+  }, [showtime]);
 
   const handleEdit = () => {
     setIsEditing(true);

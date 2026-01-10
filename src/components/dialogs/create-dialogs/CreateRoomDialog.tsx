@@ -164,14 +164,18 @@ const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
     // Create room data
     const activeSeats = seats.filter((s) => s.isActive);
     const roomData = {
+      cinema_id: cinema.cinema_id,
       name: name.trim(),
-      cinema_id: cinema.value,
-      capacity,
-      seats: activeSeats.map((seat) => ({
-        row: seat.gridRow,
-        column: seat.gridColumn,
-        is_active: seat.isActive,
-      })),
+      seats: activeSeats.map((seat) => {
+        const seatWithLabel = seatsWithLabels.find(
+          (s) => s.gridRow === seat.gridRow && s.gridColumn === seat.gridColumn
+        );
+        return {
+          row: seat.gridRow,
+          col: seat.gridColumn,
+          seat_label: seatWithLabel?.label || "",
+        };
+      }),
     };
 
     // Call onSave callback if provided
