@@ -18,13 +18,15 @@ import {
   LockOutlined,
   PersonOutlined,
 } from "@mui/icons-material";
-import { useSignUp } from "../../services/authService";
+import { useSignUp, authKeys } from "../../services/authService";
 import { useFeedback } from "../../provider/FeedbackProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Signup = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useFeedback();
   const signUpMutation = useSignUp();
+  const queryClient = useQueryClient();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -48,13 +50,16 @@ const Signup = () => {
       const response = await signUpMutation.mutateAsync({
         email,
         password,
-        full_name: fullName,
+        fullName: fullName,
       });
 
       // Store tokens
       localStorage.setItem("access_token", response.access_token);
       localStorage.setItem("refresh_token", response.refresh_token);
       localStorage.setItem("user", JSON.stringify(response.user));
+
+      // Set user data in cache immediately to prevent redirect loop
+      queryClient.setQueryData(authKeys.currentUser(), response.user);
 
       showSnackbar({
         message: "Account created successfully!",

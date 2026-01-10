@@ -16,10 +16,12 @@ import {
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import ProfileMenu from "../../popovers/ProfileMenu";
 
 const Header = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,7 +50,12 @@ const Header = () => {
 
   const handleLogout = () => {
     handleClose();
-    localStorage.clear();
+    // Clear all stored authentication data
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("user");
+    // Clear React Query cache
+    queryClient.clear();
     navigate("/signin");
   };
 

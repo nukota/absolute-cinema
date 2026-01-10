@@ -11,7 +11,7 @@ export interface ChatResponse {
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 // Using stable gemini-2.0-flash model (gemini-1.5-flash is deprecated)
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
 // System instruction for the cinema assistant
 const SYSTEM_INSTRUCTION = `You are a helpful cinema assistant for "Absolute Cinema". You help customers with:

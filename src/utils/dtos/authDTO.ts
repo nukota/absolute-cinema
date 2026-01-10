@@ -1,8 +1,10 @@
 // Authentication DTOs
+import { UserRole } from "../enum";
+
 export interface SignUpDTO {
   email: string;
   password: string;
-  full_name?: string;
+  fullName?: string;
 }
 
 export interface SignInDTO {
@@ -16,6 +18,7 @@ export interface AuthResponse {
   user: {
     id: string;
     email: string;
+    role: UserRole;
     created_at?: string;
   };
 }

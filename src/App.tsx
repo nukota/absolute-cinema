@@ -23,6 +23,8 @@ import Profile from "./pages/user/Profile";
 import HelpCenter from "./pages/user/HelpCenter";
 import TermsConditions from "./pages/user/TermsConditions";
 import PrivacyPolicy from "./pages/user/PrivacyPolicy";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { UserRole } from "./utils/enum";
 import "./App.css";
 
 const App = () => {
@@ -33,32 +35,36 @@ const App = () => {
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* User routes with layout */}
-        <Route path="/" element={<UserLayout />}>
-          <Route index element={<Home />} />
-          <Route path="movies" element={<MoviesPage />} />
-          <Route path="saved-movies" element={<SavedMoviesPage />} />
-          <Route path="movie/:id" element={<MovieDetail />} />
-          <Route path="booking/:showtimeId" element={<Booking />} />
-          <Route path="payment" element={<Payment />} />
-          <Route path="confirmation" element={<Confirmation />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="help-center" element={<HelpCenter />} />
-          <Route path="terms-conditions" element={<TermsConditions />} />
-          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        {/* User routes with layout - Protected for customers and admins */}
+        <Route element={<ProtectedRoute allowedRoles={[UserRole.Customer, UserRole.Admin]} />}>
+          <Route path="/" element={<UserLayout />}>
+            <Route index element={<Home />} />
+            <Route path="movies" element={<MoviesPage />} />
+            <Route path="saved-movies" element={<SavedMoviesPage />} />
+            <Route path="movie/:id" element={<MovieDetail />} />
+            <Route path="booking/:showtimeId" element={<Booking />} />
+            <Route path="payment" element={<Payment />} />
+            <Route path="confirmation" element={<Confirmation />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="help-center" element={<HelpCenter />} />
+            <Route path="terms-conditions" element={<TermsConditions />} />
+            <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          </Route>
         </Route>
 
-        {/* Admin routes */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="movies" element={<Movies />} />
-          <Route path="showtimes" element={<Showtimes />} />
-          <Route path="cinemas" element={<Cinemas />} />
-          <Route path="rooms" element={<Rooms />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="products" element={<Products />} />
-          <Route path="invoices" element={<Invoices />} />
-          <Route path="settings" element={<Settings />} />
+        {/* Admin routes - Protected for admins only */}
+        <Route element={<ProtectedRoute allowedRoles={[UserRole.Admin]} />}>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="movies" element={<Movies />} />
+            <Route path="showtimes" element={<Showtimes />} />
+            <Route path="cinemas" element={<Cinemas />} />
+            <Route path="rooms" element={<Rooms />} />
+            <Route path="customers" element={<Customers />} />
+            <Route path="products" element={<Products />} />
+            <Route path="invoices" element={<Invoices />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

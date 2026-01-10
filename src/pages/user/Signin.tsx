@@ -17,13 +17,15 @@ import {
   EmailOutlined,
   LockOutlined,
 } from "@mui/icons-material";
-import { useSignIn } from "../../services/authService";
+import { useSignIn, authKeys } from "../../services/authService";
 import { useFeedback } from "../../provider/FeedbackProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Signin = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useFeedback();
   const signInMutation = useSignIn();
+  const queryClient = useQueryClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -41,6 +43,9 @@ const Signin = () => {
       localStorage.setItem("access_token", response.access_token);
       localStorage.setItem("refresh_token", response.refresh_token);
       localStorage.setItem("user", JSON.stringify(response.user));
+
+      // Set user data in cache immediately to prevent redirect loop
+      queryClient.setQueryData(authKeys.currentUser(), response.user);
 
       showSnackbar({
         message: "Sign in successful!",

@@ -27,3 +27,9 @@ export type ProductCategory =
     Unknown: "unknown",
   } as const;
   export type MovieStatus = (typeof MovieStatus)[keyof typeof MovieStatus];
+
+export const UserRole = {
+  Admin: "admin",
+  Customer: "customer",
+} as const;
+export type UserRole = (typeof UserRole)[keyof typeof UserRole];

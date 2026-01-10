@@ -73,9 +73,21 @@ export const useSignOut = () => {
 };
 
 export const useCurrentUser = () => {
+  // Get initial user data from localStorage if available
+  const getInitialUserData = () => {
+    try {
+      const storedUser = localStorage.getItem("user");
+      return storedUser ? JSON.parse(storedUser) : undefined;
+    } catch {
+      return undefined;
+    }
+  };
+
   return useQuery({
     queryKey: authKeys.currentUser(),
     queryFn: getCurrentUser,
+    initialData: getInitialUserData(),
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
 
