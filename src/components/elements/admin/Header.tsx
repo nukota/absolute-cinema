@@ -23,13 +23,20 @@ import { useState } from "react";
 import { LocalizationProvider, DateCalendar } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
+import { useNavigate } from "react-router-dom";
+import { useSignOut } from "../../../services/authService";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [calendarAnchor, setCalendarAnchor] = useState<null | HTMLElement>(null);
+  const [calendarAnchor, setCalendarAnchor] = useState<null | HTMLElement>(
+    null
+  );
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const open = Boolean(anchorEl);
   const calendarOpen = Boolean(calendarAnchor);
+  const navigate = useNavigate();
+
+  const { mutate: signOutMutate } = useSignOut();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -72,7 +79,11 @@ export const Header = () => {
         }}
       >
         {/* Icon Buttons */}
-        <IconButton color="default" sx={{ p: 1.25 }} onClick={handleCalendarClick}>
+        <IconButton
+          color="default"
+          sx={{ p: 1.25 }}
+          onClick={handleCalendarClick}
+        >
           <CalendarTodayRounded sx={{ fontSize: 24 }} />
         </IconButton>
 
@@ -132,10 +143,7 @@ export const Header = () => {
         >
           <Paper elevation={3}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateCalendar
-                value={selectedDate}
-                onChange={handleDateChange}
-              />
+              <DateCalendar value={selectedDate} onChange={handleDateChange} />
             </LocalizationProvider>
           </Paper>
         </Popover>
@@ -171,7 +179,17 @@ export const Header = () => {
             Settings
           </MenuItem>
           <Divider />
-          <MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              signOutMutate(undefined, {
+                onSuccess: () => {
+                  localStorage.removeItem("auth_token");
+                  navigate("/signin");
+                },
+              });
+            }}
+          >
             <ListItemIcon>
               <LogoutRounded fontSize="small" />
             </ListItemIcon>

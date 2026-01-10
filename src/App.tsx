@@ -11,6 +11,7 @@ import Invoices from "./pages/admin/Invoices";
 import Settings from "./pages/admin/Settings";
 import Signin from "./pages/user/Signin";
 import Signup from "./pages/user/Signup";
+import Verify from "./pages/user/Verify";
 import UserLayout from "./pages/user";
 import Home from "./pages/user/Home";
 import MoviesPage from "./pages/user/MoviesPage";
@@ -34,6 +35,7 @@ const App = () => {
         {/* Auth routes */}
         <Route path="/signin" element={<Signin />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/verify" element={<Verify />} />
 
         {/* User routes with layout - Protected for customers and admins */}
         <Route element={<ProtectedRoute allowedRoles={[UserRole.Customer, UserRole.Admin]} />}>
