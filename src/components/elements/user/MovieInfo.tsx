@@ -12,12 +12,23 @@ import {
 } from "@mui/icons-material";
 import type { MovieDTO } from "../../../utils/dtos/movieDTO";
 import { MovieStatus } from "../../../utils/enum";
+import TrailerDialog from "../../dialogs/detail-dialogs/TrailerDialog";
+import { useState } from "react";
 
 interface MovieInfoProps {
   movie: MovieDTO;
 }
 
 const MovieInfo = ({ movie }: MovieInfoProps) => {
+  const [trailerDialogOpen, setTrailerDialogOpen] = useState(false);
+
+  const handleWatchTrailer = () => {
+    setTrailerDialogOpen(true);
+  };
+
+  const handleCloseTrailerDialog = () => {
+    setTrailerDialogOpen(false);
+  };
   const statusColors = {
     success: "#4caf50",
     info: "#2196f3",
@@ -283,6 +294,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                   mt: 2,
                   backgroundColor: "rgba(255, 215, 0, 0.1)",
                 }}
+                onClick={handleWatchTrailer}
               >
                 Play Trailer
               </Button>
@@ -290,6 +302,12 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
           </Box>
         </Box>
       </Container>
+
+      <TrailerDialog
+        open={trailerDialogOpen}
+        onClose={handleCloseTrailerDialog}
+        trailerUrl={movie.trailer_url}
+      />
     </Box>
   );
 };

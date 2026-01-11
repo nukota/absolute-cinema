@@ -64,6 +64,7 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
       release_date: editedMovie.release_date,
       rating: editedMovie.rating?.toString() || undefined,
       poster_url: editedMovie.poster_url?.trim() || "",
+      trailer_url: editedMovie.trailer_url?.trim() || "",
       director: editedMovie.director?.trim() || "",
       actors: editedMovie.actors || [],
       genre: editedMovie.genre || [],
@@ -201,6 +202,17 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
           onChange: (value) =>
             setEditedMovie((prev) =>
               prev ? { ...prev, poster_url: value } : null
+            ),
+        },
+        {
+          name: "trailer_url",
+          label: "Trailer URL",
+          type: "text",
+          placeholder: "Enter trailer URL (YouTube, Vimeo, etc.)",
+          value: editedMovie?.trailer_url || "",
+          onChange: (value) =>
+            setEditedMovie((prev) =>
+              prev ? { ...prev, trailer_url: value } : null
             ),
         },
       ],

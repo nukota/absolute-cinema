@@ -4,24 +4,35 @@ import { PlayArrow, LocalActivity, AccessTime, Category, CalendarToday, Person, 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
-import { mockMovies } from '../../../utils/mockdata';
 import { MovieStatus } from '../../../utils/enum';
-import type { MovieDTO } from '../../../utils/dtos/movieDTO';
+import type { UserMovieDTO } from '../../../utils/dtos/movieDTO';
+import TrailerDialog from '../../dialogs/detail-dialogs/TrailerDialog';
+import { useState } from 'react';
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  movies: UserMovieDTO[];
+}
+
+const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
   const navigate = useNavigate();
+  const [trailerDialogOpen, setTrailerDialogOpen] = useState(false);
+  const [selectedMovie, setSelectedMovie] = useState<UserMovieDTO | null>(null);
 
   // Get now showing movies for hero swiper
-  const nowShowingMovies = mockMovies.filter(movie => movie.status === MovieStatus.NowShowing);
+  const nowShowingMovies = movies.filter(movie => movie.status === MovieStatus.NowShowing);
 
   const handleBookTicket = (movieId: string) => {
     navigate(`/movie/${movieId}`);
   };
 
-  const handleWatchTrailer = (movie: MovieDTO) => {
-    // For now, just navigate to movie detail page
-    // In a real app, this would open a trailer modal
-    navigate(`/movie/${movie.movie_id}`);
+  const handleWatchTrailer = (movie: UserMovieDTO) => {
+    setSelectedMovie(movie);
+    setTrailerDialogOpen(true);
+  };
+
+  const handleCloseTrailerDialog = () => {
+    setTrailerDialogOpen(false);
+    setSelectedMovie(null);
   };
 
   return (
@@ -303,6 +314,12 @@ const HeroSection = () => {
           </SwiperSlide>
         ))}
       </Swiper>
+
+      <TrailerDialog
+        open={trailerDialogOpen}
+        onClose={handleCloseTrailerDialog}
+        trailerUrl={selectedMovie?.trailer_url}
+      />
     </Box>
   );
 };

@@ -1,15 +1,68 @@
-import { Box, Container, Typography } from '@mui/material';
-import { mockMovies } from '../../utils/mockdata';
+import { Box, Container, Typography, CircularProgress } from '@mui/material';
+import { useEffect } from 'react';
+import { useMoviesByCustomer } from '../../services/moviesService';
+import { useCurrentUser } from '../../services/authService';
+import { useSaveMovie, useRemoveSavedMovie } from '../../services/savesService';
+import { useFeedback } from '../../provider/FeedbackProvider';
 import { MovieStatus } from '../../utils/enum';
 import MovieSwiper from '../../components/elements/user/MovieSwiper';
 import HeroSection from '../../components/elements/user/HeroSection';
 
 const Home = () => {
-  // Get featured movies (currently showing)
-  const featuredMovies = mockMovies.filter(movie => movie.status === MovieStatus.NowShowing).slice(0, 6);
+  const { data: currentUser } = useCurrentUser();
+  const { data: movies, isLoading } = useMoviesByCustomer(currentUser?.id || '');
+  const saveMovieMutation = useSaveMovie();
+  const removeSavedMovieMutation = useRemoveSavedMovie();
+  const { showSnackbar } = useFeedback();
+  
+  const featuredMovies = movies?.filter(movie => movie.status === MovieStatus.NowShowing).slice(0, 6) || [];
+  const comingSoonMovies = movies?.filter(movie => movie.status === MovieStatus.ComingSoon).slice(0, 6) || [];
 
-  // Get coming soon movies
-  const comingSoonMovies = mockMovies.filter(movie => movie.status === MovieStatus.ComingSoon).slice(0, 6);
+  const handleSaveMovie = (movieId: string) => {
+    if (currentUser?.id) {
+      saveMovieMutation.mutate({
+        customer_id: currentUser.id,
+        movie_id: movieId,
+      });
+    }
+  };
+
+  const handleUnsaveMovie = (movieId: string) => {
+    if (currentUser?.id) {
+      removeSavedMovieMutation.mutate({
+        customerId: currentUser.id,
+        movieId,
+      });
+    }
+  };
+
+  // Show snackbar when movie is successfully saved
+  useEffect(() => {
+    if (saveMovieMutation.isSuccess) {
+      showSnackbar({
+        message: "Movie saved successfully!",
+        severity: "success",
+      });
+      // Reset the mutation state to prevent repeated snackbars
+      saveMovieMutation.reset();
+    }
+  }, [saveMovieMutation.isSuccess, showSnackbar, saveMovieMutation]);
+
+  if (isLoading || !currentUser) {
+    return (
+      <Box
+        sx={{
+          background: 'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress size={60} sx={{ color: 'primary.main' }} />
+      </Box>
+    );
+  }
 
   return (
     <Box 
@@ -19,16 +72,26 @@ const Home = () => {
       }}
     >
       {/* Hero Section */}
-      <HeroSection />
+      <HeroSection movies={movies || []} />
 
       {/* Now Showing Section */}
       <Container maxWidth="lg" sx={{ my: 8 }}>
-        <MovieSwiper title="Now Showing" movies={featuredMovies} />
+        <MovieSwiper 
+          title="Now Showing" 
+          movies={featuredMovies}
+          onSaveMovie={handleSaveMovie}
+          onUnsaveMovie={handleUnsaveMovie}
+        />
       </Container>
 
       {/* Coming Soon Section */}
       <Container maxWidth="lg" sx={{ mb: 8 }}>
-        <MovieSwiper title="Coming Soon" movies={comingSoonMovies} />
+        <MovieSwiper 
+          title="Coming Soon" 
+          movies={comingSoonMovies}
+          onSaveMovie={handleSaveMovie}
+          onUnsaveMovie={handleUnsaveMovie}
+        />
       </Container>
 
       {/* Features Section */}

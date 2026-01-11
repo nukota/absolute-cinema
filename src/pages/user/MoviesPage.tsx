@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Box, Checkbox, Container, FormControlLabel, TextField, Typography } from '@mui/material';
+import { Box, Checkbox, Container, FormControlLabel, TextField, Typography, CircularProgress } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { mockMovies } from '../../utils/mockdata';
+import { useMoviesByCustomer } from '../../services/moviesService';
+import { useCurrentUser } from '../../services/authService';
+import { useSaveMovie, useRemoveSavedMovie } from '../../services/savesService';
+import { useFeedback } from '../../provider/FeedbackProvider';
 import { MovieStatus } from '../../utils/enum';
 import SlideItem from '../../components/items/SlideItem';
 
@@ -12,6 +15,12 @@ const Movies = () => {
   const [showNowShowing, setShowNowShowing] = useState(true);
   const [showComingSoon, setShowComingSoon] = useState(true);
 
+  const { data: currentUser } = useCurrentUser();
+  const { data: movies, isLoading } = useMoviesByCustomer(currentUser?.id || '');
+  const saveMovieMutation = useSaveMovie();
+  const removeSavedMovieMutation = useRemoveSavedMovie();
+  const { showSnackbar } = useFeedback();
+
   // Initialize search term from URL query parameter
   useEffect(() => {
     const searchQuery = searchParams.get('search');
@@ -20,14 +29,43 @@ const Movies = () => {
     }
   }, [searchParams]);
 
+  // Show snackbar when movie is successfully saved
+  useEffect(() => {
+    if (saveMovieMutation.isSuccess) {
+      showSnackbar({
+        message: "Movie saved successfully!",
+        severity: "success",
+      });
+      saveMovieMutation.reset();
+    }
+  }, [saveMovieMutation.isSuccess, showSnackbar, saveMovieMutation]);
+
+  const handleSaveMovie = (movieId: string) => {
+    if (currentUser?.id) {
+      saveMovieMutation.mutate({
+        customer_id: currentUser.id,
+        movie_id: movieId,
+      });
+    }
+  };
+
+  const handleUnsaveMovie = (movieId: string) => {
+    if (currentUser?.id) {
+      removeSavedMovieMutation.mutate({
+        customerId: currentUser.id,
+        movieId,
+      });
+    }
+  };
+
   // Filter movies based on search and status
-  const filteredMovies = mockMovies.filter(movie => {
+  const filteredMovies = movies?.filter(movie => {
     const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = 
       (showNowShowing && movie.status === MovieStatus.NowShowing) ||
       (showComingSoon && movie.status === MovieStatus.ComingSoon);
     return matchesSearch && matchesStatus;
-  });
+  }) || [];
 
 
 
@@ -96,26 +134,40 @@ const Movies = () => {
           </Box>
         </Box>
 
-        {/* Movie Grid */}
-        {filteredMovies.length === 0 ? (
-          <Box sx={{ textAlign: 'center', py: 8 }}>
-            <Typography variant="h6" color="rgba(255, 255, 255, 0.7)">
-              No movies found
-            </Typography>
+        {/* Loading State */}
+        {isLoading || !currentUser ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress size={60} sx={{ color: 'primary.main' }} />
           </Box>
         ) : (
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
-              gap: 4,
-              justifyItems: 'center',
-            }}
-          >
-            {filteredMovies.map((movie) => (
-              <SlideItem key={movie.movie_id} movie={movie} />
-            ))}
-          </Box>
+          <>
+            {/* Movie Grid */}
+            {filteredMovies.length === 0 ? (
+              <Box sx={{ textAlign: 'center', py: 8 }}>
+                <Typography variant="h6" color="rgba(255, 255, 255, 0.7)">
+                  No movies found
+                </Typography>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
+                  gap: 4,
+                  justifyItems: 'center',
+                }}
+              >
+                {filteredMovies.map((movie) => (
+                  <SlideItem 
+                    key={movie.movie_id} 
+                    movie={movie}
+                    onSaveMovie={handleSaveMovie}
+                    onUnsaveMovie={handleUnsaveMovie}
+                  />
+                ))}
+              </Box>
+            )}
+          </>
         )}
       </Container>
     </Box>

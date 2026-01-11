@@ -2,23 +2,24 @@ import { useState } from "react";
 import {
   Box,
   Button,
-  Card,
-  CardContent,
   Container,
   Typography,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  CircularProgress,
 } from "@mui/material";
 import {
   EventSeat,
 } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
-import { mockMovies, mockShowtimes, mockCinemas } from "../../utils/mockdata";
+import { useMovie } from "../../services/moviesService";
+import { useShowtimesByMovie } from "../../services/showtimesSerivce";
 import MovieInfo from "../../components/elements/user/MovieInfo";
+import ShowtimeItem from "../../components/items/Showtime";
 import { MovieStatus } from "../../utils/enum";
-import { formatDate, formatTime } from "../../utils/helper";
+import { formatDate } from "../../utils/helper";
 
 const MovieDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,30 +28,47 @@ const MovieDetail = () => {
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedCinema, setSelectedCinema] = useState<string>("");
 
-  // Find the movie
-  const movie = mockMovies.find((m) => m.movie_id === id);
+  // API calls
+  const { data: movie, isLoading: movieLoading } = useMovie(id || "");
+  const { data: showtimes, isLoading: showtimesLoading } = useShowtimesByMovie(id || "");
 
-  // Find showtimes for this movie
-  const movieShowtimes = mockShowtimes.filter((s) => s.movie.movie_id === id);
+  // Get unique dates and cinemas from showtimes
+  const availableDates = showtimes ? [
+    ...new Set(showtimes.map((s) => formatDate(s.start_time))),
+  ].sort() : [];
 
-  // Get unique dates and cinemas
-  const availableDates = [
-    ...new Set(movieShowtimes.map((s) => formatDate(s.start_time))),
-  ].sort();
-  const availableCinemas = [
-    ...new Set(movieShowtimes.map((s) => s.cinema.cinema_id)),
+  const availableCinemas = showtimes ? [
+    ...new Set(showtimes.map((s) => s.cinema.cinema_id)),
   ]
-    .map((cinemaId) => mockCinemas.find((c) => c.cinema_id === cinemaId))
-    .filter(Boolean);
+    .map((cinemaId) => showtimes.find((s) => s.cinema.cinema_id === cinemaId)?.cinema)
+    .filter(Boolean) : [];
 
   // Filter showtimes based on selected date and cinema
-  const filteredShowtimes = movieShowtimes.filter((showtime) => {
+  const filteredShowtimes = showtimes?.filter((showtime) => {
     const showtimeDate = formatDate(showtime.start_time);
     const matchesDate = !selectedDate || showtimeDate === selectedDate;
     const matchesCinema =
       !selectedCinema || showtime.cinema.cinema_id === selectedCinema;
     return matchesDate && matchesCinema;
-  });
+  }) || [];
+
+  const isLoading = movieLoading || showtimesLoading;
+
+  if (isLoading) {
+    return (
+      <Box
+        sx={{
+          background: 'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <CircularProgress size={60} sx={{ color: 'primary.main' }} />
+      </Box>
+    );
+  }
 
   if (!movie) {
     return (
@@ -83,7 +101,7 @@ const MovieDetail = () => {
       {/* Showtimes Section */}
       <Container maxWidth="lg" sx={{ py: 6 }}>
         {movie.status === MovieStatus.NowShowing &&
-        movieShowtimes.length > 0 ? (
+        showtimes && showtimes.length > 0 ? (
           <Box>
             <Typography
               variant="h3"
@@ -174,7 +192,7 @@ const MovieDetail = () => {
                           value={cinema.cinema_id}
                         >
                           <Typography variant="body1">
-                            {cinema.name} ({cinema.address})
+                            {cinema.name}{cinema.address ? ` (${cinema.address})` : ''}
                           </Typography>
                         </MenuItem>
                       )
@@ -194,11 +212,11 @@ const MovieDetail = () => {
                     }
                     acc[date].push(showtime);
                     return acc;
-                  }, {} as Record<string, typeof movieShowtimes>)
+                  }, {} as Record<string, typeof showtimes>)
                 ).map(([date, showtimes]) => (
                   <Box key={date} sx={{ mb: 6 }}>
                     <Typography
-                      variant="h4"
+                      variant="h5"
                       fontWeight={600}
                       sx={{ mb: 2 }}
                       color="secondary"
@@ -210,55 +228,20 @@ const MovieDetail = () => {
                         display: "grid",
                         gridTemplateColumns: {
                           xs: "1fr",
-                          sm: "repeat(2, 1fr)",
-                          md: "repeat(4, 1fr)",
-                          lg: "repeat(5, 1fr)",
+                          sm: "repeat(3, 1fr)",
+                          md: "repeat(5, 1fr)",
+                          lg: "repeat(7, 1fr)",
                         },
                         gap: 2,
                       }}
                     >
                       {showtimes.map((showtime) => (
-                        <Card
+                        <ShowtimeItem
                           key={showtime.showtime_id}
-                          sx={{
-                            cursor: "pointer",
-                            border: 2,
-                            borderColor:
-                              selectedShowtime === showtime.showtime_id
-                                ? "secondary.main"
-                                : "transparent",
-                            transition: "all 0.2s",
-                            background: "linear-gradient(135deg, #4a148c 0%, #543468 100%)",
-                            color: "white",
-                            "&:hover": {
-                              borderColor: "secondary.light",
-                              transform: "translateY(-2px)",
-                            },
-                          }}
-                          onClick={() =>
-                            setSelectedShowtime(showtime.showtime_id)
-                          }
-                        >
-                          <CardContent>
-                            <Typography
-                              variant="h6"
-                              fontWeight={600}
-                              gutterBottom
-                            >
-                              {formatTime(showtime.start_time)}
-                            </Typography>
-                            <Typography
-                              variant="body1"
-                              fontWeight={600}
-                              color="secondary"
-                            >
-                              {new Intl.NumberFormat("vi-VN", {
-                                style: "currency",
-                                currency: "VND",
-                              }).format(showtime.price)}
-                            </Typography>
-                          </CardContent>
-                        </Card>
+                          showtime={showtime}
+                          isSelected={selectedShowtime === showtime.showtime_id}
+                          onSelect={setSelectedShowtime}
+                        />
                       ))}
                     </Box>
                   </Box>

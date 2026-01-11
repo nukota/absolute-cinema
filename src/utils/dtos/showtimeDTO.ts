@@ -3,6 +3,7 @@ export interface ShowtimeDTO {
   cinema: {
     cinema_id: string;
     name: string;
+    address?: string;
   };
   room: {
     room_id: string;

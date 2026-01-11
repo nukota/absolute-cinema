@@ -1,18 +1,56 @@
-import { useState } from 'react';
-import { Box, Container, TextField, Typography } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Box, Container, TextField, Typography, CircularProgress } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { mockMovies } from '../../utils/mockdata';
+import { useMoviesByCustomer } from '../../services/moviesService';
+import { useCurrentUser } from '../../services/authService';
+import { useSaveMovie, useRemoveSavedMovie } from '../../services/savesService';
+import { useFeedback } from '../../provider/FeedbackProvider';
 import SlideItem from '../../components/items/SlideItem';
 
 const SavedMoviesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  // For now, filter from mockMovies - in real app, this would be user's saved movies
-  // You can later add a "saved" property to filter only saved movies
-  const filteredMovies = mockMovies.filter(movie => {
+  const { data: currentUser } = useCurrentUser();
+  const { data: movies, isLoading } = useMoviesByCustomer(currentUser?.id || '');
+  const saveMovieMutation = useSaveMovie();
+  const removeSavedMovieMutation = useRemoveSavedMovie();
+  const { showSnackbar } = useFeedback();
+
+  // Show snackbar when movie is successfully saved
+  useEffect(() => {
+    if (saveMovieMutation.isSuccess) {
+      showSnackbar({
+        message: "Movie saved successfully!",
+        severity: "success",
+      });
+      saveMovieMutation.reset();
+    }
+  }, [saveMovieMutation.isSuccess, showSnackbar, saveMovieMutation]);
+
+  const handleSaveMovie = (movieId: string) => {
+    if (currentUser?.id) {
+      saveMovieMutation.mutate({
+        customer_id: currentUser.id,
+        movie_id: movieId,
+      });
+    }
+  };
+
+  const handleUnsaveMovie = (movieId: string) => {
+    if (currentUser?.id) {
+      removeSavedMovieMutation.mutate({
+        customerId: currentUser.id,
+        movieId,
+      });
+    }
+  };
+
+  // Filter saved movies based on search
+  const filteredMovies = movies?.filter(movie => {
     const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
-  });
+    const isSaved = movie.isSaved === true;
+    return matchesSearch && isSaved;
+  }) || [];
 
   return (
     <Box sx={{ 
@@ -48,26 +86,40 @@ const SavedMoviesPage = () => {
           />
         </Box>
 
-        {/* Movie Grid */}
-        {filteredMovies.length === 0 ? (
-          <Box sx={{ textAlign: 'center', py: 8 }}>
-            <Typography variant="h6" color="rgba(255, 255, 255, 0.7)">
-              No saved movies found
-            </Typography>
+        {/* Loading State */}
+        {isLoading || !currentUser ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress size={60} sx={{ color: 'primary.main' }} />
           </Box>
         ) : (
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
-              gap: 4,
-              justifyItems: 'center',
-            }}
-          >
-            {filteredMovies.map((movie) => (
-              <SlideItem key={movie.movie_id} movie={movie} />
-            ))}
-          </Box>
+          <>
+            {/* Movie Grid */}
+            {filteredMovies.length === 0 ? (
+              <Box sx={{ textAlign: 'center', py: 8 }}>
+                <Typography variant="h6" color="rgba(255, 255, 255, 0.7)">
+                  No saved movies found
+                </Typography>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', lg: 'repeat(4, 1fr)' },
+                  gap: 4,
+                  justifyItems: 'center',
+                }}
+              >
+                {filteredMovies.map((movie) => (
+                  <SlideItem 
+                    key={movie.movie_id} 
+                    movie={movie}
+                    onSaveMovie={handleSaveMovie}
+                    onUnsaveMovie={handleUnsaveMovie}
+                  />
+                ))}
+              </Box>
+            )}
+          </>
         )}
       </Container>
     </Box>

@@ -8,24 +8,40 @@ import {
   Bookmark,
   CalendarToday,
   Person,
+  PlayArrow,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import type { UserMovieDTO } from "../../utils/dtos/movieDTO";
+import TrailerDialog from "../dialogs/detail-dialogs/TrailerDialog";
 
 interface SlideItemProps {
   movie: UserMovieDTO;
+  onSaveMovie: (movieId: string) => void;
+  onUnsaveMovie: (movieId: string) => void;
 }
 
-const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
-  const [isSaved, setIsSaved] = useState(movie.isSaved || false);
+const SlideItem: React.FC<SlideItemProps> = ({ movie, onSaveMovie, onUnsaveMovie }) => {
+  const [trailerDialogOpen, setTrailerDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSaveClicked = () => {
-    setIsSaved(!isSaved);
+    if (movie.isSaved) {
+      onUnsaveMovie(movie.movie_id);
+    } else {
+      onSaveMovie(movie.movie_id);
+    }
   };
 
   const handleBuyTicketClicked = () => {
     navigate(`/movie/${movie.movie_id}`);
+  };
+
+  const handleWatchTrailer = () => {
+    setTrailerDialogOpen(true);
+  };
+
+  const handleCloseTrailerDialog = () => {
+    setTrailerDialogOpen(false);
   };
 
   if (!movie) {
@@ -103,18 +119,18 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
         <Button
           variant="text"
           fullWidth
-          color={isSaved ? "inherit" : "secondary"}
+          color={movie.isSaved ? "inherit" : "secondary"}
           startIcon={<Bookmark sx={{ fontSize: 10 }} />}
           sx={{
             fontSize: 12,
             fontWeight: 600,
             flex: 1,
-            opacity: isSaved ? 0.6 : 1,
-            color: isSaved ? "grey.400" : undefined,
+            opacity: movie.isSaved ? 0.6 : 1,
+            color: movie.isSaved ? "grey.400" : undefined,
           }}
           onClick={handleSaveClicked}
         >
-          {isSaved ? "Unsave" : "Save"}
+          {movie.isSaved ? "Unsave" : "Save"}
         </Button>
         <Button
           variant="contained"
@@ -135,6 +151,28 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
           Book
         </Button>
       </Box>
+      <Button
+        variant="outlined"
+        fullWidth
+        startIcon={<PlayArrow sx={{ fontSize: 12 }} />}
+        sx={{
+          position: "absolute",
+          top: 481,
+          width: "100%",
+          fontSize: 12,
+          fontWeight: 600,
+          borderColor: "primary.main",
+          color: "primary.main",
+          "&:hover": {
+            borderColor: "primary.dark",
+            bgcolor: "primary.main",
+            color: "white",
+          },
+        }}
+        onClick={handleWatchTrailer}
+      >
+        Trailer
+      </Button>
       <Box
         className="slide-item-filter"
         sx={{
@@ -262,6 +300,11 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie }) => {
           </Box>
         </Box>
       </Box>
+      <TrailerDialog
+        open={trailerDialogOpen}
+        onClose={handleCloseTrailerDialog}
+        trailerUrl={movie.trailer_url}
+      />
     </Box>
   );
 };

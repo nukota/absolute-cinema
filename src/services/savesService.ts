@@ -1,6 +1,7 @@
 import { api } from "../lib/apiClient";
 import type { CreateSaveDto, SavedMovieResponse } from "../utils/dtos/saveDTO";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { moviesKeys } from "./moviesService";
 
 const saveMovie = async (data: CreateSaveDto): Promise<SavedMovieResponse> => {
   const response = await api.post<SavedMovieResponse>("/saves", data);
@@ -38,8 +39,9 @@ export const useSaveMovie = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: saveMovie,
-    onSuccess: () => {
+    onSuccess: (_, { customer_id }) => {
       queryClient.invalidateQueries({ queryKey: savesKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: moviesKeys.byCustomer(customer_id) });
     },
   });
 };
@@ -73,6 +75,9 @@ export const useRemoveSavedMovie = () => {
       queryClient.invalidateQueries({ queryKey: savesKeys.lists() });
       queryClient.invalidateQueries({
         queryKey: savesKeys.byCustomer(customerId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: moviesKeys.byCustomer(customerId),
       });
     },
   });

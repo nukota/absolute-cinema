@@ -8,9 +8,11 @@ import "swiper/swiper-bundle.css";
 interface MovieSwiperProps {
   title: string;
   movies: UserMovieDTO[];
+  onSaveMovie: (movieId: string) => void;
+  onUnsaveMovie: (movieId: string) => void;
 }
 
-const MovieSwiper: React.FC<MovieSwiperProps> = ({ title, movies }) => {
+const MovieSwiper: React.FC<MovieSwiperProps> = ({ title, movies, onSaveMovie, onUnsaveMovie }) => {
   return (
     <Box
       sx={{
@@ -82,7 +84,11 @@ const MovieSwiper: React.FC<MovieSwiperProps> = ({ title, movies }) => {
       >
         {movies.map((movie) => (
           <SwiperSlide key={movie.movie_id}>
-            <SlideItem movie={movie} />
+            <SlideItem 
+              movie={movie} 
+              onSaveMovie={onSaveMovie}
+              onUnsaveMovie={onUnsaveMovie}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

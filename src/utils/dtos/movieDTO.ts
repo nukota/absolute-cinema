@@ -8,6 +8,7 @@ export interface MovieDTO {
   release_date: string; // date
   rating?: string;
   poster_url?: string;
+  trailer_url?: string;
   director?: string;
   actors?: any; // JSON (can be array or object)
   genre?: any; // JSON (can be array or object)
@@ -26,6 +27,7 @@ export interface UserMovieDTO {
   release_date: string; // date
   rating?: string;
   poster_url?: string;
+  trailer_url?: string;
   director?: string;
   actors?: any; // JSON (can be array or object)
   genre?: any; // JSON (can be array or object)
@@ -42,6 +44,7 @@ export interface CreateMovieDTO {
   release_date: string;
   rating?: string;
   poster_url: string;
+  trailer_url?: string;
   director?: string;
   actors?: Array<{ name: string; role: string }>;
   genre?: string[];
@@ -55,6 +58,7 @@ export interface UpdateMovieDTO {
   release_date?: string;
   rating?: string;
   poster_url?: string;
+  trailer_url?: string;
   director?: string;
   actors?: Array<{ name: string; role: string }>;
   genre?: string[];

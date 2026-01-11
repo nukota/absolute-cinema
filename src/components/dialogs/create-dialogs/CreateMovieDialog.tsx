@@ -1,7 +1,6 @@
 import { useState } from "react";
 import CreateDialog from "../template/CreateDialog";
 import type { FormSection } from "../template/CreateDialog";
-import { MovieStatus } from "../../../utils/enum";
 
 interface CreateMovieDialogProps {
   open: boolean;
@@ -19,6 +18,7 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
   const [duration, setDuration] = useState("");
   const [releaseDate, setReleaseDate] = useState("");
   const [posterUrl, setPosterUrl] = useState("");
+  const [trailerUrl, setTrailerUrl] = useState("");
   const [director, setDirector] = useState("");
   const [actors, setActors] = useState<string[]>([]);
   const [genre, setGenre] = useState<string[]>([]);
@@ -48,6 +48,7 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
       release_date: releaseDate,
       rating: rating.trim() || undefined,
       poster_url: posterUrl.trim(),
+      trailer_url: trailerUrl.trim(),
       director: director.trim(),
       actors,
       genre,
@@ -64,6 +65,7 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
     setReleaseDate("");
     setRating("");
     setPosterUrl("");
+    setTrailerUrl("");
     setDirector("");
     setActors([]);
     setGenre([]);
@@ -124,6 +126,14 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
           placeholder: "Enter poster image URL",
           value: posterUrl,
           onChange: setPosterUrl,
+        },
+        {
+          name: "trailer_url",
+          label: "Trailer URL",
+          type: "text",
+          placeholder: "Enter trailer URL (YouTube, Vimeo, etc.)",
+          value: trailerUrl,
+          onChange: setTrailerUrl,
         },
         {
           name: "director",
