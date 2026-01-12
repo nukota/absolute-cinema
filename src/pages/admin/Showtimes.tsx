@@ -7,6 +7,7 @@ import {
   useDeleteShowtime,
   useCreateShowtime,
   useUpdateShowtime,
+  useNotifyUsers,
 } from "../../services/showtimesSerivce";
 import type { GridColDef } from "@mui/x-data-grid";
 import type { ShowtimeDTO } from "../../utils/dtos/showtimeDTO";
@@ -19,6 +20,7 @@ const Showtimes = () => {
   const deleteShowtimeMutation = useDeleteShowtime();
   const createShowtimeMutation = useCreateShowtime();
   const updateShowtimeMutation = useUpdateShowtime();
+  const notifyUsersMutation = useNotifyUsers();
   const { showSnackbar } = useFeedback();
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
@@ -39,23 +41,27 @@ const Showtimes = () => {
     }
   };
 
-  const handleCreateShowtime = (data: any) => {
-    createShowtimeMutation.mutate(data, {
-      onSuccess: () => {
-        setOpenCreateDialog(false);
-        showSnackbar({
-          message: "Showtime created successfully!",
-          severity: "success",
-        });
-      },
-      onError: (error) => {
-        console.error("Create showtime error:", error);
-        showSnackbar({
-          message: "Failed to create showtime. Please try again.",
-          severity: "error",
-        });
-      },
-    });
+  const handleCreateShowtime = async (data: any) => {
+    const { notifyUsers, ...showtimeData } = data;
+    try {
+      const createdShowtime = await createShowtimeMutation.mutateAsync(showtimeData);
+
+      if (notifyUsers) {
+        await notifyUsersMutation.mutateAsync({ showtime_id: createdShowtime.showtime_id });
+      }
+
+      setOpenCreateDialog(false);
+      showSnackbar({
+        message: "Showtime created successfully!",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Create showtime error:", error);
+      showSnackbar({
+        message: "Failed to create showtime. Please try again.",
+        severity: "error",
+      });
+    }
   };
 
   const handleUpdateShowtime = (id: string, data: any) => {

@@ -40,23 +40,21 @@ const Movies = () => {
     setOpenDetailDialog(true);
   };
 
-  const handleCreateMovie = (data: any) => {
-    createMovieMutation.mutate(data, {
-      onSuccess: () => {
-        setOpenCreateDialog(false);
-        showSnackbar({
-          message: "Movie created successfully!",
-          severity: "success",
-        });
-      },
-      onError: (error) => {
-        console.error("Create movie error:", error);
-        showSnackbar({
-          message: "Failed to create movie. Please try again.",
-          severity: "error",
-        });
-      },
-    });
+  const handleCreateMovie = async (data: any) => {
+    try {
+      await createMovieMutation.mutateAsync(data);
+      setOpenCreateDialog(false);
+      showSnackbar({
+        message: "Movie created successfully!",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Create movie error:", error);
+      showSnackbar({
+        message: "Failed to create movie. Please try again.",
+        severity: "error",
+      });
+    }
   };
 
   const handleUpdateMovie = (id: string, data: any) => {

@@ -5,7 +5,7 @@ import type { FormSection } from "../template/CreateDialog";
 interface CreateCinemaDialogProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (data: { name: string; address: string }) => void;
+  onCreate: (data: { name: string; address: string }) => Promise<void>;
 }
 
 const CreateCinemaDialog: React.FC<CreateCinemaDialogProps> = ({
@@ -16,8 +16,9 @@ const CreateCinemaDialog: React.FC<CreateCinemaDialogProps> = ({
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     // Validation
     if (!name.trim()) {
       setError("Cinema name is required");
@@ -28,19 +29,29 @@ const CreateCinemaDialog: React.FC<CreateCinemaDialogProps> = ({
       return;
     }
 
-    onCreate({
-      name: name.trim(),
-      address: address.trim(),
-    });
+    setIsSubmitting(true);
+    setError("");
 
-    // Reset form and close
-    handleClose();
+    try {
+      await onCreate({
+        name: name.trim(),
+        address: address.trim(),
+      });
+
+      // Reset form and close only after API call succeeds
+      handleClose();
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
     setName("");
     setAddress("");
     setError("");
+    setIsSubmitting(false);
     onClose();
   };
 
@@ -78,6 +89,7 @@ const CreateCinemaDialog: React.FC<CreateCinemaDialogProps> = ({
       sections={sections}
       onAdd={handleAdd}
       error={error}
+      isLoading={isSubmitting}
     />
   );
 };

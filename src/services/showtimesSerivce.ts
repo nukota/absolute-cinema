@@ -3,6 +3,7 @@ import type {
   ShowtimeDTO,
   CreateShowtimeDto,
   UpdateShowtimeDTO,
+  NotifyShowtimeDto,
 } from "../utils/dtos/showtimeDTO";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -43,12 +44,12 @@ const deleteShowtime = async (id: string): Promise<void> => {
 };
 
 const notifyUsers = async (
-  showtime_id: string
+  data: NotifyShowtimeDto
 ): Promise<{ message: string; notified_users: number }> => {
   const response = await api.post<{
     message: string;
     notified_users: number;
-  }>("/showtimes/notify", { showtime_id });
+  }>("/showtimes/notify", data);
   return response.data;
 };
 

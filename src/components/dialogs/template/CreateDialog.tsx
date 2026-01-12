@@ -15,6 +15,7 @@ interface CreateDialogProps {
   onAdd: () => void;
   error?: string;
   showImage?: string;
+  isLoading?: boolean;
 }
 
 const CreateDialog: React.FC<CreateDialogProps> = ({
@@ -26,18 +27,21 @@ const CreateDialog: React.FC<CreateDialogProps> = ({
   onAdd,
   error,
   showImage,
+  isLoading = false,
 }) => {
   const actions: DialogAction[] = [
     {
       label: 'Cancel',
       onClick: onClose,
       variant: 'outlined',
+      disabled: isLoading,
     },
     {
       label: 'Add',
       onClick: onAdd,
       variant: 'contained',
       color: 'primary',
+      disabled: isLoading,
     },
   ];
 
