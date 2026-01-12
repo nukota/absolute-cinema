@@ -57,6 +57,22 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
       return;
     }
 
+    // Convert string inputs to arrays
+    const actorsArray =
+      typeof editedMovie.actors === "string"
+        ? editedMovie.actors
+            .split(",")
+            .map((item) => item.trim())
+            .filter((item) => item !== "")
+        : editedMovie.actors || [];
+    const genreArray =
+      typeof editedMovie.genre === "string"
+        ? editedMovie.genre
+            .split(",")
+            .map((item) => item.trim())
+            .filter((item) => item !== "")
+        : editedMovie.genre || [];
+
     onUpdate(editedMovie.movie_id, {
       title: editedMovie.title.trim(),
       description: editedMovie.description?.trim() || "",
@@ -66,8 +82,8 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
       poster_url: editedMovie.poster_url?.trim() || "",
       trailer_url: editedMovie.trailer_url?.trim() || "",
       director: editedMovie.director?.trim() || "",
-      actors: editedMovie.actors || [],
-      genre: editedMovie.genre || [],
+      actors: actorsArray,
+      genre: genreArray,
     });
 
     setIsEditing(false);
@@ -161,9 +177,11 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
         {
           name: "actors",
           label: "Actors",
-          type: "list",
+          type: "text",
           placeholder: "Enter actors (comma-separated)",
-          value: editedMovie?.actors || [],
+          value: Array.isArray(editedMovie?.actors)
+            ? editedMovie?.actors.join(", ")
+            : editedMovie?.actors || "",
           onChange: (value) =>
             setEditedMovie((prev) =>
               prev ? { ...prev, actors: value } : null
@@ -172,9 +190,11 @@ const DetailMovieDialog: React.FC<DetailMovieDialogProps> = ({
         {
           name: "genre",
           label: "Genre",
-          type: "list",
+          type: "text",
           placeholder: "Enter genres (comma-separated)",
-          value: editedMovie?.genre || [],
+          value: Array.isArray(editedMovie?.genre)
+            ? editedMovie?.genre.join(", ")
+            : editedMovie?.genre || "",
           onChange: (value) =>
             setEditedMovie((prev) => (prev ? { ...prev, genre: value } : null)),
         },

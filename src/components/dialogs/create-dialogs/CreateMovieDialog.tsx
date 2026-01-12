@@ -20,8 +20,8 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
   const [posterUrl, setPosterUrl] = useState("");
   const [trailerUrl, setTrailerUrl] = useState("");
   const [director, setDirector] = useState("");
-  const [actors, setActors] = useState<string[]>([]);
-  const [genre, setGenre] = useState<string[]>([]);
+  const [actorsInput, setActorsInput] = useState(""); // String input for the field
+  const [genreInput, setGenreInput] = useState(""); // String input for the field
   const [rating, setRating] = useState("");
   const [error, setError] = useState("");
 
@@ -40,6 +40,20 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
       return;
     }
 
+    // Convert string inputs to arrays
+    const actorsArray = actorsInput
+      ? actorsInput
+          .split(",")
+          .map((item) => item.trim())
+          .filter((item) => item !== "")
+      : [];
+    const genreArray = genreInput
+      ? genreInput
+          .split(",")
+          .map((item) => item.trim())
+          .filter((item) => item !== "")
+      : [];
+
     // TODO: Add movie logic here
     onCreate({
       title: title.trim(),
@@ -50,8 +64,8 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
       poster_url: posterUrl.trim(),
       trailer_url: trailerUrl.trim(),
       director: director.trim(),
-      actors,
-      genre,
+      actors: actorsArray,
+      genre: genreArray,
     });
 
     // Reset form and close
@@ -67,8 +81,8 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
     setPosterUrl("");
     setTrailerUrl("");
     setDirector("");
-    setActors([]);
-    setGenre([]);
+    setActorsInput("");
+    setGenreInput("");
     setError("");
     onClose();
   };
@@ -146,18 +160,18 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
         {
           name: "actors",
           label: "Actors",
-          type: "list",
+          type: "text",
           placeholder: "Enter actor names (comma-separated)",
-          value: actors,
-          onChange: setActors,
+          value: actorsInput,
+          onChange: setActorsInput,
         },
         {
           name: "genre",
           label: "Genre",
-          type: "list",
+          type: "text",
           placeholder: "Enter genres (comma-separated)",
-          value: genre,
-          onChange: setGenre,
+          value: genreInput,
+          onChange: setGenreInput,
         },
       ],
     },
@@ -171,7 +185,7 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
       sections={sections}
       onAdd={handleAdd}
       error={error}
-      showImage="posterUrl"
+      showImage="poster_url"
     />
   );
 };

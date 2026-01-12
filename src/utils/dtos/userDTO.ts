@@ -14,6 +14,7 @@ export interface UserProfileDTO {
   full_name: string;
   email: string;
   phone?: string;
+  cccd?: string;
   date_of_birth?: string;
   member_since: string;
   total_bookings: number;

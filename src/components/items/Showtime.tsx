@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, Typography } from "@mui/material";
 import type { ShowtimeDTO } from "../../utils/dtos/showtimeDTO";
-import { formatTime } from "../../utils/helper";
+import { formatTime } from "../../utils/helper/helper";
 
 interface ShowtimeItemProps {
   showtime: ShowtimeDTO;

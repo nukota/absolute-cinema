@@ -1,7 +1,9 @@
 import { useState } from "react";
 import CreateDialog from "../template/CreateDialog";
 import type { FormSection } from "../template/CreateDialog";
-import { mockCinemas, mockRooms, mockMovies } from "../../../utils/mockdata";
+import { useAllCinemas } from "../../../services/cinemasService";
+import { useAllRooms } from "../../../services/roomsService";
+import { useAllMovies } from "../../../services/moviesService";
 
 interface CreateShowtimeDialogProps {
   open: boolean;
@@ -30,14 +32,19 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
   const [price, setPrice] = useState("");
   const [error, setError] = useState("");
 
-  const cinemaOptions = mockCinemas.map((c) => ({
+  // Fetch real data
+  const { data: cinemas = [], isLoading: cinemasLoading } = useAllCinemas();
+  const { data: rooms = [], isLoading: roomsLoading } = useAllRooms();
+  const { data: movies = [], isLoading: moviesLoading } = useAllMovies();
+
+  const cinemaOptions = cinemas.map((c) => ({
     cinema_id: c.cinema_id,
     name: c.name,
   }));
 
   // Filter rooms based on selected cinema
   const roomOptions = cinema
-    ? mockRooms
+    ? rooms
         .filter((r) => r.cinema.cinema_id === cinema.cinema_id)
         .map((r) => ({
           room_id: r.room_id,
@@ -45,7 +52,7 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
         }))
     : [];
 
-  const movieOptions = mockMovies.map((m) => ({
+  const movieOptions = movies.map((m) => ({
     movie_id: m.movie_id,
     title: m.title,
   }));
@@ -91,9 +98,7 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
       return;
     }
 
-    // TODO: Add showtime logic here
     onCreate({
-      cinema_id: cinema.cinema_id,
       room_id: room.room_id,
       movie_id: movie.movie_id,
       start_time: startTime,
@@ -124,35 +129,37 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
           name: "cinema",
           label: "Cinema",
           type: "autocomplete",
-          placeholder: "Select cinema",
+          placeholder: cinemasLoading ? "Loading cinemas..." : "Select cinema",
           required: true,
           options: cinemaOptions,
           getOptionLabel: (option: any) => option.name,
           value: cinema,
           onChange: handleCinemaChange,
+          disabled: cinemasLoading,
         },
         {
           name: "room",
           label: "Room",
           type: "autocomplete",
-          placeholder: "Select room",
+          placeholder: roomsLoading ? "Loading rooms..." : "Select room",
           required: true,
           options: roomOptions,
           getOptionLabel: (option: any) => option.name,
           value: room,
           onChange: setRoom,
-          disabled: !cinema,
+          disabled: !cinema || roomsLoading,
         },
         {
           name: "movie",
           label: "Movie",
           type: "autocomplete",
-          placeholder: "Select movie",
+          placeholder: moviesLoading ? "Loading movies..." : "Select movie",
           required: true,
           options: movieOptions,
           getOptionLabel: (option: any) => option.title,
           value: movie,
           onChange: setMovie,
+          disabled: moviesLoading,
         },
         {
           name: "startTime",

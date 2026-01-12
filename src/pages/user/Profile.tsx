@@ -11,11 +11,18 @@ import {
   Typography,
   TextField,
   IconButton,
+  CircularProgress,
 } from "@mui/material";
 import { Person, History, Edit, Save, Cancel } from "@mui/icons-material";
 import { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { mockBookingHistory, mockUser } from "../../utils/mockdata";
+import { useCurrentUser } from "../../services/authService";
+import {
+  useUserProfile,
+  useUpdateCustomer,
+} from "../../services/customersService";
+import { useFeedback } from "../../provider/FeedbackProvider";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -37,27 +44,83 @@ const Profile = () => {
   const navigate = useNavigate();
   const [tabValue, setTabValue] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
+
+  const { showSnackbar } = useFeedback();
+
+  const { data: currentUser } = useCurrentUser();
+  const customerId = currentUser?.id;
+
+  const { data: profile, isLoading: profileLoading } = useUserProfile(
+    customerId || ""
+  );
+  const updateCustomerMutation = useUpdateCustomer();
+
   const [formData, setFormData] = useState({
-    fullName: mockUser.fullName,
-    email: mockUser.email,
-    phone: mockUser.phone,
+    full_name: "",
+    email: "",
+    phone: "",
+    cccd: "",
+    dob: "",
   });
+
+  // Update form data when profile loads
+  React.useEffect(() => {
+    if (profile) {
+      setFormData({
+        full_name: profile.full_name,
+        email: profile.email,
+        phone: profile.phone || "",
+        cccd: profile.cccd || "",
+        dob: profile.date_of_birth || "",
+      });
+    }
+  }, [profile]);
 
   const handleEditToggle = () => {
     if (isEditing) {
-      // Save changes (in a real app, this would make an API call)
-      setIsEditing(false);
+      // Save changes
+      if (customerId) {
+        updateCustomerMutation.mutate(
+          {
+            id: customerId,
+            data: {
+              phone_number: formData.phone,
+              cccd: formData.cccd,
+              dob: formData.dob,
+            },
+          },
+          {
+            onSuccess: () => {
+              showSnackbar({
+                message: "Profile updated successfully!",
+                severity: "success",
+              });
+              setIsEditing(false);
+            },
+            onError: () => {
+              showSnackbar({
+                message: "Failed to update profile. Please try again.",
+                severity: "error",
+              });
+            },
+          }
+        );
+      }
     } else {
       setIsEditing(true);
     }
   };
 
   const handleCancel = () => {
-    setFormData({
-      fullName: mockUser.fullName,
-      email: mockUser.email,
-      phone: mockUser.phone,
-    });
+    if (profile) {
+      setFormData({
+        full_name: profile.full_name,
+        email: profile.email,
+        phone: profile.phone || "",
+        cccd: profile.cccd || "",
+        dob: profile.date_of_birth || "",
+      });
+    }
     setIsEditing(false);
   };
 
@@ -67,6 +130,23 @@ const Profile = () => {
       [field]: value,
     }));
   };
+
+  if (profileLoading) {
+    return (
+      <Box
+        sx={{
+          background:
+            "radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress sx={{ color: "#ffd700" }} />
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -123,19 +203,19 @@ const Profile = () => {
                   margin: "0 auto 16px",
                 }}
               >
-                {mockUser.fullName
+                {profile?.full_name
                   .split(" ")
                   .map((n) => n[0])
-                  .join("")}
+                  .join("") || "?"}
               </Box>
               <Typography variant="h6" fontWeight={600} sx={{ color: "white" }}>
-                {mockUser.fullName}
+                {profile?.full_name || "Loading..."}
               </Typography>
               <Typography
                 variant="body2"
                 sx={{ color: "rgba(255,255,255,0.7)" }}
               >
-                {mockUser.email}
+                {profile?.email || ""}
               </Typography>
             </Box>
 
@@ -153,10 +233,12 @@ const Profile = () => {
                 fontWeight={600}
                 sx={{ color: "white" }}
               >
-                {new Date(mockUser.memberSince).toLocaleDateString("en-US", {
-                  month: "long",
-                  year: "numeric",
-                })}
+                {profile?.member_since
+                  ? new Date(profile.member_since).toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })
+                  : ""}
               </Typography>
             </Box>
 
@@ -172,7 +254,7 @@ const Profile = () => {
                 fontWeight={600}
                 sx={{ color: "white" }}
               >
-                {mockUser.totalBookings}
+                {profile?.total_bookings || 0}
               </Typography>
             </Box>
           </Paper>
@@ -227,6 +309,7 @@ const Profile = () => {
                       <>
                         <IconButton
                           onClick={handleEditToggle}
+                          disabled={updateCustomerMutation.isPending}
                           sx={{
                             color: "white",
                             "&:hover": { bgcolor: "rgba(255,255,255,0.1)" },
@@ -236,6 +319,7 @@ const Profile = () => {
                         </IconButton>
                         <IconButton
                           onClick={handleCancel}
+                          disabled={updateCustomerMutation.isPending}
                           sx={{
                             color: "white",
                             "&:hover": { bgcolor: "rgba(255,255,255,0.1)" },
@@ -247,6 +331,7 @@ const Profile = () => {
                     ) : (
                       <IconButton
                         onClick={handleEditToggle}
+                        disabled={profileLoading}
                         sx={{
                           color: "white",
                           "&:hover": { bgcolor: "rgba(255,255,255,0.1)" },
@@ -265,70 +350,117 @@ const Profile = () => {
                     mb: 3,
                   }}
                 >
-                  <TextField
-                    label="Full Name"
-                    value={formData.fullName}
-                    onChange={(e) =>
-                      handleInputChange("fullName", e.target.value)
-                    }
-                    disabled={!isEditing}
-                    variant={isEditing ? "outlined" : "standard"}
-                    sx={{
-                      "& .MuiInputBase-input": { color: "white" },
-                      "& .MuiInputLabel-root": {
+                  {/* Full Name - Read Only */}
+                  <Box>
+                    <Typography
+                      variant="caption"
+                      sx={{
                         color: "rgba(255,255,255,0.7)",
-                      },
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "rgba(255,255,255,0.3)" },
-                        "&:hover fieldset": {
-                          borderColor: "rgba(255,255,255,0.5)",
-                        },
-                        "&.Mui-focused fieldset": { borderColor: "white" },
-                      },
-                      "& .MuiInput-underline:before": {
-                        borderBottomColor: "rgba(255,255,255,0.3)",
-                      },
-                      "& .MuiInput-underline:hover:before": {
-                        borderBottomColor: "rgba(255,255,255,0.5)",
-                      },
-                      "& .MuiInput-underline:after": {
-                        borderBottomColor: "white",
-                      },
-                    }}
-                  />
-                  <TextField
-                    label="Email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    disabled={!isEditing}
-                    variant={isEditing ? "outlined" : "standard"}
-                    sx={{
-                      "& .MuiInputBase-input": { color: "white" },
-                      "& .MuiInputLabel-root": {
+                        display: "block",
+                        mb: 1,
+                      }}
+                    >
+                      Full Name
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "white", fontWeight: 500 }}
+                    >
+                      {formData.full_name}
+                    </Typography>
+                  </Box>
+
+                  {/* Email - Read Only */}
+                  <Box>
+                    <Typography
+                      variant="caption"
+                      sx={{
                         color: "rgba(255,255,255,0.7)",
-                      },
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": { borderColor: "rgba(255,255,255,0.3)" },
-                        "&:hover fieldset": {
-                          borderColor: "rgba(255,255,255,0.5)",
-                        },
-                        "&.Mui-focused fieldset": { borderColor: "white" },
-                      },
-                      "& .MuiInput-underline:before": {
-                        borderBottomColor: "rgba(255,255,255,0.3)",
-                      },
-                      "& .MuiInput-underline:hover:before": {
-                        borderBottomColor: "rgba(255,255,255,0.5)",
-                      },
-                      "& .MuiInput-underline:after": {
-                        borderBottomColor: "white",
-                      },
-                    }}
-                  />
+                        display: "block",
+                        mb: 1,
+                      }}
+                    >
+                      Email
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "white", fontWeight: 500 }}
+                    >
+                      {formData.email}
+                    </Typography>
+                  </Box>
+
+                  {/* Phone Number */}
                   <TextField
                     label="Phone Number"
                     value={formData.phone}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
+                    disabled={!isEditing}
+                    variant={isEditing ? "outlined" : "standard"}
+                    sx={{
+                      "& .MuiInputBase-input": { color: "white" },
+                      "& .MuiInputLabel-root": {
+                        color: "rgba(255,255,255,0.7)",
+                      },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": { borderColor: "rgba(255,255,255,0.3)" },
+                        "&:hover fieldset": {
+                          borderColor: "rgba(255,255,255,0.5)",
+                        },
+                        "&.Mui-focused fieldset": { borderColor: "white" },
+                      },
+                      "& .MuiInput-underline:before": {
+                        borderBottomColor: "rgba(255,255,255,0.3)",
+                      },
+                      "& .MuiInput-underline:hover:before": {
+                        borderBottomColor: "rgba(255,255,255,0.5)",
+                      },
+                      "& .MuiInput-underline:after": {
+                        borderBottomColor: "white",
+                      },
+                    }}
+                  />
+
+                  {/* Date of Birth */}
+                  <TextField
+                    label="Date of Birth"
+                    type="date"
+                    value={formData.dob}
+                    onChange={(e) => handleInputChange("dob", e.target.value)}
+                    disabled={!isEditing}
+                    variant={isEditing ? "outlined" : "standard"}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                    sx={{
+                      "& .MuiInputBase-input": { color: "white" },
+                      "& .MuiInputLabel-root": {
+                        color: "rgba(255,255,255,0.7)",
+                      },
+                      "& .MuiOutlinedInput-root": {
+                        "& fieldset": { borderColor: "rgba(255,255,255,0.3)" },
+                        "&:hover fieldset": {
+                          borderColor: "rgba(255,255,255,0.5)",
+                        },
+                        "&.Mui-focused fieldset": { borderColor: "white" },
+                      },
+                      "& .MuiInput-underline:before": {
+                        borderBottomColor: "rgba(255,255,255,0.3)",
+                      },
+                      "& .MuiInput-underline:hover:before": {
+                        borderBottomColor: "rgba(255,255,255,0.5)",
+                      },
+                      "& .MuiInput-underline:after": {
+                        borderBottomColor: "white",
+                      },
+                    }}
+                  />
+
+                  {/* CCCD */}
+                  <TextField
+                    label="CCCD (ID)"
+                    value={formData.cccd}
+                    onChange={(e) => handleInputChange("cccd", e.target.value)}
                     disabled={!isEditing}
                     variant={isEditing ? "outlined" : "standard"}
                     sx={{
@@ -368,7 +500,8 @@ const Profile = () => {
                 >
                   Booking History
                 </Typography>
-                {mockBookingHistory.length === 0 ? (
+                {profile?.booking_history &&
+                profile.booking_history.length === 0 ? (
                   <Box sx={{ textAlign: "center", py: 6 }}>
                     <Typography
                       variant="body1"
@@ -394,9 +527,9 @@ const Profile = () => {
                   <Box
                     sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                   >
-                    {mockBookingHistory.map((booking) => (
+                    {profile?.booking_history?.map((booking) => (
                       <Card
-                        key={booking.id}
+                        key={booking.booking_id}
                         sx={{
                           bgcolor: "rgba(255,255,255,0.1)",
                           backdropFilter: "blur(10px)",
@@ -416,21 +549,22 @@ const Profile = () => {
                               variant="body2"
                               sx={{ color: "rgba(255,255,255,0.7)" }}
                             >
-                              {new Date(booking.date).toLocaleDateString(
-                              "en-US",
-                              {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                              }
-                              )}, {booking.cinema}
+                              {new Date(booking.showtime).toLocaleDateString(
+                                "en-US",
+                                {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                }
+                              )}
+                              , {booking.cinema_name}
                             </Typography>
                             <Typography
                               variant="h6"
                               fontWeight={600}
                               sx={{ color: "white" }}
                             >
-                              {booking.movieTitle}
+                              {booking.movie_title}
                             </Typography>
 
                             {/* Seats and Total in a row */}
@@ -459,7 +593,7 @@ const Profile = () => {
                                   {new Intl.NumberFormat("vi-VN", {
                                     style: "currency",
                                     currency: "VND",
-                                  }).format(booking.total)}
+                                  }).format(booking.total_price)}
                                 </Typography>
                               </Box>
                             </Box>

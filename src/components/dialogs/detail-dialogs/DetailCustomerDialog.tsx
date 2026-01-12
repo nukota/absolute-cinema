@@ -15,7 +15,6 @@ interface DetailCustomerDialogProps {
       dob?: string;
       phone_number?: string;
       cccd?: string;
-      password_hash?: string;
     }
   ) => void;
   onDelete?: () => void;
@@ -33,7 +32,6 @@ const DetailCustomerDialog: React.FC<DetailCustomerDialogProps> = ({
     customer
   );
   const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
 
   // Reset editing state when dialog closes
   useEffect(() => {
@@ -75,7 +73,6 @@ const DetailCustomerDialog: React.FC<DetailCustomerDialogProps> = ({
       dob: editedCustomer.dob,
       phone_number: editedCustomer.phone_number?.trim() || undefined,
       cccd: editedCustomer.cccd?.trim() || undefined,
-      password_hash: editedCustomer.password_hash?.trim() || undefined,
     });
 
     setIsEditing(false);
@@ -106,6 +103,7 @@ const DetailCustomerDialog: React.FC<DetailCustomerDialogProps> = ({
             setEditedCustomer((prev) =>
               prev ? { ...prev, full_name: value } : null
             ),
+          disabled: true,
         },
         {
           name: "email",
@@ -117,6 +115,7 @@ const DetailCustomerDialog: React.FC<DetailCustomerDialogProps> = ({
             setEditedCustomer((prev) =>
               prev ? { ...prev, email: value } : null
             ),
+          disabled: true,
         },
         {
           name: "dob",
@@ -150,24 +149,6 @@ const DetailCustomerDialog: React.FC<DetailCustomerDialogProps> = ({
             setEditedCustomer((prev) =>
               prev ? { ...prev, cccd: value } : null
             ),
-        },
-      ],
-    },
-    {
-      title: "Account Information",
-      fields: [
-        {
-          name: "password_hash",
-          label: "Password",
-          type: "password",
-          placeholder: "Enter password",
-          value: editedCustomer?.password_hash || "",
-          onChange: (value) =>
-            setEditedCustomer((prev) =>
-              prev ? { ...prev, password_hash: value } : null
-            ),
-          showPassword,
-          onTogglePassword: () => setShowPassword(!showPassword),
         },
       ],
     },

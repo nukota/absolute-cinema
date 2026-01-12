@@ -59,9 +59,6 @@ const DetailShowtimeDialog: React.FC<DetailShowtimeDialogProps> = ({
     }
 
     onUpdate(editedShowtime.showtime_id, {
-      cinema_id: editedShowtime.cinema.cinema_id,
-      room_id: editedShowtime.room.room_id,
-      movie_id: editedShowtime.movie.movie_id,
       start_time: editedShowtime.start_time,
       end_time: editedShowtime.end_time,
       price: editedShowtime.price,

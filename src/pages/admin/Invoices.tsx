@@ -29,11 +29,6 @@ const Invoices = () => {
     }
   };
 
-  const handleSave = () => {
-    // This will be handled in the dialog
-    setOpenDetailDialog(false);
-  };
-
   const handleDelete = () => {
     if (selectedInvoice) {
       deleteInvoiceMutation.mutate(selectedInvoice.invoice_id, {
@@ -188,7 +183,6 @@ const Invoices = () => {
         open={openDetailDialog}
         onClose={() => setOpenDetailDialog(false)}
         invoice={selectedInvoice}
-        onSave={handleSave}
         onDelete={handleDelete}
       />
     </>

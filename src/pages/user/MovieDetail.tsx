@@ -10,16 +10,14 @@ import {
   MenuItem,
   CircularProgress,
 } from "@mui/material";
-import {
-  EventSeat,
-} from "@mui/icons-material";
+import { EventSeat } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMovie } from "../../services/moviesService";
 import { useShowtimesByMovie } from "../../services/showtimesSerivce";
 import MovieInfo from "../../components/elements/user/MovieInfo";
 import ShowtimeItem from "../../components/items/Showtime";
 import { MovieStatus } from "../../utils/enum";
-import { formatDate } from "../../utils/helper";
+import { formatDate } from "../../utils/helper/helper";
 
 const MovieDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,27 +28,36 @@ const MovieDetail = () => {
 
   // API calls
   const { data: movie, isLoading: movieLoading } = useMovie(id || "");
-  const { data: showtimes, isLoading: showtimesLoading } = useShowtimesByMovie(id || "");
+  const { data: showtimes, isLoading: showtimesLoading } = useShowtimesByMovie(
+    id || ""
+  );
 
   // Get unique dates and cinemas from showtimes
-  const availableDates = showtimes ? [
-    ...new Set(showtimes.map((s) => formatDate(s.start_time))),
-  ].sort() : [];
+  const availableDates = showtimes
+    ? [...new Set(showtimes.map((s) => new Date(s.start_time).toDateString()))]
+        .map((dateStr) => new Date(dateStr))
+        .sort((a, b) => a.getTime() - b.getTime())
+        .map((date) => formatDate(date.toISOString()))
+    : [];
 
-  const availableCinemas = showtimes ? [
-    ...new Set(showtimes.map((s) => s.cinema.cinema_id)),
-  ]
-    .map((cinemaId) => showtimes.find((s) => s.cinema.cinema_id === cinemaId)?.cinema)
-    .filter(Boolean) : [];
+  const availableCinemas = showtimes
+    ? [...new Set(showtimes.map((s) => s.cinema.cinema_id))]
+        .map(
+          (cinemaId) =>
+            showtimes.find((s) => s.cinema.cinema_id === cinemaId)?.cinema
+        )
+        .filter(Boolean)
+    : [];
 
   // Filter showtimes based on selected date and cinema
-  const filteredShowtimes = showtimes?.filter((showtime) => {
-    const showtimeDate = formatDate(showtime.start_time);
-    const matchesDate = !selectedDate || showtimeDate === selectedDate;
-    const matchesCinema =
-      !selectedCinema || showtime.cinema.cinema_id === selectedCinema;
-    return matchesDate && matchesCinema;
-  }) || [];
+  const filteredShowtimes =
+    showtimes?.filter((showtime) => {
+      const showtimeDate = formatDate(showtime.start_time);
+      const matchesDate = !selectedDate || showtimeDate === selectedDate;
+      const matchesCinema =
+        !selectedCinema || showtime.cinema.cinema_id === selectedCinema;
+      return matchesDate && matchesCinema;
+    }) || [];
 
   const isLoading = movieLoading || showtimesLoading;
 
@@ -58,14 +65,15 @@ const MovieDetail = () => {
     return (
       <Box
         sx={{
-          background: 'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          background:
+            "radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        <CircularProgress size={60} sx={{ color: 'primary.main' }} />
+        <CircularProgress size={60} sx={{ color: "primary.main" }} />
       </Box>
     );
   }
@@ -101,7 +109,8 @@ const MovieDetail = () => {
       {/* Showtimes Section */}
       <Container maxWidth="lg" sx={{ py: 6 }}>
         {movie.status === MovieStatus.NowShowing &&
-        showtimes && showtimes.length > 0 ? (
+        showtimes &&
+        showtimes.length > 0 ? (
           <Box>
             <Typography
               variant="h3"
@@ -192,7 +201,8 @@ const MovieDetail = () => {
                           value={cinema.cinema_id}
                         >
                           <Typography variant="body1">
-                            {cinema.name}{cinema.address ? ` (${cinema.address})` : ''}
+                            {cinema.name}
+                            {cinema.address ? ` (${cinema.address})` : ""}
                           </Typography>
                         </MenuItem>
                       )
@@ -247,7 +257,9 @@ const MovieDetail = () => {
                   </Box>
                 ))}
 
-                <Box sx={{ mt: 6, display: "flex", justifyContent: "flex-end" }}>
+                <Box
+                  sx={{ mt: 6, display: "flex", justifyContent: "flex-end" }}
+                >
                   <Button
                     variant="contained"
                     size="large"
@@ -258,14 +270,16 @@ const MovieDetail = () => {
                       py: 1,
                       fontSize: "1.3rem",
                       fontWeight: 600,
-                      background: "linear-gradient(135deg, #ffd700 0%, #ffb300 100%)",
+                      background:
+                        "linear-gradient(135deg, #ffd700 0%, #ffb300 100%)",
                       color: "#1a0a2e",
                       border: "2px solid transparent",
                       borderRadius: 3,
                       boxShadow: "0 4px 15px rgba(255, 215, 0, 0.3)",
                       transition: "all 0.3s ease",
                       "&:hover": {
-                        background: "linear-gradient(135deg, #ffb300 0%, #ff8f00 100%)",
+                        background:
+                          "linear-gradient(135deg, #ffb300 0%, #ff8f00 100%)",
                         transform: "translateY(-2px)",
                         boxShadow: "0 8px 25px rgba(255, 215, 0, 0.4)",
                         borderColor: "#ffd700",

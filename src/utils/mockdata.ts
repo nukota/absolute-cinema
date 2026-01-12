@@ -6,7 +6,7 @@ import type { ProductDTO } from "./dtos/productDTO";
 import type { RoomDTO } from "./dtos/roomDTO";
 import type { ShowtimeDTO } from "./dtos/showtimeDTO";
 import type { DashboardData } from "./dtos/dashboardDTO";
-import { generateDailyDataPoints } from "./helper";
+import { generateDailyDataPoints } from "./helper/helper";
 import {
   InvoiceStatus,
   PaymentMethod,

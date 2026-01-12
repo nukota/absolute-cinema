@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -14,73 +14,102 @@ import {
   TextField,
   Typography,
   styled,
-} from '@mui/material';
-import { CreditCard, AccountBalance, Smartphone } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import { PaymentMethod } from '../../utils/enum';
-import { formatDateLong, formatTime } from '../../utils/helper';
+} from "@mui/material";
+import { CreditCard, AccountBalance, Smartphone } from "@mui/icons-material";
+import { useNavigate, useLocation } from "react-router-dom";
+import { PaymentMethod } from "../../utils/enum";
+import { formatDateLong, formatTime } from "../../utils/helper/helper";
+import { useCurrentUser } from "../../services/authService";
+import { useCreateBooking } from "../../services/invoicesService";
 
 // Enhanced Paper component with animated gradient background and border
 const EnhancedPaper = styled(Paper)(() => ({
-  background: 'linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(99, 102, 241, 0.15) 50%, rgba(236, 72, 153, 0.1) 100%)',
-  backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(156, 39, 176, 0.2)',
-  position: 'relative',
-  overflow: 'hidden',
+  background:
+    "linear-gradient(135deg, rgba(156, 39, 176, 0.1) 0%, rgba(99, 102, 241, 0.15) 50%, rgba(236, 72, 153, 0.1) 100%)",
+  backdropFilter: "blur(10px)",
+  border: "1px solid rgba(156, 39, 176, 0.2)",
+  position: "relative",
+  overflow: "hidden",
 }));
 
 const Payment = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [paymentMethod, setPaymentMethod] = useState<string>(
-    PaymentMethod.Card,
+    PaymentMethod.Card
   );
 
-  // Mock user data for now (user must be signed in to access this page)
-  const [customerInfo] = useState({
-    fullName: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+84 123 456 789',
-  });
+  const { data: currentUser } = useCurrentUser();
+  const createBookingMutation = useCreateBooking();
 
-  // Get booking data from localStorage
-  const bookingDataStr = localStorage.getItem('bookingData');
-  const bookingData = bookingDataStr ? JSON.parse(bookingDataStr) : null;
+  // Get booking data from navigation state
+  const bookingData = location.state as any;
 
-  if (!bookingData) {
+  if (!bookingData || !currentUser) {
     return (
       <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Typography variant="h4">No booking data found</Typography>
-        <Button onClick={() => navigate('/movies')} sx={{ mt: 2 }}>
+        <Typography variant="h4">
+          No booking data found or user not authenticated
+        </Typography>
+        <Button onClick={() => navigate("/movies")} sx={{ mt: 2 }}>
           Back to Movies
         </Button>
       </Container>
     );
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Store customer info and payment method
-    const completeBooking = {
-      ...bookingData,
-      customerInfo,
-      paymentMethod,
-      bookingId: `BK${Date.now()}`,
-      bookingDate: new Date().toISOString(),
+    // Prepare booking data for API
+    const bookingPayload = {
+      customer_id: currentUser.id,
+      amount: bookingData.total,
+      products: Object.entries(bookingData.products).map(
+        ([productId, quantity]) => ({
+          product_id: productId,
+          quantity: quantity as number,
+        })
+      ),
+      tickets: {
+        showtime_id: bookingData.showtime.showtime_id,
+        seats: bookingData.seats, // array of seat IDs
+      },
+      payment_method: paymentMethod as any,
+      total_amount: bookingData.total,
+      status: "completed",
     };
 
-    localStorage.setItem('completedBooking', JSON.stringify(completeBooking));
-    localStorage.removeItem('bookingData');
+    try {
+      await createBookingMutation.mutateAsync(bookingPayload);
 
-    navigate('/confirmation');
+      // Store completed booking for confirmation page
+      const completeBooking = {
+        ...bookingData,
+        customerInfo: {
+          fullName: currentUser.full_name,
+          email: currentUser.email,
+          phone: currentUser.phone || "",
+        },
+        paymentMethod,
+        bookingId: `BK${Date.now()}`,
+        bookingDate: new Date().toISOString(),
+      };
+
+      localStorage.setItem("completedBooking", JSON.stringify(completeBooking));
+      navigate("/confirmation");
+    } catch (error) {
+      console.error("Booking failed:", error);
+      // Handle error - maybe show a toast or error message
+    }
   };
 
   return (
     <Box
       sx={{
         background:
-          'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
-        minHeight: '100vh',
+          "radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)",
+        minHeight: "100vh",
         py: 6,
       }}
     >
@@ -99,8 +128,8 @@ const Payment = () => {
         <form onSubmit={handleSubmit}>
           <Box
             sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', lg: '2fr 1fr' },
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", lg: "2fr 1fr" },
               gap: 4,
             }}
           >
@@ -111,53 +140,33 @@ const Payment = () => {
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   Customer Information
                 </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                  <TextField
-                    label="Full Name"
-                    required
-                    fullWidth
-                    value={customerInfo.fullName}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    sx={{
-                      '& .MuiInputBase-input': {
-                        cursor: 'default',
-                        backgroundColor: 'rgba(0, 0, 0, 0.02)',
-                      },
-                    }}
-                  />
-                  <TextField
-                    label="Email"
-                    type="email"
-                    required
-                    fullWidth
-                    value={customerInfo.email}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    sx={{
-                      '& .MuiInputBase-input': {
-                        cursor: 'default',
-                        backgroundColor: 'rgba(0, 0, 0, 0.02)',
-                      },
-                    }}
-                  />
-                  <TextField
-                    label="Phone Number"
-                    required
-                    fullWidth
-                    value={customerInfo.phone}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    sx={{
-                      '& .MuiInputBase-input': {
-                        cursor: 'default',
-                        backgroundColor: 'rgba(0, 0, 0, 0.02)',
-                      },
-                    }}
-                  />
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Box sx={{ display: "flex", gap: 4 }}>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        Full Name
+                      </Typography>
+                      <Typography variant="body1" fontWeight={600}>
+                        {currentUser.full_name}
+                      </Typography>
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        Email
+                      </Typography>
+                      <Typography variant="body1" fontWeight={600}>
+                        {currentUser.email}
+                      </Typography>
+                    </Box>
+                  </Box>
                 </Box>
               </EnhancedPaper>
 
@@ -173,102 +182,102 @@ const Payment = () => {
                   >
                     <Card
                       sx={{
-                      mb: 2,
-                      border: 2,
-                      borderColor:
-                        paymentMethod === PaymentMethod.Card
-                        ? 'primary.main'
-                        : 'divider',
-                      cursor: 'pointer',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        mb: 2,
+                        border: 2,
+                        borderColor:
+                          paymentMethod === PaymentMethod.Card
+                            ? "primary.main"
+                            : "divider",
+                        cursor: "pointer",
+                        backgroundColor: "rgba(255, 255, 255, 0.05)",
                       }}
                       onClick={() => setPaymentMethod(PaymentMethod.Card)}
                     >
                       <CardContent
-                      sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
                       >
-                      <FormControlLabel
-                        value={PaymentMethod.Card}
-                        control={<Radio />}
-                        label=""
-                        sx={{ m: 0 }}
-                      />
-                      <CreditCard color="primary" />
-                      <Box>
-                        <Typography variant="body1" fontWeight={600}>
-                        Credit/Debit Card
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                        Visa, Mastercard, JCB
-                        </Typography>
-                      </Box>
+                        <FormControlLabel
+                          value={PaymentMethod.Card}
+                          control={<Radio />}
+                          label=""
+                          sx={{ m: 0 }}
+                        />
+                        <CreditCard color="secondary" />
+                        <Box>
+                          <Typography variant="body1" fontWeight={600}>
+                            Credit/Debit Card
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Visa, Mastercard, JCB
+                          </Typography>
+                        </Box>
                       </CardContent>
                     </Card>
 
                     <Card
                       sx={{
-                      mb: 2,
-                      border: 2,
-                      borderColor:
-                        paymentMethod === PaymentMethod.Banking
-                        ? 'primary.main'
-                        : 'divider',
-                      cursor: 'pointer',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        mb: 2,
+                        border: 2,
+                        borderColor:
+                          paymentMethod === PaymentMethod.Banking
+                            ? "primary.main"
+                            : "divider",
+                        cursor: "pointer",
+                        backgroundColor: "rgba(255, 255, 255, 0.05)",
                       }}
                       onClick={() => setPaymentMethod(PaymentMethod.Banking)}
                     >
                       <CardContent
-                      sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
                       >
-                      <FormControlLabel
-                        value={PaymentMethod.Banking}
-                        control={<Radio />}
-                        label=""
-                        sx={{ m: 0 }}
-                      />
-                      <AccountBalance color="primary" />
-                      <Box>
-                        <Typography variant="body1" fontWeight={600}>
-                        Internet Banking
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                        All major banks
-                        </Typography>
-                      </Box>
+                        <FormControlLabel
+                          value={PaymentMethod.Banking}
+                          control={<Radio />}
+                          label=""
+                          sx={{ m: 0 }}
+                        />
+                        <AccountBalance color="secondary" />
+                        <Box>
+                          <Typography variant="body1" fontWeight={600}>
+                            Internet Banking
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            All major banks
+                          </Typography>
+                        </Box>
                       </CardContent>
                     </Card>
 
                     <Card
                       sx={{
-                      border: 2,
-                      borderColor:
-                        paymentMethod === PaymentMethod.Momo
-                        ? 'primary.main'
-                        : 'divider',
-                      cursor: 'pointer',
-                      backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        border: 2,
+                        borderColor:
+                          paymentMethod === PaymentMethod.Momo
+                            ? "primary.main"
+                            : "divider",
+                        cursor: "pointer",
+                        backgroundColor: "rgba(255, 255, 255, 0.05)",
                       }}
                       onClick={() => setPaymentMethod(PaymentMethod.Momo)}
                     >
                       <CardContent
-                      sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
                       >
-                      <FormControlLabel
-                        value={PaymentMethod.Momo}
-                        control={<Radio />}
-                        label=""
-                        sx={{ m: 0 }}
-                      />
-                      <Smartphone color="primary" />
-                      <Box>
-                        <Typography variant="body1" fontWeight={600}>
-                        MoMo E-Wallet
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                        Fast and secure
-                        </Typography>
-                      </Box>
+                        <FormControlLabel
+                          value={PaymentMethod.Momo}
+                          control={<Radio />}
+                          label=""
+                          sx={{ m: 0 }}
+                        />
+                        <Smartphone color="secondary" />
+                        <Box>
+                          <Typography variant="body1" fontWeight={600}>
+                            MoMo E-Wallet
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Fast and secure
+                          </Typography>
+                        </Box>
                       </CardContent>
                     </Card>
                   </RadioGroup>
@@ -279,8 +288,8 @@ const Payment = () => {
                   <Box
                     sx={{
                       mt: 3,
-                      display: 'flex',
-                      flexDirection: 'column',
+                      display: "flex",
+                      flexDirection: "column",
                       gap: 2,
                     }}
                   >
@@ -292,8 +301,8 @@ const Payment = () => {
                     />
                     <Box
                       sx={{
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 1fr',
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
                         gap: 2,
                       }}
                     >
@@ -312,7 +321,7 @@ const Payment = () => {
 
             {/* Order Summary */}
             <Box>
-              <EnhancedPaper sx={{ p: 3, position: 'sticky', top: 24 }}>
+              <EnhancedPaper sx={{ p: 3, position: "sticky", top: 24 }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
                   Order Summary
                 </Typography>
@@ -368,17 +377,67 @@ const Payment = () => {
                     Seats
                   </Typography>
                   <Typography variant="body1">
-                    {bookingData.seats.join(', ')}
+                    {bookingData.seatLabels.join(", ")}
                   </Typography>
                 </Box>
+
+                {bookingData.productDetails &&
+                  bookingData.productDetails.length > 0 && (
+                    <Box sx={{ mb: 2 }}>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        gutterBottom
+                      >
+                        Products
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                        }}
+                      >
+                        {bookingData.productDetails.map((product: any) => (
+                          <Box
+                            key={product.product_id}
+                            sx={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                flex: 1,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                                mr: 2,
+                              }}
+                            >
+                              {product.name} × {product.quantity}
+                            </Typography>
+                            <Typography variant="body1" sx={{ flexShrink: 0 }}>
+                              {new Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(product.price * product.quantity)}
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    </Box>
+                  )}
 
                 <Divider sx={{ my: 2 }} />
 
                 <Box sx={{ mb: 1 }}>
                   <Box
                     sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
+                      display: "flex",
+                      justifyContent: "space-between",
                       mb: 1,
                     }}
                   >
@@ -386,11 +445,11 @@ const Payment = () => {
                       Tickets ({bookingData.seats.length})
                     </Typography>
                     <Typography variant="body2">
-                      {new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND',
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
                       }).format(
-                        bookingData.seats.length * bookingData.showtime.price,
+                        bookingData.seats.length * bookingData.showtime.price
                       )}
                     </Typography>
                   </Box>
@@ -398,8 +457,8 @@ const Payment = () => {
                   {Object.keys(bookingData.products || {}).length > 0 && (
                     <Box
                       sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
+                        display: "flex",
+                        justifyContent: "space-between",
                         mb: 1,
                       }}
                     >
@@ -407,13 +466,13 @@ const Payment = () => {
                         Products
                       </Typography>
                       <Typography variant="body2">
-                        {new Intl.NumberFormat('vi-VN', {
-                          style: 'currency',
-                          currency: 'VND',
+                        {new Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
                         }).format(
                           bookingData.total -
                             bookingData.seats.length *
-                              bookingData.showtime.price,
+                              bookingData.showtime.price
                         )}
                       </Typography>
                     </Box>
@@ -424,8 +483,8 @@ const Payment = () => {
 
                 <Box
                   sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
+                    display: "flex",
+                    justifyContent: "space-between",
                     mb: 3,
                   }}
                 >
@@ -437,9 +496,9 @@ const Payment = () => {
                     fontWeight={600}
                     color="primary.main"
                   >
-                    {new Intl.NumberFormat('vi-VN', {
-                      style: 'currency',
-                      currency: 'VND',
+                    {new Intl.NumberFormat("vi-VN", {
+                      style: "currency",
+                      currency: "VND",
                     }).format(bookingData.total)}
                   </Typography>
                 </Box>

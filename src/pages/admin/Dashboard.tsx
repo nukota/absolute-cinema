@@ -31,7 +31,10 @@ import {
   Pie,
 } from "recharts";
 import StatCard from "../../components/items/StatCard";
-import { generateLast12Months, formatDateRange } from "../../utils/helper";
+import {
+  generateLast12Months,
+  formatDateRange,
+} from "../../utils/helper/helper";
 import { useDashboardStats } from "../../services/dashboardService";
 
 // Enhanced Paper component with gradient background

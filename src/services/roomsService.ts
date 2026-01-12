@@ -5,6 +5,7 @@ import type {
   UpdateRoomDTO,
 } from "../utils/dtos/roomDTO";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { seatsKeys } from "./seatsService";
 
 const createRoom = async (data: CreateRoomDTO): Promise<RoomDTO> => {
   const response = await api.post<RoomDTO>("/rooms", data);
@@ -74,6 +75,7 @@ export const useUpdateRoom = () => {
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: roomsKeys.lists() });
       queryClient.invalidateQueries({ queryKey: roomsKeys.detail(id) });
+      queryClient.invalidateQueries({ queryKey: seatsKeys.byRoom(id) });
     },
   });
 };

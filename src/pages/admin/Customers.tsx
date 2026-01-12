@@ -5,31 +5,23 @@ import CustomDataGrid from "../../components/layouts/DataGrid";
 import {
   useAllCustomers,
   useDeleteCustomer,
-  useCreateCustomer,
   useUpdateCustomer,
 } from "../../services/customersService";
 import { useFeedback } from "../../provider/FeedbackProvider";
 import type { GridColDef } from "@mui/x-data-grid";
 import type { CustomerDTO } from "../../utils/dtos/customerDTO";
-import CreateCustomerDialog from "../../components/dialogs/create-dialogs/CreateCustomerDialog";
 import DetailCustomerDialog from "../../components/dialogs/detail-dialogs/DetailCustomerDialog";
 
 const Customers = () => {
   const { data: customers, isLoading: loading } = useAllCustomers();
   const deleteCustomerMutation = useDeleteCustomer();
-  const createCustomerMutation = useCreateCustomer();
   const updateCustomerMutation = useUpdateCustomer();
   const { showSnackbar } = useFeedback();
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerDTO | null>(
     null
   );
-
-  const handleAddNewCustomer = () => {
-    setOpenCreateDialog(true);
-  };
 
   const handleViewDetails = (id: string) => {
     const customer = customers?.find((c) => c.customer_id === id);
@@ -37,32 +29,6 @@ const Customers = () => {
       setSelectedCustomer(customer);
       setOpenDetailDialog(true);
     }
-  };
-
-  const handleCreateCustomer = (data: {
-    full_name: string;
-    email: string;
-    dob: string;
-    phone_number?: string;
-    cccd?: string;
-    password: string;
-  }) => {
-    createCustomerMutation.mutate(data, {
-      onSuccess: () => {
-        setOpenCreateDialog(false);
-        showSnackbar({
-          message: "Customer created successfully!",
-          severity: "success",
-        });
-      },
-      onError: (error) => {
-        console.error("Create customer error:", error);
-        showSnackbar({
-          message: "Failed to create customer. Please try again.",
-          severity: "error",
-        });
-      },
-    });
   };
 
   const handleUpdateCustomer = (
@@ -73,7 +39,6 @@ const Customers = () => {
       dob?: string;
       phone_number?: string;
       cccd?: string;
-      password_hash?: string;
     }
   ) => {
     updateCustomerMutation.mutate(
@@ -209,8 +174,6 @@ const Customers = () => {
         loading={loading}
         rows={customers || []}
         columns={columns}
-        onAddNew={handleAddNewCustomer}
-        addButtonText="Add New Customer"
         selectedRows={selectedRows}
         onRowSelectionChange={setSelectedRows}
         onDeleteSelected={handleDeleteSelected}
@@ -218,11 +181,6 @@ const Customers = () => {
         getRowId={(row) => row.customer_id}
         pageSize={10}
         pageSizeOptions={[10, 20, 50]}
-      />
-      <CreateCustomerDialog
-        open={openCreateDialog}
-        onClose={() => setOpenCreateDialog(false)}
-        onCreate={handleCreateCustomer}
       />
       <DetailCustomerDialog
         open={openDetailDialog}
