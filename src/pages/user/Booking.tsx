@@ -225,72 +225,84 @@ const Booking = () => {
 
                     return Object.entries(seatsByRow)
                       .sort(([a], [b]) => parseInt(a) - parseInt(b))
-                      .map(([row, rowSeats]) => (
-                        <Box
-                          key={row}
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            mb: 1,
-                            gap: 1,
-                          }}
-                        >
-                          <Typography
+                      .map(([row, rowSeats]) => {
+                        const sortedRowSeats = rowSeats.sort(
+                          (a, b) => a.column - b.column
+                        );
+
+                        return (
+                          <Box
+                            key={row}
                             sx={{
-                              width: 24,
-                              fontWeight: 600,
-                              color: "text.secondary",
+                              display: "flex",
+                              alignItems: "center",
+                              mb: 1,
                             }}
                           >
-                            {row}
-                          </Typography>
-                          {rowSeats
-                            .sort((a, b) => a.column - b.column)
-                            .map((seat) => {
-                              const isSelected = selectedSeats.includes(
-                                seat.seat_id
-                              );
+                            <Typography
+                              sx={{
+                                width: 24,
+                                fontWeight: 600,
+                                color: "text.secondary",
+                              }}
+                            >
+                              {row}
+                            </Typography>
+                            <Box
+                              sx={{
+                                display: "grid",
+                                gridTemplateColumns: `repeat(13, 36px)`,
+                                gap: 1,
+                              }}
+                            >
+                              {sortedRowSeats.map((seat) => {
+                                const gridColumn = seat.column + 7;
+                                const isSelected = selectedSeats.includes(
+                                  seat.seat_id
+                                );
 
-                              return (
-                                <Box
-                                  key={seat.seat_id}
-                                  onClick={() => toggleSeat(seat.seat_id)}
-                                  sx={{
-                                    width: 36,
-                                    height: 36,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    cursor: seat.available
-                                      ? "pointer"
-                                      : "not-allowed",
-                                    borderRadius: 1,
-                                    bgcolor: !seat.available
-                                      ? "grey.300"
-                                      : isSelected
-                                      ? "primary.main"
-                                      : "grey.700",
-                                    color:
-                                      !seat.available || isSelected
-                                        ? "white"
-                                        : "text.primary",
-                                    transition: "all 0.2s",
-                                    "&:hover": {
+                                return (
+                                  <Box
+                                    key={seat.seat_id}
+                                    onClick={() => toggleSeat(seat.seat_id)}
+                                    sx={{
+                                      width: 36,
+                                      height: 36,
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      cursor: seat.available
+                                        ? "pointer"
+                                        : "not-allowed",
+                                      borderRadius: 1,
                                       bgcolor: !seat.available
                                         ? "grey.300"
                                         : isSelected
-                                        ? "primary.dark"
-                                        : "grey.500",
-                                    },
-                                  }}
-                                >
-                                  <EventSeat fontSize="small" />
-                                </Box>
-                              );
-                            })}
-                        </Box>
-                      ));
+                                        ? "primary.main"
+                                        : "grey.700",
+                                      color:
+                                        !seat.available || isSelected
+                                          ? "white"
+                                          : "text.primary",
+                                      transition: "all 0.2s",
+                                      "&:hover": {
+                                        bgcolor: !seat.available
+                                          ? "grey.300"
+                                          : isSelected
+                                          ? "primary.dark"
+                                          : "grey.500",
+                                      },
+                                      gridColumn: gridColumn,
+                                    }}
+                                  >
+                                    <EventSeat fontSize="small" />
+                                  </Box>
+                                );
+                              })}
+                            </Box>
+                          </Box>
+                        );
+                      });
                   })()}
               </Box>
 

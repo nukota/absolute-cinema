@@ -9,7 +9,17 @@ import {
   styled,
 } from "@mui/material";
 import { CheckCircle, Print } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import type { InvoiceDTO } from "../../utils/dtos/invoiceDTO";
+import type { CinemaDTO } from "../../utils/dtos/cinemaDTO";
+import type { RoomDTO } from "../../utils/dtos/roomDTO";
+import { generateTicketHtml } from "../../utils/helper/helper";
+
+interface ConfirmationState {
+  bookingData: InvoiceDTO;
+  cinema?: CinemaDTO;
+  room?: RoomDTO;
+}
 
 // Enhanced Paper component with animated gradient background and border
 const EnhancedPaper = styled(Paper)(() => ({
@@ -41,10 +51,10 @@ const EnhancedPaper = styled(Paper)(() => ({
 
 const Confirmation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Get completed booking data
-  const bookingDataStr = localStorage.getItem("completedBooking");
-  const bookingData = bookingDataStr ? JSON.parse(bookingDataStr) : null;
+  // Get completed booking data from navigation state
+  const { bookingData, cinema, room } = location.state as ConfirmationState;
 
   useEffect(() => {
     if (!bookingData) {
@@ -57,7 +67,16 @@ const Confirmation = () => {
   }
 
   const handlePrint = () => {
-    window.print();
+    const ticketHtml = generateTicketHtml(bookingData, cinema, room);
+    const newWindow = window.open("", "_blank");
+    if (newWindow) {
+      newWindow.document.write(ticketHtml);
+      newWindow.document.close();
+      // Wait for content to load, then print
+      newWindow.onload = () => {
+        newWindow.print();
+      };
+    }
   };
 
   return (
@@ -141,7 +160,7 @@ const Confirmation = () => {
                   Name
                 </Typography>
                 <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
-                  {bookingData.customerInfo.fullName}
+                  {bookingData.customer.full_name}
                 </Typography>
               </Box>
               <Box>
@@ -152,7 +171,7 @@ const Confirmation = () => {
                   Email
                 </Typography>
                 <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
-                  {bookingData.customerInfo.email}
+                  {bookingData.customer.email}
                 </Typography>
               </Box>
             </Box>
@@ -200,31 +219,35 @@ const Confirmation = () => {
                   fontWeight={600}
                   sx={{ fontSize: "1.1rem" }}
                 >
-                  {bookingData.showtime.movie.title}
+                  {bookingData.tickets.title}
                 </Typography>
               </Box>
-              <Box>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "rgba(255, 255, 255, 0.7)" }}
-                >
-                  Cinema
-                </Typography>
-                <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
-                  {bookingData.showtime.cinema.name}
-                </Typography>
-              </Box>
-              <Box>
-                <Typography
-                  variant="caption"
-                  sx={{ color: "rgba(255, 255, 255, 0.7)" }}
-                >
-                  Room
-                </Typography>
-                <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
-                  {bookingData.showtime.room.name}
-                </Typography>
-              </Box>
+              {cinema && (
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+                  >
+                    Cinema
+                  </Typography>
+                  <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
+                    {cinema.name}
+                  </Typography>
+                </Box>
+              )}
+              {room && (
+                <Box>
+                  <Typography
+                    variant="caption"
+                    sx={{ color: "rgba(255, 255, 255, 0.7)" }}
+                  >
+                    Room
+                  </Typography>
+                  <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
+                    {room.name}
+                  </Typography>
+                </Box>
+              )}
               <Box>
                 <Typography
                   variant="caption"
@@ -233,11 +256,9 @@ const Confirmation = () => {
                   Date & Time
                 </Typography>
                 <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
-                  {new Date(
-                    bookingData.showtime.start_time
-                  ).toLocaleDateString()}{" "}
+                  {new Date(bookingData.tickets.showtime).toLocaleDateString()}{" "}
                   at{" "}
-                  {new Date(bookingData.showtime.start_time).toLocaleTimeString(
+                  {new Date(bookingData.tickets.showtime).toLocaleTimeString(
                     [],
                     { hour: "2-digit", minute: "2-digit" }
                   )}
@@ -255,7 +276,7 @@ const Confirmation = () => {
                   fontWeight={600}
                   sx={{ fontSize: "1.1rem" }}
                 >
-                  {bookingData.seatLabels.join(", ")}
+                  {bookingData.tickets.seats.join(", ")}
                 </Typography>
               </Box>
             </Box>
@@ -284,18 +305,23 @@ const Confirmation = () => {
               sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
             >
               <Typography variant="body1">
-                Tickets ({bookingData.seatLabels.length})
+                Tickets ({bookingData.tickets.seats.length})
               </Typography>
               <Typography variant="body1">
                 {new Intl.NumberFormat("vi-VN", {
                   style: "currency",
                   currency: "VND",
                 }).format(
-                  bookingData.seatLabels.length * bookingData.showtime.price
+                  bookingData.total_amount -
+                    bookingData.products.reduce(
+                      (total, product) =>
+                        total + product.price * product.quantity,
+                      0
+                    )
                 )}
               </Typography>
             </Box>
-            {Object.keys(bookingData.products || {}).length > 0 && (
+            {bookingData.products.length > 0 && (
               <Box
                 sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
               >
@@ -305,8 +331,11 @@ const Confirmation = () => {
                     style: "currency",
                     currency: "VND",
                   }).format(
-                    bookingData.total -
-                      bookingData.seatLabels.length * bookingData.showtime.price
+                    bookingData.products.reduce(
+                      (total, product) =>
+                        total + product.price * product.quantity,
+                      0
+                    )
                   )}
                 </Typography>
               </Box>
@@ -320,7 +349,7 @@ const Confirmation = () => {
                 {new Intl.NumberFormat("vi-VN", {
                   style: "currency",
                   currency: "VND",
-                }).format(bookingData.total)}
+                }).format(bookingData.total_amount)}
               </Typography>
             </Box>
             <Typography
@@ -328,15 +357,15 @@ const Confirmation = () => {
               sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "0.9rem" }}
             >
               Paid by{" "}
-              {bookingData.paymentMethod.charAt(0).toUpperCase() +
-                bookingData.paymentMethod.slice(1)}
+              {bookingData.payment_method.charAt(0).toUpperCase() +
+                bookingData.payment_method.slice(1)}
             </Typography>
             <Typography
               variant="caption"
               sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "0.9rem" }}
             >
               {" "}
-              at {new Date(bookingData.bookingDate).toLocaleString()}
+              at {new Date(bookingData.created_at).toLocaleString()}
             </Typography>
           </Box>
 

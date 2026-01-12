@@ -18,6 +18,7 @@ import {
 import { CreditCard, AccountBalance, Smartphone } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PaymentMethod } from "../../utils/enum";
+import type { InvoiceDTO } from "../../utils/dtos/invoiceDTO";
 import { formatDateLong, formatTime } from "../../utils/helper/helper";
 import { useCurrentUser } from "../../services/authService";
 import { useCreateBooking } from "../../services/invoicesService";
@@ -81,23 +82,18 @@ const Payment = () => {
     };
 
     try {
-      await createBookingMutation.mutateAsync(bookingPayload);
+      const bookingResponse = await createBookingMutation.mutateAsync(
+        bookingPayload
+      );
 
-      // Store completed booking for confirmation page
-      const completeBooking = {
-        ...bookingData,
-        customerInfo: {
-          fullName: currentUser.full_name,
-          email: currentUser.email,
-          phone: currentUser.phone || "",
+      // Navigate to confirmation with server response data and cinema info
+      navigate("/confirmation", {
+        state: {
+          bookingData: bookingResponse,
+          cinema: bookingData.showtime.cinema,
+          room: bookingData.showtime.room,
         },
-        paymentMethod,
-        bookingId: `BK${Date.now()}`,
-        bookingDate: new Date().toISOString(),
-      };
-
-      localStorage.setItem("completedBooking", JSON.stringify(completeBooking));
-      navigate("/confirmation");
+      });
     } catch (error) {
       console.error("Booking failed:", error);
       // Handle error - maybe show a toast or error message
@@ -398,35 +394,40 @@ const Payment = () => {
                           gap: 1,
                         }}
                       >
-                        {bookingData.productDetails.map((product: any) => (
-                          <Box
-                            key={product.product_id}
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Typography
-                              variant="body1"
+                        {bookingData.productDetails.map(
+                          (product: InvoiceDTO["products"][0]) => (
+                            <Box
+                              key={product.product_id}
                               sx={{
-                                flex: 1,
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                                mr: 2,
+                                display: "flex",
+                                justifyContent: "space-between",
+                                alignItems: "center",
                               }}
                             >
-                              {product.name} × {product.quantity}
-                            </Typography>
-                            <Typography variant="body1" sx={{ flexShrink: 0 }}>
-                              {new Intl.NumberFormat("vi-VN", {
-                                style: "currency",
-                                currency: "VND",
-                              }).format(product.price * product.quantity)}
-                            </Typography>
-                          </Box>
-                        ))}
+                              <Typography
+                                variant="body1"
+                                sx={{
+                                  flex: 1,
+                                  overflow: "hidden",
+                                  textOverflow: "ellipsis",
+                                  whiteSpace: "nowrap",
+                                  mr: 2,
+                                }}
+                              >
+                                {product.name} × {product.quantity}
+                              </Typography>
+                              <Typography
+                                variant="body1"
+                                sx={{ flexShrink: 0 }}
+                              >
+                                {new Intl.NumberFormat("vi-VN", {
+                                  style: "currency",
+                                  currency: "VND",
+                                }).format(product.price * product.quantity)}
+                              </Typography>
+                            </Box>
+                          )
+                        )}
                       </Box>
                     </Box>
                   )}
