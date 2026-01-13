@@ -27,9 +27,7 @@ const Header = () => {
   const open = Boolean(anchorEl);
   const { mutate: signOutMutate } = useSignOut();
   const { data: user } = useCurrentUser();
-
-  // Mock user role - in real app, this would come from authentication context
-  const userRole = user?.role || "customer"; // Change to 'customer' to test customer view
+  console.log("Current User in Header:", user);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -236,7 +234,7 @@ const Header = () => {
             onProfile={handleProfile}
             onAdminPage={handleAdminPage}
             onLogout={handleLogout}
-            userRole={userRole}
+            userRole={user?.role || "customer"}
           />
         </Box>
       </Container>

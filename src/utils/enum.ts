@@ -8,6 +8,7 @@ export const PaymentMethod = {
   Momo: "momo",
   Card: "card",
   Banking: "banking",
+  VNPay: "vnpay",
 } as const;
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod];
 
@@ -20,13 +21,13 @@ export const ProductCategory = {
 export type ProductCategory =
   (typeof ProductCategory)[keyof typeof ProductCategory];
 
-  export const MovieStatus = {
-    NowShowing: "now showing",
-    Stopped: "stopped",
-    ComingSoon: "coming soon",
-    Unknown: "unknown",
-  } as const;
-  export type MovieStatus = (typeof MovieStatus)[keyof typeof MovieStatus];
+export const MovieStatus = {
+  NowShowing: "now showing",
+  Stopped: "stopped",
+  ComingSoon: "coming soon",
+  Unknown: "unknown",
+} as const;
+export type MovieStatus = (typeof MovieStatus)[keyof typeof MovieStatus];
 
 export const UserRole = {
   Admin: "admin",

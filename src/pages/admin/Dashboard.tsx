@@ -66,7 +66,9 @@ const Dashboard = () => {
     return [
       {
         title: "Total Revenue",
-        value: `$${(dashboardData.stats.total_revenue / 1000).toFixed(1)}k`,
+        value: dashboardData.stats.total_revenue
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, " "),
         icon: <AttachMoneyOutlined />,
         color: "#4caf50",
       },

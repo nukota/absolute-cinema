@@ -525,7 +525,14 @@ const Profile = () => {
                   </Box>
                 ) : (
                   <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 2,
+                      maxHeight: 400,
+                      overflowY: "auto",
+                      pr: 1, // Add padding right for scrollbar
+                    }}
                   >
                     {profile?.booking_history?.map((booking) => (
                       <Card
@@ -535,11 +542,13 @@ const Profile = () => {
                           backdropFilter: "blur(10px)",
                           border: "1px solid rgba(255,255,255,0.2)",
                           borderRadius: 2,
+                          minHeight: 120,
                         }}
                       >
                         <CardContent>
                           <Box
                             sx={{
+                              height: "100%",
                               display: "flex",
                               flexDirection: "column",
                             }}

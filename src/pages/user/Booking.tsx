@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   Container,
   Paper,
   Typography,
@@ -50,9 +51,18 @@ const Booking = () => {
   // Loading and error states
   if (showtimeLoading || seatsLoading || productsLoading) {
     return (
-      <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Typography variant="h4">Loading...</Typography>
-      </Container>
+      <Box
+        sx={{
+          background:
+            "radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <CircularProgress size={60} sx={{ color: "primary.main" }} />
+      </Box>
     );
   }
 

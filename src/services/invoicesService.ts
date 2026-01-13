@@ -2,6 +2,8 @@ import { api } from "../lib/apiClient";
 import type { InvoiceDTO, CreateInvoiceDTO } from "../utils/dtos/invoiceDTO";
 import type { BookingHistoryDTO, UserProfileDTO } from "../utils/dtos/userDTO";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getShowtimeById } from "./showtimesSerivce";
+import { seatsKeys } from "./seatsService";
 
 const createBooking = async (data: CreateInvoiceDTO): Promise<InvoiceDTO> => {
   const response = await api.post<InvoiceDTO>("/invoices/booking", data);
@@ -54,8 +56,18 @@ export const useCreateBooking = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createBooking,
-    onSuccess: () => {
+    onSuccess: async (_data, variables) => {
+      // Invalidate invoices
       queryClient.invalidateQueries({ queryKey: invoicesKeys.lists() });
+
+      // Get the showtime ID from the booking
+      const showtimeId = variables.tickets.showtime_id;
+
+      // Fetch showtime to get room ID
+      const showtime = await getShowtimeById(showtimeId);
+      const roomId = showtime.room.room_id;
+
+      queryClient.invalidateQueries({ queryKey: seatsKeys.byRoom(roomId) });
     },
   });
 };

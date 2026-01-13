@@ -25,6 +25,8 @@ import Profile from "./pages/user/Profile";
 import HelpCenter from "./pages/user/HelpCenter";
 import TermsConditions from "./pages/user/TermsConditions";
 import PrivacyPolicy from "./pages/user/PrivacyPolicy";
+import VNPayPayment from "./pages/user/VNPayPayment";
+import VNPayResult from "./pages/user/VNPayResult";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { UserRole } from "./utils/enum";
 import "./App.css";
@@ -40,7 +42,13 @@ const App = () => {
         <Route path="/verify-email" element={<VerifyCallback />} />
 
         {/* User routes with layout - Protected for customers and admins */}
-        <Route element={<ProtectedRoute allowedRoles={[UserRole.Customer, UserRole.Admin]} />}>
+        <Route
+          element={
+            <ProtectedRoute
+              allowedRoles={[UserRole.Customer, UserRole.Admin]}
+            />
+          }
+        >
           <Route path="/" element={<UserLayout />}>
             <Route index element={<Home />} />
             <Route path="movies" element={<MoviesPage />} />
@@ -49,6 +57,8 @@ const App = () => {
             <Route path="booking/:showtimeId" element={<Booking />} />
             <Route path="payment" element={<Payment />} />
             <Route path="confirmation" element={<Confirmation />} />
+            <Route path="vnpay-payment" element={<VNPayPayment />} />
+            <Route path="payment-result" element={<VNPayResult />} />
             <Route path="profile" element={<Profile />} />
             <Route path="help-center" element={<HelpCenter />} />
             <Route path="terms-conditions" element={<TermsConditions />} />

@@ -22,6 +22,8 @@ import type { InvoiceDTO } from "../../utils/dtos/invoiceDTO";
 import { formatDateLong, formatTime } from "../../utils/helper/helper";
 import { useCurrentUser } from "../../services/authService";
 import { useCreateBooking } from "../../services/invoicesService";
+import { useCreatePayment } from "../../services/vnpayService";
+import VNPayImg from "../../assets/images/vnpay.png";
 
 // Enhanced Paper component with animated gradient background and border
 const EnhancedPaper = styled(Paper)(() => ({
@@ -42,6 +44,7 @@ const Payment = () => {
 
   const { data: currentUser } = useCurrentUser();
   const createBookingMutation = useCreateBooking();
+  const createPaymentMutation = useCreatePayment();
 
   // Get booking data from navigation state
   const bookingData = location.state as any;
@@ -82,20 +85,50 @@ const Payment = () => {
     };
 
     try {
-      const bookingResponse = await createBookingMutation.mutateAsync(
-        bookingPayload
-      );
+      if (paymentMethod === PaymentMethod.VNPay) {
+        // For VNPay, create booking first with banking method, then create payment URL
+        const vnpayBookingPayload = {
+          ...bookingPayload,
+          payment_method: PaymentMethod.Banking,
+        };
+        const bookingResponse = await createBookingMutation.mutateAsync(
+          vnpayBookingPayload
+        );
 
-      // Navigate to confirmation with server response data and cinema info
-      navigate("/confirmation", {
-        state: {
-          bookingData: bookingResponse,
-          cinema: bookingData.showtime.cinema,
-          room: bookingData.showtime.room,
-        },
-      });
+        // Create VNPay payment
+        const paymentResponse = await createPaymentMutation.mutateAsync({
+          amount: bookingData.total,
+          orderId: bookingResponse.invoice_id,
+          orderInfo: `Payment for invoice ${bookingResponse.invoice_id}`,
+        });
+
+        // Navigate to VNPay payment page
+        navigate("/vnpay-payment", {
+          state: {
+            paymentUrl: paymentResponse.paymentUrl,
+          },
+        });
+      } else {
+        // For other payment methods, create booking and go to confirmation
+        const finalBookingPayload = {
+          ...bookingPayload,
+          status: "completed",
+        };
+        const bookingResponse = await createBookingMutation.mutateAsync(
+          finalBookingPayload
+        );
+
+        // Navigate to confirmation with server response data and cinema info
+        navigate("/confirmation", {
+          state: {
+            bookingData: bookingResponse,
+            cinema: bookingData.showtime.cinema,
+            room: bookingData.showtime.room,
+          },
+        });
+      }
     } catch (error) {
-      console.error("Booking failed:", error);
+      console.error("Payment failed:", error);
       // Handle error - maybe show a toast or error message
     }
   };
@@ -246,6 +279,7 @@ const Payment = () => {
 
                     <Card
                       sx={{
+                        mb: 2,
                         border: 2,
                         borderColor:
                           paymentMethod === PaymentMethod.Momo
@@ -272,6 +306,43 @@ const Payment = () => {
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
                             Fast and secure
+                          </Typography>
+                        </Box>
+                      </CardContent>
+                    </Card>
+
+                    <Card
+                      sx={{
+                        border: 2,
+                        borderColor:
+                          paymentMethod === PaymentMethod.VNPay
+                            ? "primary.main"
+                            : "divider",
+                        cursor: "pointer",
+                        backgroundColor: "rgba(255, 255, 255, 0.05)",
+                      }}
+                      onClick={() => setPaymentMethod(PaymentMethod.VNPay)}
+                    >
+                      <CardContent
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                      >
+                        <FormControlLabel
+                          value={PaymentMethod.VNPay}
+                          control={<Radio />}
+                          label=""
+                          sx={{ m: 0 }}
+                        />
+                        <img
+                          src={VNPayImg}
+                          alt="VNPay"
+                          style={{ height: 24, width: 24 }}
+                        />
+                        <Box>
+                          <Typography variant="body1" fontWeight={600}>
+                            VNPay
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Online banking and e-wallets
                           </Typography>
                         </Box>
                       </CardContent>
@@ -509,8 +580,15 @@ const Payment = () => {
                   variant="contained"
                   fullWidth
                   size="large"
+                  disabled={
+                    createBookingMutation.isPending ||
+                    createPaymentMutation.isPending
+                  }
                 >
-                  Complete Payment
+                  {createBookingMutation.isPending ||
+                  createPaymentMutation.isPending
+                    ? "Processing..."
+                    : "Complete Payment"}
                 </Button>
                 <Button
                   variant="text"

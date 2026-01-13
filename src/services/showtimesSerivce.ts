@@ -30,6 +30,8 @@ const getShowtimeById = async (id: string): Promise<ShowtimeDTO> => {
   return response.data;
 };
 
+export { getShowtimeById };
+
 const updateShowtime = async (
   id: string,
   data: UpdateShowtimeDTO
