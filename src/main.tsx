@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { FeedbackProvider } from "./provider/FeedbackProvider";
 import { QueryProvider } from "./provider/QueryProvider";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const theme = createTheme({
   palette: {
@@ -31,7 +31,7 @@ createRoot(document.getElementById("root")!).render(
           <App />
         </FeedbackProvider>
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryProvider>
   </StrictMode>
 );
