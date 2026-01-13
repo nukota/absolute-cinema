@@ -53,8 +53,8 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="movies" element={<MoviesPage />} />
             <Route path="saved-movies" element={<SavedMoviesPage />} />
-            <Route path="movie/:id" element={<MovieDetail />} />
-            <Route path="booking/:showtimeId" element={<Booking />} />
+            <Route path="movie/:slug" element={<MovieDetail />} />
+            <Route path="booking" element={<Booking />} />
             <Route path="payment" element={<Payment />} />
             <Route path="confirmation" element={<Confirmation />} />
             <Route path="vnpay-payment" element={<VNPayPayment />} />

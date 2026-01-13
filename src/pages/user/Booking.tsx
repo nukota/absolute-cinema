@@ -10,7 +10,7 @@ import {
   styled,
 } from "@mui/material";
 import { EventSeat } from "@mui/icons-material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { formatDateLong, formatTime } from "../../utils/helper/helper";
 import { useSeatsByRoom } from "../../services/seatsService";
 import { useAllProducts } from "../../services/productsService";
@@ -28,8 +28,9 @@ const EnhancedPaper = styled(Paper)(() => ({
 }));
 
 const Booking = () => {
-  const { showtimeId } = useParams<{ showtimeId: string }>();
+  const location = useLocation();
   const navigate = useNavigate();
+  const showtimeId = location.state?.showtimeId as string | undefined;
 
   const {
     data: showtime,

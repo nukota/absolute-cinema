@@ -20,7 +20,11 @@ interface SlideItemProps {
   onUnsaveMovie: (movieId: string) => void;
 }
 
-const SlideItem: React.FC<SlideItemProps> = ({ movie, onSaveMovie, onUnsaveMovie }) => {
+const SlideItem: React.FC<SlideItemProps> = ({
+  movie,
+  onSaveMovie,
+  onUnsaveMovie,
+}) => {
   const [trailerDialogOpen, setTrailerDialogOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -33,7 +37,8 @@ const SlideItem: React.FC<SlideItemProps> = ({ movie, onSaveMovie, onUnsaveMovie
   };
 
   const handleBuyTicketClicked = () => {
-    navigate(`/movie/${movie.movie_id}`);
+    const slug = movie.slug || movie.movie_id;
+    navigate(`/movie/${slug}`);
   };
 
   const handleWatchTrailer = () => {

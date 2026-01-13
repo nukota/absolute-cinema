@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { EventSeat } from "@mui/icons-material";
 import { useNavigate, useParams } from "react-router-dom";
-import { useMovie } from "../../services/moviesService";
+import { useMovieBySlug } from "../../services/moviesService";
 import { useShowtimesByMovie } from "../../services/showtimesSerivce";
 import MovieInfo from "../../components/elements/user/MovieInfo";
 import ShowtimeItem from "../../components/items/Showtime";
@@ -20,16 +20,16 @@ import { MovieStatus } from "../../utils/enum";
 import { formatDate } from "../../utils/helper/helper";
 
 const MovieDetail = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [selectedShowtime, setSelectedShowtime] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedCinema, setSelectedCinema] = useState<string>("");
 
   // API calls
-  const { data: movie, isLoading: movieLoading } = useMovie(id || "");
+  const { data: movie, isLoading: movieLoading } = useMovieBySlug(slug || "");
   const { data: showtimes, isLoading: showtimesLoading } = useShowtimesByMovie(
-    id || ""
+    movie?.movie_id || ""
   );
 
   // Get unique dates and cinemas from showtimes
@@ -91,7 +91,7 @@ const MovieDetail = () => {
 
   const handleBooking = () => {
     if (selectedShowtime) {
-      navigate(`/booking/${selectedShowtime}`);
+      navigate("/booking", { state: { showtimeId: selectedShowtime } });
     }
   };
 

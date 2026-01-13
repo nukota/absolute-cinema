@@ -12,6 +12,7 @@ export interface MovieDTO {
   director?: string;
   actors?: any; // JSON (can be array or object)
   genre?: any; // JSON (can be array or object)
+  slug?: string;
   created_at?: string; // timestamp
   status: MovieStatus; // IMPORTANT! (calculate this based on release_date)
   //if release_date <= today => Coming Soon,
@@ -31,6 +32,7 @@ export interface UserMovieDTO {
   director?: string;
   actors?: any; // JSON (can be array or object)
   genre?: any; // JSON (can be array or object)
+  slug?: string;
   created_at?: string; // timestamp
   status: MovieStatus;
   isSaved?: boolean;
