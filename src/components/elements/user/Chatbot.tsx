@@ -1,4 +1,3 @@
-import { useState, useRef, useEffect } from "react";
 import {
   Box,
   Drawer,
@@ -11,14 +10,16 @@ import {
   Divider,
   Chip,
 } from "@mui/material";
-import { Close, Send } from "@mui/icons-material";
+import { Close, Send, Mic } from "@mui/icons-material";
 import { Bot, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { useState, useRef, useEffect } from "react";
 import {
   useSendChatMessage,
   createChatMessage,
   type ChatMessage,
 } from "../../../services/chatbotService";
+import { startVoiceSearch } from "../../../utils/helpers/voiceHelper";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,6 +30,7 @@ const Chatbot = () => {
     ),
   ]);
   const [inputMessage, setInputMessage] = useState("");
+  const [isListening, setIsListening] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -44,10 +46,23 @@ const Chatbot = () => {
 
   // Focus input when drawer opens
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+    if (isOpen) {
+      // Use multiple attempts to ensure focus works after drawer animation
+      const focusInput = () => {
+        if (inputRef.current) {
+          inputRef.current.focus();
+          // Ensure cursor is at the end if there's existing text
+          inputRef.current.setSelectionRange(
+            inputRef.current.value.length,
+            inputRef.current.value.length
+          );
+        }
+      };
+
+      // Try immediately, then after a short delay, then after drawer animation
+      focusInput();
+      setTimeout(focusInput, 100);
+      setTimeout(focusInput, 300);
     }
   }, [isOpen]);
 
@@ -109,6 +124,29 @@ const Chatbot = () => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleVoiceInput = () => {
+    startVoiceSearch({
+      onResult: (transcript) => {
+        setInputMessage(transcript);
+        setIsListening(false);
+      },
+      onError: (error) => {
+        console.error("Voice input error:", error);
+        setIsListening(false);
+        // Could show a toast notification here instead of alert
+        const errorMessage = createChatMessage(
+          "assistant",
+          "Sorry, I couldn't hear you clearly. Please try again or type your message."
+        );
+        setMessages((prev) => [...prev, errorMessage]);
+      },
+      onStart: () => setIsListening(true),
+      onEnd: () => setIsListening(false),
+      continuous: false,
+      interimResults: false,
+    });
   };
 
   const toggleDrawer = () => {
@@ -412,7 +450,7 @@ const Chatbot = () => {
               />
             </Box>
 
-            <Box sx={{ display: "flex", gap: 1, alignItems: "flex-end" }}>
+            <Box sx={{ display: "flex", gap: 0.5, alignItems: "flex-end" }}>
               <TextField
                 inputRef={inputRef}
                 fullWidth
@@ -422,7 +460,7 @@ const Chatbot = () => {
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}
-                disabled={sendChatMessageMutation.isPending}
+                disabled={sendChatMessageMutation.isPending || isListening}
                 variant="outlined"
                 size="small"
                 sx={{
@@ -451,6 +489,25 @@ const Chatbot = () => {
                 }}
               />
               <IconButton
+                onClick={handleVoiceInput}
+                disabled={sendChatMessageMutation.isPending}
+                sx={{
+                  color: isListening ? "error.main" : "white",
+                  width: 40,
+                  height: 40,
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    bgcolor: "rgba(255, 255, 255, 0.1)",
+                  },
+                  "&.Mui-disabled": {
+                    color: "#9e9e9e",
+                  },
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
+              >
+                <Mic sx={{ fontSize: 22 }} />
+              </IconButton>
+              <IconButton
                 color="primary"
                 onClick={handleSendMessage}
                 disabled={
@@ -469,7 +526,7 @@ const Chatbot = () => {
                   transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
               >
-                <Send sx={{ fontSize: 18 }} />
+                <Send sx={{ fontSize: 22 }} />
               </IconButton>
             </Box>
           </Box>

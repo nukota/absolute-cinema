@@ -13,17 +13,20 @@ import {
   Movie,
   ArrowForward,
   BookmarkRounded,
+  Mic,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProfileMenu from "../../popovers/ProfileMenu";
 import { useSignOut, useCurrentUser } from "../../../services/authService";
+import { startVoiceSearch } from "../../../utils/helpers/voiceHelper";
 
 const Header = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isListening, setIsListening] = useState(false);
   const open = Boolean(anchorEl);
   const { mutate: signOutMutate } = useSignOut();
   const { data: user } = useCurrentUser();
@@ -73,6 +76,28 @@ const Header = () => {
     if (event.key === "Enter") {
       handleSearch();
     }
+  };
+
+  const handleVoiceSearch = () => {
+    startVoiceSearch({
+      onResult: (transcript) => {
+        setSearchQuery(transcript);
+        setIsListening(false);
+        // Auto-search after voice input
+        if (transcript.trim()) {
+          navigate(`/movies?search=${encodeURIComponent(transcript.trim())}`);
+          setSearchOpen(false);
+          setSearchQuery("");
+        }
+      },
+      onError: (error) => {
+        console.error("Voice search error:", error);
+        setIsListening(false);
+        alert("Voice search failed. Please try again or use text search.");
+      },
+      onStart: () => setIsListening(true),
+      onEnd: () => setIsListening(false),
+    });
   };
 
   return (
@@ -133,6 +158,18 @@ const Header = () => {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
+                      <IconButton
+                        onClick={handleVoiceSearch}
+                        edge="end"
+                        size="small"
+                        sx={{
+                          mr: 0.5,
+                          color: isListening ? "error.main" : "inherit",
+                        }}
+                        disabled={isListening}
+                      >
+                        <Mic />
+                      </IconButton>
                       <IconButton
                         onClick={handleSearch}
                         edge="end"
