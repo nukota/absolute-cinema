@@ -1,16 +1,24 @@
-import { Box, CssBaseline } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import { Outlet } from 'react-router-dom';
-import Header from '../../components/elements/user/Header';
-import Footer from '../../components/elements/user/Footer';
-import Chatbot from '../../components/elements/user/Chatbot';
-import userTheme from '../../theme/userTheme';
+import { Box, CssBaseline } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+import { Outlet } from "react-router-dom";
+import Header from "../../components/elements/user/Header";
+import Footer from "../../components/elements/user/Footer";
+import Chatbot from "../../components/elements/user/Chatbot";
+import Gamebox from "../../components/elements/user/Gamebox";
+import userTheme from "../../theme/userTheme";
 
 const UserLayout = () => {
   return (
     <ThemeProvider theme={userTheme}>
       <CssBaseline />
-      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', bgcolor: 'background.default' }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "100vh",
+          bgcolor: "background.default",
+        }}
+      >
         {/* Header */}
         <Header />
 
@@ -24,6 +32,9 @@ const UserLayout = () => {
 
         {/* Chatbot */}
         <Chatbot />
+
+        {/* Gamebox */}
+        <Gamebox />
       </Box>
     </ThemeProvider>
   );
