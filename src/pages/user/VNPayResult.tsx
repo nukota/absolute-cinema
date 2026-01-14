@@ -13,6 +13,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { useCurrentUser } from "../../services/authService";
 import VNPayImg from "../../assets/images/vnpay.png";
+import { useTheme } from "../../provider/ThemeProvider";
 
 // Enhanced Paper component with animated gradient background and border
 const EnhancedPaper = styled(Paper)(() => ({
@@ -28,6 +29,7 @@ const VNPayResult: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { data: userProfile } = useCurrentUser();
+  const { t } = useTheme();
   const [loading, setLoading] = useState(true);
   const [paymentResult, setPaymentResult] = useState<{
     success: boolean;
@@ -59,7 +61,7 @@ const VNPayResult: React.FC = () => {
         if (isSuccess && vnp_TxnRef) {
           setPaymentResult({
             success: true,
-            message: "Payment Successfully!",
+            message: t("vnpayResult.success"),
             order_id: vnp_TxnRef,
             amount: vnp_Amount ? parseInt(vnp_Amount) / 100 : undefined,
             transactionNo: vnp_TransactionNo || undefined,
@@ -92,11 +94,11 @@ const VNPayResult: React.FC = () => {
 
     switch (role) {
       case "admin":
-        return { label: "Go back to Admin Page", path: "/admin" };
+        return { label: t("vnpayResult.goBackAdmin"), path: "/admin" };
       case "customer":
-        return { label: "Go back to Home Page", path: "/" };
+        return { label: t("vnpayResult.goBackHome"), path: "/" };
       default:
-        return { label: "Go back to Home Page", path: "/" };
+        return { label: t("vnpayResult.goBackHome"), path: "/" };
     }
   };
 
@@ -187,7 +189,7 @@ const VNPayResult: React.FC = () => {
                     color: "#1976d2",
                   }}
                 >
-                  Payment Successful!
+                  {t("vnpayResult.success")}
                 </Typography>
               </Box>
             ) : (
@@ -207,7 +209,7 @@ const VNPayResult: React.FC = () => {
                     mb: 1,
                   }}
                 >
-                  Payment Failed
+                  {t("vnpayResult.failed")}
                 </Typography>
               </>
             )}
@@ -217,7 +219,7 @@ const VNPayResult: React.FC = () => {
 
           <Box sx={{ mb: 3 }}>
             <Typography variant="h6" sx={{ mb: 2, fontWeight: "bold" }}>
-              Order Details
+              {t("vnpayResult.orderDetails")}
             </Typography>
 
             {paymentResult?.bankCode && (
@@ -229,7 +231,7 @@ const VNPayResult: React.FC = () => {
                 }}
               >
                 <Typography variant="body1" color="text.secondary">
-                  Bank:
+                  {t("vnpayResult.bank")}
                 </Typography>
                 <Typography variant="body1" sx={{ fontWeight: "medium" }}>
                   {paymentResult.bankCode}
@@ -246,7 +248,7 @@ const VNPayResult: React.FC = () => {
                 }}
               >
                 <Typography variant="body1" color="text.secondary">
-                  Transaction Code:
+                  {t("vnpayResult.transactionCode")}
                 </Typography>
                 <Typography variant="body1" sx={{ fontWeight: "medium" }}>
                   {paymentResult.transactionNo}
@@ -263,7 +265,7 @@ const VNPayResult: React.FC = () => {
                 }}
               >
                 <Typography variant="body1" color="text.secondary">
-                  Amount:
+                  {t("vnpayResult.amount")}
                 </Typography>
                 <Typography variant="body1" sx={{ fontWeight: "medium" }}>
                   {new Intl.NumberFormat("vi-VN", {

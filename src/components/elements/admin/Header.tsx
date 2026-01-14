@@ -18,6 +18,8 @@ import {
   LogoutRounded,
   MessageRounded,
   CalendarTodayRounded,
+  Lightbulb,
+  LightbulbOutlined,
 } from "@mui/icons-material";
 import { useState } from "react";
 import { LocalizationProvider, DateCalendar } from "@mui/x-date-pickers";
@@ -32,13 +34,14 @@ export const Header = () => {
     null
   );
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const open = Boolean(anchorEl);
   const calendarOpen = Boolean(calendarAnchor);
   const navigate = useNavigate();
 
   const { mutate: signOutMutate } = useSignOut();
   const { data: user } = useCurrentUser();
- console.log("Current User in Admin Header:", user);
+  console.log("Current User in Admin Header:", user);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -96,6 +99,19 @@ export const Header = () => {
           <Badge badgeContent={3} color="error">
             <NotificationsRounded sx={{ fontSize: 28 }} />
           </Badge>
+        </IconButton>
+
+        {/* Theme Switch */}
+        <IconButton
+          color="default"
+          sx={{ p: 1.25 }}
+          onClick={() => setIsDarkMode(!isDarkMode)}
+        >
+          {isDarkMode ? (
+            <Lightbulb sx={{ fontSize: 24 }} />
+          ) : (
+            <LightbulbOutlined sx={{ fontSize: 24 }} />
+          )}
         </IconButton>
 
         {/* Profile Section */}

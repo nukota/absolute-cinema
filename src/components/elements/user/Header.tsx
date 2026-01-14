@@ -6,6 +6,8 @@ import {
   Avatar,
   TextField,
   InputAdornment,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import {
   MovieFilter,
@@ -19,7 +21,10 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ProfileMenu from "../../popovers/ProfileMenu";
 import { useSignOut, useCurrentUser } from "../../../services/authService";
-import { startVoiceSearch } from "../../../utils/helpers/voiceHelper";
+import { startVoiceSearch } from "../../../utils/helper/voiceHelper";
+import { useTheme } from "../../../provider/ThemeProvider";
+import vnFlag from "../../../assets/images/vn.png";
+import enFlag from "../../../assets/images/en.png";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -30,6 +35,7 @@ const Header = () => {
   const open = Boolean(anchorEl);
   const { mutate: signOutMutate } = useSignOut();
   const { data: user } = useCurrentUser();
+  const { language, setLanguage } = useTheme();
   console.log("Current User in Header:", user);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -224,6 +230,33 @@ const Header = () => {
             >
               <Movie />
             </IconButton>
+
+            {/* Language Selector */}
+            <Select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value as "en" | "vn")}
+              renderValue={(value) => (
+                <Avatar
+                  src={value === "en" ? enFlag : vnFlag}
+                  sx={{ width: 24, height: 24 }}
+                />
+              )}
+              sx={{
+                color: "white",
+                "& .MuiSelect-icon": { color: "white" },
+                "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                minWidth: 50,
+              }}
+            >
+              <MenuItem value="en">
+                <Avatar src={enFlag} sx={{ width: 20, height: 20, mr: 1 }} />
+                ENG
+              </MenuItem>
+              <MenuItem value="vn">
+                <Avatar src={vnFlag} sx={{ width: 20, height: 20, mr: 1 }} />
+                VIE
+              </MenuItem>
+            </Select>
 
             {/* User Info and Avatar */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

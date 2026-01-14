@@ -19,7 +19,7 @@ import {
   createChatMessage,
   type ChatMessage,
 } from "../../../services/chatbotService";
-import { startVoiceSearch } from "../../../utils/helpers/voiceHelper";
+import { startVoiceSearch } from "../../../utils/helper/voiceHelper";
 
 const Chatbot = () => {
   const [isOpen, setIsOpen] = useState(false);

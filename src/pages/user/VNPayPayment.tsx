@@ -10,6 +10,7 @@ import {
   styled,
 } from "@mui/material";
 import VNPayImg from "../../assets/images/vnpay.png";
+import { useTheme } from "../../provider/ThemeProvider";
 
 // Enhanced Paper component with animated gradient background and border
 const EnhancedPaper = styled(Paper)(() => ({
@@ -25,6 +26,7 @@ const VNPayPayment: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const paymentUrl = location.state?.paymentUrl;
+  const { t } = useTheme();
 
   useEffect(() => {
     if (paymentUrl) {
@@ -89,12 +91,11 @@ const VNPayPayment: React.FC = () => {
             </Box>
 
             <Typography variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
-              Complete Your Payment
+              {t("vnpayPayment.title")}
             </Typography>
 
             <Typography variant="body1" sx={{ mb: 3, color: "text.secondary" }}>
-              A new tab has been opened for you to complete your payment with
-              VNPay.
+              {t("vnpayPayment.message")}
             </Typography>
 
             <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
@@ -112,7 +113,7 @@ const VNPayPayment: React.FC = () => {
                   },
                 }}
               >
-                Go Back to Home Page
+                {t("vnpayPayment.goBack")}
               </Button>
             </Box>
           </Box>

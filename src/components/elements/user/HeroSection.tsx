@@ -1,13 +1,22 @@
-import { Box, Button, Container, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { PlayArrow, LocalActivity, AccessTime, Category, CalendarToday, Person, People } from '@mui/icons-material';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/swiper-bundle.css';
-import { MovieStatus } from '../../../utils/enum';
-import type { UserMovieDTO } from '../../../utils/dtos/movieDTO';
-import TrailerDialog from '../../dialogs/detail-dialogs/TrailerDialog';
-import { useState } from 'react';
+import { Box, Button, Container, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import {
+  PlayArrow,
+  LocalActivity,
+  AccessTime,
+  Category,
+  CalendarToday,
+  Person,
+  People,
+} from "@mui/icons-material";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+import "swiper/swiper-bundle.css";
+import { MovieStatus } from "../../../utils/enum";
+import type { UserMovieDTO } from "../../../utils/dtos/movieDTO";
+import TrailerDialog from "../../dialogs/detail-dialogs/TrailerDialog";
+import { useState } from "react";
+import { useTheme } from "../../../provider/ThemeProvider";
 
 interface HeroSectionProps {
   movies: UserMovieDTO[];
@@ -17,12 +26,16 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
   const navigate = useNavigate();
   const [trailerDialogOpen, setTrailerDialogOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<UserMovieDTO | null>(null);
+  const { t } = useTheme();
 
   // Get now showing movies for hero swiper
-  const nowShowingMovies = movies.filter(movie => movie.status === MovieStatus.NowShowing);
+  const nowShowingMovies = movies.filter(
+    (movie) => movie.status === MovieStatus.NowShowing
+  );
 
-  const handleBookTicket = (movieId: string) => {
-    navigate(`/movie/${movieId}`);
+  const handleBookTicket = (movie: UserMovieDTO) => {
+    const slug = movie.slug || movie.movie_id;
+    navigate(`/movie/${slug}`);
   };
 
   const handleWatchTrailer = (movie: UserMovieDTO) => {
@@ -38,42 +51,52 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
   return (
     <Box
       sx={{
-        height: 'calc(100vh)',
-        width: '100%',
-        position: 'relative',
-        overflow: 'hidden',
-        marginTop: '-64px',
-        '& .swiper-pagination': {
-          bottom: '60px !important',
+        height: "calc(100vh)",
+        width: "100%",
+        position: "relative",
+        overflow: "hidden",
+        marginTop: "-64px",
+        "& .swiper-pagination": {
+          bottom: "60px !important",
         },
-        '& .swiper-pagination-bullet': {
-          width: '12px',
-          height: '12px',
+        "& .swiper-pagination-bullet": {
+          width: "12px",
+          height: "12px",
           opacity: 0.5,
-          backgroundColor: 'white',
-          margin: '0 8px !important',
+          backgroundColor: "white",
+          margin: "0 8px !important",
         },
-        '& .swiper-pagination-bullet-active': {
+        "& .swiper-pagination-bullet-active": {
           opacity: 1,
-          backgroundColor: 'white',
+          backgroundColor: "white",
         },
       }}
     >
       {/* Static "Welcome to Absolute Cinema" text */}
-      <Container maxWidth="lg" sx={{ position: 'absolute', top: '80px', left: 0, right: 0, zIndex: 10, display: { xs: 'none', md: 'block' } }}>
+      <Container
+        maxWidth="lg"
+        sx={{
+          position: "absolute",
+          top: "80px",
+          left: 0,
+          right: 0,
+          zIndex: 10,
+          display: { xs: "none", md: "block" },
+        }}
+      >
         <Typography
           variant="h3"
           fontWeight={700}
           sx={{
             fontFamily: '"Montserrat Alternates", sans-serif',
-            fontSize: { xs: '2rem', md: '3rem' },
+            fontSize: { xs: "2rem", md: "3rem" },
             mb: 2,
             opacity: 0.75,
-            color: 'white',
-            textAlign: { xs: 'center', md: 'left' },
+            color: "white",
+            textAlign: { xs: "center", md: "left" },
           }}
         >
-          Showing movies on Absolute Cinema!
+          {t("hero.welcome")}
         </Typography>
       </Container>
 
@@ -90,39 +113,40 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
           disableOnInteraction: false,
         }}
         loop={true}
-        style={{ height: '100%' }}
+        style={{ height: "100%" }}
       >
         {nowShowingMovies.map((movie) => (
           <SwiperSlide key={movie.movie_id}>
             <Box
               sx={{
-                height: 'calc(100vh)',
-                width: '100%',
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
+                height: "calc(100vh)",
+                width: "100%",
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
                 backgroundImage: `url(${movie.poster_url})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                backgroundRepeat: 'no-repeat',
-                '&::before': {
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                "&::before": {
                   content: '""',
-                  position: 'absolute',
+                  position: "absolute",
                   top: 0,
                   left: 0,
                   right: 0,
                   bottom: 0,
-                  background: 'rgba(0, 0, 0, 0.85)',
+                  background: "rgba(0, 0, 0, 0.85)",
                   zIndex: 1,
                 },
-                '&::after': {
+                "&::after": {
                   content: '""',
-                  position: 'absolute',
+                  position: "absolute",
                   top: 0,
                   left: 0,
                   right: 0,
-                  height: '64px',
-                  background: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, transparent 100%)',
+                  height: "64px",
+                  background:
+                    "linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, transparent 100%)",
                   zIndex: 2,
                 },
               }}
@@ -130,23 +154,24 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
               {/* Bottom gradient overlay */}
               <Box
                 sx={{
-                  position: 'absolute',
+                  position: "absolute",
                   bottom: 0,
                   left: 0,
                   right: 0,
-                  height: '64px',
-                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%)',
+                  height: "64px",
+                  background:
+                    "linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%)",
                   zIndex: 2,
                 }}
               />
-              
-              <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 3 }}>
+
+              <Container maxWidth="lg" sx={{ position: "relative", zIndex: 3 }}>
                 <Box
                   sx={{
-                    display: 'flex',
-                    flexDirection: { xs: 'column', md: 'row' },
-                    alignItems: 'center',
-                    minHeight: 'calc(100vh)',
+                    display: "flex",
+                    flexDirection: { xs: "column", md: "row" },
+                    alignItems: "center",
+                    minHeight: "calc(100vh)",
                     py: 4,
                     pt: 12,
                   }}
@@ -154,7 +179,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
                   {/* Movie Poster */}
                   <Box
                     sx={{
-                      flex: { xs: 'none', md: '0 0 300px' },
+                      flex: { xs: "none", md: "0 0 300px" },
                       mb: { xs: 4, md: 0 },
                       mr: { md: 6 },
                     }}
@@ -164,11 +189,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
                       src={movie.poster_url}
                       alt={`${movie.title} poster`}
                       sx={{
-                        width: '100%',
+                        width: "100%",
                         maxWidth: 300,
-                        height: 'auto',
+                        height: "auto",
                         borderRadius: 2,
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+                        boxShadow: "0 20px 40px rgba(0,0,0,0.5)",
                       }}
                     />
                   </Box>
@@ -177,8 +202,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
                   <Box
                     sx={{
                       flex: 1,
-                      color: 'white',
-                      textAlign: { xs: 'center', md: 'left' },
+                      color: "white",
+                      textAlign: { xs: "center", md: "left" },
                     }}
                   >
                     <Typography
@@ -187,7 +212,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
                       gutterBottom
                       color="#ccc"
                       sx={{
-                        fontSize: { xs: '1.5rem', md: '2.5rem' },
+                        fontSize: { xs: "1.5rem", md: "2.5rem" },
                         mb: 1,
                       }}
                     >
@@ -196,60 +221,100 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
 
                     <Box
                       sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: { xs: 'center', md: 'flex-start' },
-                        justifyContent: 'flex-start',
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: { xs: "center", md: "flex-start" },
+                        justifyContent: "flex-start",
                         gap: 1,
                         my: 2,
                         color: "#bbb",
-                        flexWrap: 'wrap',
+                        flexWrap: "wrap",
                       }}
                     >
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Category sx={{ fontSize: 20, color: 'primary.main' }} />
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <Category
+                          sx={{ fontSize: 20, color: "primary.main" }}
+                        />
                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                          <Typography component="span" sx={{ color: '#999', mr: 1 }}>
-                            Genre:
+                          <Typography
+                            component="span"
+                            sx={{ color: "#999", mr: 1 }}
+                          >
+                            {t("hero.genre")}
                           </Typography>
-                          {Array.isArray(movie.genre) ? movie.genre.join(', ') : movie.genre}
+                          {Array.isArray(movie.genre)
+                            ? movie.genre.join(", ")
+                            : movie.genre}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <AccessTime sx={{ fontSize: 20, color: 'primary.main' }} />
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <AccessTime
+                          sx={{ fontSize: 20, color: "primary.main" }}
+                        />
                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                          <Typography component="span" sx={{ color: '#999', mr: 1 }}>
-                            Duration:
+                          <Typography
+                            component="span"
+                            sx={{ color: "#999", mr: 1 }}
+                          >
+                            {t("hero.duration")}
                           </Typography>
                           {movie.duration_min} min
                         </Typography>
                       </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <CalendarToday sx={{ fontSize: 20, color: 'primary.main' }} />
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <CalendarToday
+                          sx={{ fontSize: 20, color: "primary.main" }}
+                        />
                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                          <Typography component="span" sx={{ color: '#999', mr: 1 }}>
-                            Year:
+                          <Typography
+                            component="span"
+                            sx={{ color: "#999", mr: 1 }}
+                          >
+                            {t("hero.year")}
                           </Typography>
-                          {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
+                          {movie.release_date
+                            ? new Date(movie.release_date).getFullYear()
+                            : "N/A"}
                         </Typography>
                       </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <Person sx={{ fontSize: 20, color: 'primary.main' }} />
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <Person sx={{ fontSize: 20, color: "primary.main" }} />
                         <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                          <Typography component="span" sx={{ color: '#999', mr: 1 }}>
-                            Director:
+                          <Typography
+                            component="span"
+                            sx={{ color: "#999", mr: 1 }}
+                          >
+                            {t("hero.director")}
                           </Typography>
-                          {movie.director || 'N/A'}
+                          {movie.director || "N/A"}
                         </Typography>
                       </Box>
                       {movie.actors && (
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <People sx={{ fontSize: 20, color: 'primary.main' }} />
+                        <Box
+                          sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                        >
+                          <People
+                            sx={{ fontSize: 20, color: "primary.main" }}
+                          />
                           <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                            <Typography component="span" sx={{ color: '#999', mr: 1 }}>
-                              Cast:
+                            <Typography
+                              component="span"
+                              sx={{ color: "#999", mr: 1 }}
+                            >
+                              {t("hero.cast")}
                             </Typography>
-                            {Array.isArray(movie.actors) ? movie.actors.slice(0, 3).join(', ') + (movie.actors.length > 3 ? '...' : '') : movie.actors}
+                            {Array.isArray(movie.actors)
+                              ? movie.actors.slice(0, 3).join(", ") +
+                                (movie.actors.length > 3 ? "..." : "")
+                              : movie.actors}
                           </Typography>
                         </Box>
                       )}
@@ -270,25 +335,25 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
 
                     <Box
                       sx={{
-                        display: 'flex',
+                        display: "flex",
                         gap: 2,
-                        flexWrap: 'wrap',
-                        justifyContent: { xs: 'center', md: 'flex-start' },
+                        flexWrap: "wrap",
+                        justifyContent: { xs: "center", md: "flex-start" },
                       }}
                     >
                       <Button
                         variant="contained"
                         size="large"
                         startIcon={<LocalActivity />}
-                        onClick={() => handleBookTicket(movie.movie_id)}
+                        onClick={() => handleBookTicket(movie)}
                         sx={{
-                          bgcolor: 'primary.main',
-                          '&:hover': {
-                            bgcolor: 'primary.dark',
+                          bgcolor: "primary.main",
+                          "&:hover": {
+                            bgcolor: "primary.dark",
                           },
                         }}
                       >
-                        Book Ticket
+                        {t("hero.bookTicket")}
                       </Button>
                       <Button
                         variant="outlined"
@@ -296,15 +361,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({ movies }) => {
                         startIcon={<PlayArrow />}
                         onClick={() => handleWatchTrailer(movie)}
                         sx={{
-                          borderColor: 'white',
-                          color: 'white',
-                          '&:hover': {
-                            borderColor: 'white',
-                            bgcolor: 'rgba(255,255,255,0.1)',
+                          borderColor: "white",
+                          color: "white",
+                          "&:hover": {
+                            borderColor: "white",
+                            bgcolor: "rgba(255,255,255,0.1)",
                           },
                         }}
                       >
-                        Watch Trailer
+                        {t("hero.watchTrailer")}
                       </Button>
                     </Box>
                   </Box>

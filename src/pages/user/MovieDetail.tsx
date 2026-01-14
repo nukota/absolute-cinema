@@ -18,6 +18,7 @@ import MovieInfo from "../../components/elements/user/MovieInfo";
 import ShowtimeItem from "../../components/items/Showtime";
 import { MovieStatus } from "../../utils/enum";
 import { formatDate } from "../../utils/helper/helper";
+import { useTheme } from "../../provider/ThemeProvider";
 
 const MovieDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -25,6 +26,7 @@ const MovieDetail = () => {
   const [selectedShowtime, setSelectedShowtime] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedCinema, setSelectedCinema] = useState<string>("");
+  const { t } = useTheme();
 
   // API calls
   const { data: movie, isLoading: movieLoading } = useMovieBySlug(slug || "");
@@ -81,9 +83,9 @@ const MovieDetail = () => {
   if (!movie) {
     return (
       <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Typography variant="h4">Movie not found</Typography>
+        <Typography variant="h4">{t("movieDetail.movieNotFound")}</Typography>
         <Button onClick={() => navigate("/movies")} sx={{ mt: 2 }}>
-          Back to Movies
+          {t("movieDetail.backToMovies")}
         </Button>
       </Container>
     );
@@ -118,14 +120,14 @@ const MovieDetail = () => {
               gutterBottom
               color="rgba(255, 255, 255, 0.7)"
             >
-              Select Showtime
+              {t("movieDetail.selectShowtime")}
             </Typography>
             <Typography
               variant="body1"
               color="rgba(255, 255, 255, 0.5)"
               sx={{ mb: 4 }}
             >
-              Choose your preferred date and time
+              {t("movieDetail.chooseDateTime")}
             </Typography>
 
             {/* Date and Cinema Selection */}
@@ -142,11 +144,13 @@ const MovieDetail = () => {
               }}
             >
               <FormControl fullWidth sx={{ minWidth: 200 }}>
-                <InputLabel sx={{ color: "white" }}>Select Date</InputLabel>
+                <InputLabel sx={{ color: "white" }}>
+                  {t("movieDetail.selectDate")}
+                </InputLabel>
                 <Select
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  label="Select Date"
+                  label={t("movieDetail.selectDate")}
                   sx={{
                     color: "white",
                     "& .MuiOutlinedInput-notchedOutline": {
@@ -161,7 +165,7 @@ const MovieDetail = () => {
                   }}
                 >
                   <MenuItem value="">
-                    <em>All Dates</em>
+                    <em>{t("movieDetail.allDates")}</em>
                   </MenuItem>
                   {availableDates.map((date) => (
                     <MenuItem key={date} value={date}>
@@ -172,11 +176,13 @@ const MovieDetail = () => {
               </FormControl>
 
               <FormControl fullWidth sx={{ minWidth: 200 }}>
-                <InputLabel sx={{ color: "white" }}>Select Cinema</InputLabel>
+                <InputLabel sx={{ color: "white" }}>
+                  {t("movieDetail.selectCinema")}
+                </InputLabel>
                 <Select
                   value={selectedCinema}
                   onChange={(e) => setSelectedCinema(e.target.value)}
-                  label="Select Cinema"
+                  label={t("movieDetail.selectCinema")}
                   sx={{
                     color: "white",
                     "& .MuiOutlinedInput-notchedOutline": {
@@ -191,7 +197,7 @@ const MovieDetail = () => {
                   }}
                 >
                   <MenuItem value="">
-                    <em>All Cinemas</em>
+                    <em>{t("movieDetail.allCinemas")}</em>
                   </MenuItem>
                   {availableCinemas.map(
                     (cinema) =>
@@ -296,7 +302,7 @@ const MovieDetail = () => {
                       },
                     }}
                   >
-                    Continue to Seat Selection
+                    {t("movieDetail.continueToSeats")}
                   </Button>
                 </Box>
               </Box>
@@ -311,10 +317,10 @@ const MovieDetail = () => {
                   color="secondary.main"
                   sx={{ textTransform: "uppercase", mb: 2 }}
                 >
-                  Currently there're no showtimes
+                  {t("movieDetail.noShowtimes")}
                 </Typography>
                 <Typography variant="body1" color="rgba(255, 255, 255, 0.7)">
-                  Try selecting different date or cinema options
+                  {t("movieDetail.tryDifferent")}
                 </Typography>
               </Box>
             )}
@@ -328,7 +334,7 @@ const MovieDetail = () => {
               color="secondary.main"
               sx={{ textTransform: "uppercase", mb: 2 }}
             >
-              Currently there're no showtimes
+              {t("movieDetail.noShowtimes")}
             </Typography>
             <Typography
               variant="body1"
@@ -336,15 +342,15 @@ const MovieDetail = () => {
               sx={{ mb: 3 }}
             >
               {movie.status === MovieStatus.ComingSoon
-                ? "Check back later for showtime updates"
-                : "This movie is no longer showing"}
+                ? t("movieDetail.checkBack")
+                : t("movieDetail.noLongerShowing")}
             </Typography>
             <Button
               variant="outlined"
               onClick={() => navigate("/movies")}
               sx={{ color: "white", borderColor: "white" }}
             >
-              Browse Other Movies
+              {t("movieDetail.browseOther")}
             </Button>
           </Box>
         )}

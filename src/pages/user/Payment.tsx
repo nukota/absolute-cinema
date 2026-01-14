@@ -24,6 +24,7 @@ import { useCurrentUser } from "../../services/authService";
 import { useCreateBooking } from "../../services/invoicesService";
 import { useCreatePayment } from "../../services/vnpayService";
 import VNPayImg from "../../assets/images/vnpay.png";
+import { useTheme } from "../../provider/ThemeProvider";
 
 // Enhanced Paper component with animated gradient background and border
 const EnhancedPaper = styled(Paper)(() => ({
@@ -38,6 +39,7 @@ const EnhancedPaper = styled(Paper)(() => ({
 const Payment = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTheme();
   const [paymentMethod, setPaymentMethod] = useState<string>(
     PaymentMethod.Card
   );
@@ -52,11 +54,9 @@ const Payment = () => {
   if (!bookingData || !currentUser) {
     return (
       <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Typography variant="h4">
-          No booking data found or user not authenticated
-        </Typography>
+        <Typography variant="h4">{t("payment.noBookingData")}</Typography>
         <Button onClick={() => navigate("/movies")} sx={{ mt: 2 }}>
-          Back to Movies
+          {t("movieDetail.backToMovies")}
         </Button>
       </Container>
     );
@@ -144,14 +144,14 @@ const Payment = () => {
     >
       <Container maxWidth="lg">
         <Typography variant="h3" fontWeight={700} gutterBottom color="white">
-          Payment
+          {t("payment.title")}
         </Typography>
         <Typography
           variant="body1"
           color="rgba(255, 255, 255, 0.7)"
           sx={{ mb: 4 }}
         >
-          Complete your booking by providing payment details
+          {t("payment.subtitle")}
         </Typography>
 
         <form onSubmit={handleSubmit}>
@@ -167,7 +167,7 @@ const Payment = () => {
               {/* Customer Information */}
               <EnhancedPaper sx={{ p: 3, mb: 3 }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
-                  Customer Information
+                  {t("payment.customerInfo")}
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                   <Box sx={{ display: "flex", gap: 4 }}>
@@ -177,7 +177,7 @@ const Payment = () => {
                         color="text.secondary"
                         gutterBottom
                       >
-                        Full Name
+                        {t("payment.name")}
                       </Typography>
                       <Typography variant="body1" fontWeight={600}>
                         {currentUser.full_name}
@@ -189,7 +189,7 @@ const Payment = () => {
                         color="text.secondary"
                         gutterBottom
                       >
-                        Email
+                        {t("payment.email")}
                       </Typography>
                       <Typography variant="body1" fontWeight={600}>
                         {currentUser.email}
@@ -202,7 +202,7 @@ const Payment = () => {
               {/* Payment Method */}
               <EnhancedPaper sx={{ p: 3 }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
-                  Payment Method
+                  {t("payment.paymentMethod")}
                 </Typography>
                 <FormControl component="fieldset" fullWidth>
                   <RadioGroup
@@ -234,10 +234,10 @@ const Payment = () => {
                         <CreditCard color="secondary" />
                         <Box>
                           <Typography variant="body1" fontWeight={600}>
-                            Credit/Debit Card
+                            {t("payment.creditCard")}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            Visa, Mastercard, JCB
+                            {t("payment.creditCardDesc")}
                           </Typography>
                         </Box>
                       </CardContent>
@@ -268,10 +268,10 @@ const Payment = () => {
                         <AccountBalance color="secondary" />
                         <Box>
                           <Typography variant="body1" fontWeight={600}>
-                            Internet Banking
+                            {t("payment.banking")}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            All major banks
+                            {t("payment.bankingDesc")}
                           </Typography>
                         </Box>
                       </CardContent>
@@ -302,10 +302,10 @@ const Payment = () => {
                         <Smartphone color="secondary" />
                         <Box>
                           <Typography variant="body1" fontWeight={600}>
-                            MoMo E-Wallet
+                            {t("payment.cash")}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            Fast and secure
+                            {t("payment.cashDesc")}
                           </Typography>
                         </Box>
                       </CardContent>
@@ -339,10 +339,10 @@ const Payment = () => {
                         />
                         <Box>
                           <Typography variant="body1" fontWeight={600}>
-                            VNPay
+                            {t("payment.vnpay")}
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            Online banking and e-wallets
+                            {t("payment.vnpayDesc")}
                           </Typography>
                         </Box>
                       </CardContent>
@@ -361,7 +361,7 @@ const Payment = () => {
                     }}
                   >
                     <TextField
-                      label="Card Number"
+                      label={t("payment.cardNumber")}
                       required
                       fullWidth
                       placeholder="1234 5678 9012 3456"
@@ -374,13 +374,21 @@ const Payment = () => {
                       }}
                     >
                       <TextField
-                        label="Expiry Date"
+                        label={t("payment.expiryDate")}
                         required
                         placeholder="MM/YY"
                       />
-                      <TextField label="CVV" required placeholder="123" />
+                      <TextField
+                        label={t("payment.cvv")}
+                        required
+                        placeholder="123"
+                      />
                     </Box>
-                    <TextField label="Cardholder Name" required fullWidth />
+                    <TextField
+                      label={t("payment.cardholderName")}
+                      required
+                      fullWidth
+                    />
                   </Box>
                 )}
               </EnhancedPaper>
@@ -390,7 +398,7 @@ const Payment = () => {
             <Box>
               <EnhancedPaper sx={{ p: 3, position: "sticky", top: 24 }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom>
-                  Order Summary
+                  {t("payment.orderSummary")}
                 </Typography>
 
                 <Box sx={{ mb: 2 }}>
@@ -399,7 +407,7 @@ const Payment = () => {
                     color="text.secondary"
                     gutterBottom
                   >
-                    Movie
+                    {t("payment.movie")}
                   </Typography>
                   <Typography variant="body1" fontWeight={600}>
                     {bookingData.showtime.movie.title}
@@ -412,7 +420,7 @@ const Payment = () => {
                     color="text.secondary"
                     gutterBottom
                   >
-                    Cinema
+                    {t("payment.cinema")}
                   </Typography>
                   <Typography variant="body1">
                     {bookingData.showtime.cinema.name}
@@ -425,7 +433,7 @@ const Payment = () => {
                     color="text.secondary"
                     gutterBottom
                   >
-                    Date & Time
+                    {t("payment.dateTime")}
                   </Typography>
                   <Typography variant="body1">
                     {formatDateLong(bookingData.showtime.start_time)}
@@ -441,7 +449,7 @@ const Payment = () => {
                     color="text.secondary"
                     gutterBottom
                   >
-                    Seats
+                    {t("payment.seats")}
                   </Typography>
                   <Typography variant="body1">
                     {bookingData.seatLabels.join(", ")}
@@ -456,7 +464,7 @@ const Payment = () => {
                         color="text.secondary"
                         gutterBottom
                       >
-                        Products
+                        {t("payment.products")}
                       </Typography>
                       <Box
                         sx={{
@@ -514,7 +522,7 @@ const Payment = () => {
                     }}
                   >
                     <Typography variant="body2" color="text.secondary">
-                      Tickets ({bookingData.seats.length})
+                      {t("payment.tickets")} ({bookingData.seats.length})
                     </Typography>
                     <Typography variant="body2">
                       {new Intl.NumberFormat("vi-VN", {
@@ -535,7 +543,7 @@ const Payment = () => {
                       }}
                     >
                       <Typography variant="body2" color="text.secondary">
-                        Products
+                        {t("payment.products")}
                       </Typography>
                       <Typography variant="body2">
                         {new Intl.NumberFormat("vi-VN", {
@@ -561,7 +569,7 @@ const Payment = () => {
                   }}
                 >
                   <Typography variant="h6" fontWeight={600}>
-                    Total
+                    {t("payment.total")}
                   </Typography>
                   <Typography
                     variant="h6"
@@ -587,8 +595,8 @@ const Payment = () => {
                 >
                   {createBookingMutation.isPending ||
                   createPaymentMutation.isPending
-                    ? "Processing..."
-                    : "Complete Payment"}
+                    ? t("payment.processing")
+                    : t("payment.completePayment")}
                 </Button>
                 <Button
                   variant="text"
@@ -596,7 +604,7 @@ const Payment = () => {
                   sx={{ mt: 1 }}
                   onClick={() => navigate(-1)}
                 >
-                  Back
+                  {t("payment.back")}
                 </Button>
               </EnhancedPaper>
             </Box>

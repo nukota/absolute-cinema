@@ -14,6 +14,7 @@ import type { InvoiceDTO } from "../../utils/dtos/invoiceDTO";
 import type { CinemaDTO } from "../../utils/dtos/cinemaDTO";
 import type { RoomDTO } from "../../utils/dtos/roomDTO";
 import { generateTicketHtml } from "../../utils/helper/helper";
+import { useTheme } from "../../provider/ThemeProvider";
 
 interface ConfirmationState {
   bookingData: InvoiceDTO;
@@ -52,6 +53,7 @@ const EnhancedPaper = styled(Paper)(() => ({
 const Confirmation = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTheme();
 
   // Get completed booking data from navigation state
   const { bookingData, cinema, room } = location.state as ConfirmationState;
@@ -110,7 +112,7 @@ const Confirmation = () => {
                 mt: 2,
               }}
             >
-              Booking Confirmed!
+              {t("confirmation.confirmed")}
             </Typography>
             <CheckCircle
               sx={{
@@ -143,7 +145,7 @@ const Confirmation = () => {
                 color: "secondary.light",
               }}
             >
-              Customer Details
+              {t("confirmation.customerDetails")}
             </Typography>
             <Box
               sx={{
@@ -157,7 +159,7 @@ const Confirmation = () => {
                   variant="caption"
                   sx={{ color: "rgba(255, 255, 255, 0.7)" }}
                 >
-                  Name
+                  {t("confirmation.name")}
                 </Typography>
                 <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
                   {bookingData.customer.full_name}
@@ -168,7 +170,7 @@ const Confirmation = () => {
                   variant="caption"
                   sx={{ color: "rgba(255, 255, 255, 0.7)" }}
                 >
-                  Email
+                  {t("confirmation.email")}
                 </Typography>
                 <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
                   {bookingData.customer.email}
@@ -194,7 +196,7 @@ const Confirmation = () => {
                 color: "secondary.light",
               }}
             >
-              Movie Details
+              {t("confirmation.movieDetails")}
             </Typography>
             <Box
               sx={{
@@ -212,7 +214,7 @@ const Confirmation = () => {
                   variant="caption"
                   sx={{ color: "rgba(255, 255, 255, 0.7)" }}
                 >
-                  Movie
+                  {t("confirmation.movie")}
                 </Typography>
                 <Typography
                   variant="body1"
@@ -228,7 +230,7 @@ const Confirmation = () => {
                     variant="caption"
                     sx={{ color: "rgba(255, 255, 255, 0.7)" }}
                   >
-                    Cinema
+                    {t("confirmation.cinema")}
                   </Typography>
                   <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
                     {cinema.name}
@@ -241,7 +243,7 @@ const Confirmation = () => {
                     variant="caption"
                     sx={{ color: "rgba(255, 255, 255, 0.7)" }}
                   >
-                    Room
+                    {t("confirmation.room")}
                   </Typography>
                   <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
                     {room.name}
@@ -253,11 +255,11 @@ const Confirmation = () => {
                   variant="caption"
                   sx={{ color: "rgba(255, 255, 255, 0.7)" }}
                 >
-                  Date & Time
+                  {t("confirmation.dateTime")}
                 </Typography>
                 <Typography variant="body1" sx={{ fontSize: "1.1rem" }}>
                   {new Date(bookingData.tickets.showtime).toLocaleDateString()}{" "}
-                  at{" "}
+                  {t("confirmation.at")}{" "}
                   {new Date(bookingData.tickets.showtime).toLocaleTimeString(
                     [],
                     { hour: "2-digit", minute: "2-digit" }
@@ -269,7 +271,7 @@ const Confirmation = () => {
                   variant="caption"
                   sx={{ color: "rgba(255, 255, 255, 0.7)" }}
                 >
-                  Seats
+                  {t("confirmation.seats")}
                 </Typography>
                 <Typography
                   variant="body1"
@@ -299,13 +301,13 @@ const Confirmation = () => {
                 color: "secondary.light",
               }}
             >
-              Payment Summary
+              {t("confirmation.paymentSummary")}
             </Typography>
             <Box
               sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
             >
               <Typography variant="body1">
-                Tickets ({bookingData.tickets.seats.length})
+                {t("confirmation.tickets")} ({bookingData.tickets.seats.length})
               </Typography>
               <Typography variant="body1">
                 {new Intl.NumberFormat("vi-VN", {
@@ -325,7 +327,9 @@ const Confirmation = () => {
               <Box
                 sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
               >
-                <Typography variant="body1">Products</Typography>
+                <Typography variant="body1">
+                  {t("confirmation.products")}
+                </Typography>
                 <Typography variant="body1">
                   {new Intl.NumberFormat("vi-VN", {
                     style: "currency",
@@ -343,7 +347,7 @@ const Confirmation = () => {
             <Divider sx={{ my: 2, borderColor: "rgba(156, 39, 176, 0.2)" }} />
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography variant="h6" fontWeight={600}>
-                Total Paid
+                {t("confirmation.totalPaid")}
               </Typography>
               <Typography variant="h6" fontWeight={600} color="secondary.light">
                 {new Intl.NumberFormat("vi-VN", {
@@ -356,7 +360,7 @@ const Confirmation = () => {
               variant="caption"
               sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "0.9rem" }}
             >
-              Paid by{" "}
+              {t("confirmation.paidBy")}{" "}
               {bookingData.payment_method.charAt(0).toUpperCase() +
                 bookingData.payment_method.slice(1)}
             </Typography>
@@ -392,7 +396,7 @@ const Confirmation = () => {
                 },
               }}
             >
-              Get Ticket
+              {t("confirmation.getTicket")}
             </Button>
             <Button
               variant="contained"
@@ -410,7 +414,7 @@ const Confirmation = () => {
                 },
               }}
             >
-              Book More
+              {t("confirmation.bookMore")}
             </Button>
           </Box>
         </EnhancedPaper>

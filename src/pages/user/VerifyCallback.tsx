@@ -1,6 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Box, CircularProgress, Typography, Card, CardContent } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Typography,
+  Card,
+  CardContent,
+} from "@mui/material";
 import {
   MovieFilterOutlined,
   CheckCircleOutline,
@@ -15,7 +21,9 @@ const VerifyCallback = () => {
   const location = useLocation();
   const { showSnackbar } = useFeedback();
   const queryClient = useQueryClient();
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading"
+  );
   const [message, setMessage] = useState("Verifying your email...");
   const hasVerified = useRef(false);
 
@@ -30,17 +38,17 @@ const VerifyCallback = () => {
       try {
         // Get hash from location (React Router provides this)
         const hash = location.hash || window.location.hash;
-        
+
         console.log("Full URL:", window.location.href);
         console.log("Hash:", hash);
-        
+
         if (!hash) {
           throw new Error("No hash fragment found in URL");
         }
 
         // Parse hash fragment from URL (Supabase sends tokens after #)
         const hashParams = new URLSearchParams(hash.substring(1));
-        
+
         const accessToken = hashParams.get("access_token");
         const refreshToken = hashParams.get("refresh_token");
 
@@ -69,9 +77,9 @@ const VerifyCallback = () => {
 
         setStatus("success");
         setMessage("Email verified successfully! Redirecting...");
-        
+
         showSnackbar({
-          message: "Email verified successfully!",
+          message: "Email verified successfully! Redirecting...",
           severity: "success",
         });
 
@@ -86,11 +94,11 @@ const VerifyCallback = () => {
         console.error("Verification error:", error);
         setStatus("error");
         setMessage(
-          error?.response?.data?.message || 
-          error?.message ||
-          "Failed to verify email. The link may be expired or invalid."
+          error?.response?.data?.message ||
+            error?.message ||
+            "Failed to verify email. The link may be expired or invalid."
         );
-        
+
         showSnackbar({
           message: "Email verification failed",
           severity: "error",
@@ -101,7 +109,7 @@ const VerifyCallback = () => {
     };
 
     handleVerification();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -180,7 +188,7 @@ const VerifyCallback = () => {
                   {message}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Redirecting to sign in...
+                  {t("verifyCallback.redirecting")}
                 </Typography>
               </>
             )}

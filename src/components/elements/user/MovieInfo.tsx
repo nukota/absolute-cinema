@@ -14,6 +14,7 @@ import type { MovieDTO } from "../../../utils/dtos/movieDTO";
 import { MovieStatus } from "../../../utils/enum";
 import TrailerDialog from "../../dialogs/detail-dialogs/TrailerDialog";
 import { useState } from "react";
+import { useTheme } from "../../../provider/ThemeProvider";
 
 interface MovieInfoProps {
   movie: MovieDTO;
@@ -21,6 +22,7 @@ interface MovieInfoProps {
 
 const MovieInfo = ({ movie }: MovieInfoProps) => {
   const [trailerDialogOpen, setTrailerDialogOpen] = useState(false);
+  const { t } = useTheme();
 
   const handleWatchTrailer = () => {
     setTrailerDialogOpen(true);
@@ -51,13 +53,13 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case MovieStatus.NowShowing:
-        return "Now Showing";
+        return t("movie.nowShowing");
       case MovieStatus.ComingSoon:
-        return "Coming Soon";
+        return t("movie.comingSoon");
       case MovieStatus.Stopped:
-        return "Stopped";
+        return t("movie.stopped");
       default:
-        return "Unknown";
+        return t("movie.unknown");
     }
   };
 
@@ -133,7 +135,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                     fontSize: "1.1rem",
                   }}
                 >
-                  Duration:
+                  {t("movie.duration")}
                 </Typography>
                 <Typography
                   sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "1.1rem" }}
@@ -151,7 +153,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                     fontSize: "1.1rem",
                   }}
                 >
-                  Quality:
+                  {t("movie.quality")}
                 </Typography>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Rating
@@ -171,7 +173,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                       fontSize: "1.1rem",
                     }}
                   >
-                    (4.5/5)
+                    {t("movie.rating")}
                   </Typography>
                 </Box>
               </Box>
@@ -186,7 +188,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                       fontSize: "1.1rem",
                     }}
                   >
-                    Advisory:
+                    {t("movie.advisory")}
                   </Typography>
                   <Typography
                     sx={{
@@ -208,7 +210,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                     fontSize: "1.1rem",
                   }}
                 >
-                  Year:
+                  {t("movie.year")}
                 </Typography>
                 <Typography
                   sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "1.1rem" }}
@@ -226,7 +228,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                     fontSize: "1.1rem",
                   }}
                 >
-                  Genre:
+                  {t("movie.genre")}
                 </Typography>
                 <Typography
                   sx={{ color: "rgba(255, 255, 255, 0.8)", fontSize: "1.1rem" }}
@@ -247,7 +249,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                       fontSize: "1.1rem",
                     }}
                   >
-                    Director:
+                    {t("movie.director")}
                   </Typography>
                   <Typography
                     sx={{
@@ -270,7 +272,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                       fontSize: "1.1rem",
                     }}
                   >
-                    Cast:
+                    {t("movie.cast")}
                   </Typography>
                   <Typography
                     sx={{
@@ -296,7 +298,7 @@ const MovieInfo = ({ movie }: MovieInfoProps) => {
                 }}
                 onClick={handleWatchTrailer}
               >
-                Play Trailer
+                {t("movie.playTrailer")}
               </Button>
             </Box>
           </Box>

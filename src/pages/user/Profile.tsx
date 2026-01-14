@@ -23,6 +23,7 @@ import {
   useUpdateCustomer,
 } from "../../services/customersService";
 import { useFeedback } from "../../provider/FeedbackProvider";
+import { useTheme } from "../../provider/ThemeProvider";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -46,6 +47,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   const { showSnackbar } = useFeedback();
+  const { t } = useTheme();
 
   const { data: currentUser } = useCurrentUser();
   const customerId = currentUser?.id;
@@ -92,14 +94,14 @@ const Profile = () => {
           {
             onSuccess: () => {
               showSnackbar({
-                message: "Profile updated successfully!",
+                message: t("profile.updateSuccess"),
                 severity: "success",
               });
               setIsEditing(false);
             },
             onError: () => {
               showSnackbar({
-                message: "Failed to update profile. Please try again.",
+                message: t("profile.updateError"),
                 severity: "error",
               });
             },
@@ -159,14 +161,14 @@ const Profile = () => {
     >
       <Container maxWidth="lg">
         <Typography variant="h3" fontWeight={700} gutterBottom color="white">
-          My Profile
+          {t("profile.title")}
         </Typography>
         <Typography
           variant="body1"
           color="rgba(255, 255, 255, 0.7)"
           sx={{ mb: 4 }}
         >
-          Manage your account and view booking history
+          {t("profile.subtitle")}
         </Typography>
 
         <Box
@@ -226,7 +228,7 @@ const Profile = () => {
                 variant="caption"
                 sx={{ color: "rgba(255,255,255,0.7)" }}
               >
-                Member Since
+                {t("profile.memberSince")}
               </Typography>
               <Typography
                 variant="body1"
@@ -247,7 +249,7 @@ const Profile = () => {
                 variant="caption"
                 sx={{ color: "rgba(255,255,255,0.7)" }}
               >
-                Total Bookings
+                {t("profile.totalBookings")}
               </Typography>
               <Typography
                 variant="body1"
@@ -287,8 +289,8 @@ const Profile = () => {
                 },
               }}
             >
-              <Tab icon={<Person />} label="Account" />
-              <Tab icon={<History />} label="Booking History" />
+              <Tab icon={<Person />} label={t("profile.account")} />
+              <Tab icon={<History />} label={t("profile.bookingHistory")} />
             </Tabs>
 
             <TabPanel value={tabValue} index={0}>
@@ -302,7 +304,7 @@ const Profile = () => {
                   }}
                 >
                   <Typography variant="h6" fontWeight={600} color="white">
-                    Account Information
+                    {t("profile.accountInfo")}
                   </Typography>
                   <Box sx={{ display: "flex", gap: 1 }}>
                     {isEditing ? (
@@ -360,7 +362,7 @@ const Profile = () => {
                         mb: 1,
                       }}
                     >
-                      Full Name
+                      {t("profile.fullName")}
                     </Typography>
                     <Typography
                       variant="body1"
@@ -380,7 +382,7 @@ const Profile = () => {
                         mb: 1,
                       }}
                     >
-                      Email
+                      {t("profile.email")}
                     </Typography>
                     <Typography
                       variant="body1"
@@ -392,7 +394,7 @@ const Profile = () => {
 
                   {/* Phone Number */}
                   <TextField
-                    label="Phone Number"
+                    label={t("profile.phoneNumber")}
                     value={formData.phone}
                     onChange={(e) => handleInputChange("phone", e.target.value)}
                     disabled={!isEditing}
@@ -423,7 +425,7 @@ const Profile = () => {
 
                   {/* Date of Birth */}
                   <TextField
-                    label="Date of Birth"
+                    label={t("profile.dateOfBirth")}
                     type="date"
                     value={formData.dob}
                     onChange={(e) => handleInputChange("dob", e.target.value)}
@@ -458,7 +460,7 @@ const Profile = () => {
 
                   {/* CCCD */}
                   <TextField
-                    label="CCCD (ID)"
+                    label={t("profile.cccd")}
                     value={formData.cccd}
                     onChange={(e) => handleInputChange("cccd", e.target.value)}
                     disabled={!isEditing}
@@ -498,7 +500,7 @@ const Profile = () => {
                   gutterBottom
                   sx={{ color: "white" }}
                 >
-                  Booking History
+                  {t("profile.bookingHistory")}
                 </Typography>
                 {profile?.booking_history &&
                 profile.booking_history.length === 0 ? (
@@ -508,7 +510,7 @@ const Profile = () => {
                       sx={{ color: "rgba(255,255,255,0.7)" }}
                       gutterBottom
                     >
-                      No bookings yet
+                      {t("profile.noBookings")}
                     </Typography>
                     <Button
                       variant="contained"
@@ -520,7 +522,7 @@ const Profile = () => {
                         "&:hover": { bgcolor: "#e6c300" },
                       }}
                     >
-                      Browse Movies
+                      {t("profile.browseMovies")}
                     </Button>
                   </Box>
                 ) : (
@@ -590,7 +592,8 @@ const Profile = () => {
                                   variant="caption"
                                   sx={{ color: "rgba(255,255,255,0.7)" }}
                                 >
-                                  Seats: {booking.seats.join(", ")}
+                                  {t("profile.seats")}{" "}
+                                  {booking.seats.join(", ")}
                                 </Typography>
                               </Box>
                               <Box sx={{ textAlign: "right" }}>

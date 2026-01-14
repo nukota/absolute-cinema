@@ -13,6 +13,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import type { UserMovieDTO } from "../../utils/dtos/movieDTO";
 import TrailerDialog from "../dialogs/detail-dialogs/TrailerDialog";
+import { useTheme } from "../../provider/ThemeProvider";
 
 interface SlideItemProps {
   movie: UserMovieDTO;
@@ -27,6 +28,7 @@ const SlideItem: React.FC<SlideItemProps> = ({
 }) => {
   const [trailerDialogOpen, setTrailerDialogOpen] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTheme();
 
   const handleSaveClicked = () => {
     if (movie.isSaved) {
@@ -135,7 +137,7 @@ const SlideItem: React.FC<SlideItemProps> = ({
           }}
           onClick={handleSaveClicked}
         >
-          {movie.isSaved ? "Unsave" : "Save"}
+          {movie.isSaved ? t("slide.unsave") : t("slide.save")}
         </Button>
         <Button
           variant="contained"
@@ -153,7 +155,7 @@ const SlideItem: React.FC<SlideItemProps> = ({
           onClick={handleBuyTicketClicked}
           disableElevation
         >
-          Book
+          {t("slide.book")}
         </Button>
       </Box>
       <Button
@@ -176,7 +178,7 @@ const SlideItem: React.FC<SlideItemProps> = ({
         }}
         onClick={handleWatchTrailer}
       >
-        Trailer
+        {t("slide.trailer")}
       </Button>
       <Box
         className="slide-item-filter"
@@ -229,7 +231,7 @@ const SlideItem: React.FC<SlideItemProps> = ({
                   textOverflow: "ellipsis",
                 }}
               >
-                Genre:{" "}
+                {t("slide.genre")}{" "}
                 {Array.isArray(movie.genre)
                   ? movie.genre.join(", ")
                   : movie.genre || "N/A"}
@@ -248,7 +250,7 @@ const SlideItem: React.FC<SlideItemProps> = ({
                   textOverflow: "ellipsis",
                 }}
               >
-                Duration: {movie.duration_min} min
+                {t("slide.duration")} {movie.duration_min} min
               </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -264,7 +266,7 @@ const SlideItem: React.FC<SlideItemProps> = ({
                   textOverflow: "ellipsis",
                 }}
               >
-                Rating: 4.5
+                {t("slide.rating")} 4.5
               </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -280,7 +282,7 @@ const SlideItem: React.FC<SlideItemProps> = ({
                   textOverflow: "ellipsis",
                 }}
               >
-                Year:{" "}
+                {t("slide.year")}{" "}
                 {movie.release_date
                   ? new Date(movie.release_date).getFullYear()
                   : "N/A"}
@@ -299,7 +301,7 @@ const SlideItem: React.FC<SlideItemProps> = ({
                   textOverflow: "ellipsis",
                 }}
               >
-                Director: {movie.director || "N/A"}
+                {t("slide.director")} {movie.director || "N/A"}
               </Typography>
             </Box>
           </Box>

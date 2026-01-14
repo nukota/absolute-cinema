@@ -16,6 +16,7 @@ import { useSeatsByRoom } from "../../services/seatsService";
 import { useAllProducts } from "../../services/productsService";
 import { useShowtime } from "../../services/showtimesSerivce";
 import ProductItem from "../../components/items/ProductItem";
+import { useTheme } from "../../provider/ThemeProvider";
 
 // Enhanced Paper component with animated gradient background and border
 const EnhancedPaper = styled(Paper)(() => ({
@@ -49,6 +50,8 @@ const Booking = () => {
     Record<string, number>
   >({});
 
+  const { t } = useTheme();
+
   // Loading and error states
   if (showtimeLoading || seatsLoading || productsLoading) {
     return (
@@ -70,9 +73,9 @@ const Booking = () => {
   if (showtimeError || !showtime) {
     return (
       <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Typography variant="h4">Showtime not found</Typography>
+        <Typography variant="h4">{t("booking.showtimeNotFound")}</Typography>
         <Button onClick={() => navigate("/movies")} sx={{ mt: 2 }}>
-          Back to Movies
+          {t("booking.backToMovies")}
         </Button>
       </Container>
     );
@@ -149,7 +152,7 @@ const Booking = () => {
     >
       <Container maxWidth="lg">
         <Typography variant="h3" fontWeight={700} gutterBottom color="white">
-          Select Seats
+          {t("booking.selectSeats")}
         </Typography>
 
         {/* Movie Info */}
@@ -163,7 +166,7 @@ const Booking = () => {
           >
             <Box>
               <Typography variant="caption" color="text.secondary">
-                Movie
+                {t("booking.movie")}
               </Typography>
               <Typography variant="body1" fontWeight={600}>
                 {showtime.movie.title}
@@ -171,7 +174,7 @@ const Booking = () => {
             </Box>
             <Box>
               <Typography variant="caption" color="text.secondary">
-                Cinema
+                {t("booking.cinema")}
               </Typography>
               <Typography variant="body1" fontWeight={600}>
                 {showtime.cinema.name}
@@ -179,7 +182,7 @@ const Booking = () => {
             </Box>
             <Box>
               <Typography variant="caption" color="text.secondary">
-                Date & Time
+                {t("booking.dateTime")}
               </Typography>
               <Typography variant="body1" fontWeight={600}>
                 {formatDateLong(showtime.start_time)}
@@ -190,7 +193,7 @@ const Booking = () => {
             </Box>
             <Box>
               <Typography variant="caption" color="text.secondary">
-                Room
+                {t("booking.room")}
               </Typography>
               <Typography variant="body1" fontWeight={600}>
                 {showtime.room.name}
@@ -220,7 +223,7 @@ const Booking = () => {
                   mb: 4,
                 }}
               >
-                <Typography variant="body2">SCREEN</Typography>
+                <Typography variant="body2">{t("booking.screen")}</Typography>
               </Box>
 
               {/* Seats */}
@@ -335,7 +338,9 @@ const Booking = () => {
                       borderRadius: 1,
                     }}
                   />
-                  <Typography variant="caption">Available</Typography>
+                  <Typography variant="caption">
+                    {t("booking.available")}
+                  </Typography>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Box
@@ -346,7 +351,9 @@ const Booking = () => {
                       borderRadius: 1,
                     }}
                   />
-                  <Typography variant="caption">Selected</Typography>
+                  <Typography variant="caption">
+                    {t("booking.selected")}
+                  </Typography>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <Box
@@ -357,7 +364,9 @@ const Booking = () => {
                       borderRadius: 1,
                     }}
                   />
-                  <Typography variant="caption">Occupied</Typography>
+                  <Typography variant="caption">
+                    {t("booking.occupied")}
+                  </Typography>
                 </Box>
               </Box>
             </EnhancedPaper>
@@ -365,7 +374,7 @@ const Booking = () => {
             {/* Products */}
             <EnhancedPaper sx={{ p: 3, mt: 3 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                Add Snacks & Drinks
+                {t("booking.addSnacks")}
               </Typography>
               <Box
                 sx={{
@@ -390,12 +399,12 @@ const Booking = () => {
           <Box>
             <EnhancedPaper sx={{ p: 3, position: "sticky", top: 80 }}>
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                Booking Summary
+                {t("booking.summary")}
               </Typography>
 
               <Box sx={{ my: 2 }}>
                 <Typography variant="body2" color="text.secondary" gutterBottom>
-                  Selected Seats ({selectedSeats.length})
+                  {t("booking.selectedSeats")} ({selectedSeats.length})
                 </Typography>
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
                   {selectedSeats.length > 0 ? (
@@ -412,7 +421,7 @@ const Booking = () => {
                     })
                   ) : (
                     <Typography variant="body2" color="text.secondary">
-                      No seats selected
+                      {t("booking.noSeats")}
                     </Typography>
                   )}
                 </Box>
@@ -439,7 +448,7 @@ const Booking = () => {
                     color="text.secondary"
                     gutterBottom
                   >
-                    Products
+                    {t("booking.products")}
                   </Typography>
                   {Object.entries(selectedProducts).map(
                     ([productId, quantity]) => {
@@ -477,7 +486,7 @@ const Booking = () => {
                   }}
                 >
                   <Typography variant="h6" fontWeight={600}>
-                    Total
+                    {t("booking.total")}
                   </Typography>
                   <Typography
                     variant="h6"
@@ -497,7 +506,7 @@ const Booking = () => {
                   disabled={selectedSeats.length === 0}
                   onClick={handleProceedToPayment}
                 >
-                  Proceed to Payment
+                  {t("booking.proceedToPayment")}
                 </Button>
               </Box>
             </EnhancedPaper>
