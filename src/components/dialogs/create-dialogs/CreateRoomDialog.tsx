@@ -10,6 +10,7 @@ import {
   TextField,
   Autocomplete,
   IconButton,
+  useTheme,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -26,36 +27,56 @@ interface Seat {
   isActive: boolean;
 }
 
-const CustomDialogContent = styled(DialogContent)({
+const CustomDialogContent = styled(DialogContent)(({ theme }) => ({
   "&::-webkit-scrollbar": {
     width: "8px",
   },
   "&::-webkit-scrollbar-track": {
-    background: "#f1f1f1",
+    background: theme.palette.mode === "dark" ? "#2a2a2a" : "#f1f1f1",
   },
   "&::-webkit-scrollbar-thumb": {
-    background: "#999",
+    background: theme.palette.mode === "dark" ? "#555" : "#999",
     borderRadius: "4px",
   },
   "&::-webkit-scrollbar-thumb:hover": {
-    background: "#666",
+    background: theme.palette.mode === "dark" ? "#777" : "#666",
   },
   overflowX: "hidden",
-});
-
-const SeatButton = styled(IconButton)<{ active: boolean }>(({ active }) => ({
-  width: 40,
-  height: 28,
-  borderRadius: 6,
-  backgroundColor: active ? "#bbdefb" : "#f5f5f5",
-  fontSize: 14,
-  fontWeight: 600,
-  color: active ? "#1976d2" : "#999",
-  "&:hover": {
-    backgroundColor: active ? "#90caf9" : "#eeeeee",
-  },
-  transition: "all 0.2s",
 }));
+
+const SeatButton = styled(IconButton)<{ active: boolean }>(
+  ({ active, theme }) => ({
+    width: 40,
+    height: 28,
+    borderRadius: 6,
+    backgroundColor: active
+      ? theme.palette.mode === "dark"
+        ? "rgba(156, 39, 176, 0.3)"
+        : "#bbdefb"
+      : theme.palette.mode === "dark"
+      ? "rgba(255, 255, 255, 0.05)"
+      : "#f5f5f5",
+    fontSize: 14,
+    fontWeight: 600,
+    color: active
+      ? theme.palette.mode === "dark"
+        ? "#ce93d8"
+        : "#1976d2"
+      : theme.palette.mode === "dark"
+      ? "#666"
+      : "#999",
+    "&:hover": {
+      backgroundColor: active
+        ? theme.palette.mode === "dark"
+          ? "rgba(156, 39, 176, 0.4)"
+          : "#90caf9"
+        : theme.palette.mode === "dark"
+        ? "rgba(255, 255, 255, 0.08)"
+        : "#eeeeee",
+    },
+    transition: "all 0.2s",
+  })
+);
 
 const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
   open,
@@ -63,6 +84,7 @@ const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
   onSave,
   cinemas = [],
 }) => {
+  const theme = useTheme();
   const [name, setName] = useState("");
   const [cinema, setCinema] = useState<{
     cinema_id: string;
@@ -283,7 +305,7 @@ const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
             <Typography variant="h6" color="primary" fontWeight={550}>
               Seat Map
             </Typography>
-            <Typography variant="h6" fontWeight={700} color="black">
+            <Typography variant="h6" fontWeight={700} color="text.primary">
               Capacity: {capacity}
             </Typography>
           </Box>
@@ -294,8 +316,13 @@ const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
               sx={{
                 width: 640,
                 height: 28,
-                backgroundColor: "#f5f5f5",
-                border: "2px solid #999",
+                backgroundColor:
+                  theme.palette.mode === "dark"
+                    ? "rgba(255, 255, 255, 0.05)"
+                    : "#f5f5f5",
+                border: `2px solid ${
+                  theme.palette.mode === "dark" ? "#555" : "#999"
+                }`,
                 borderRadius: 100,
                 display: "flex",
                 alignItems: "center",

@@ -14,6 +14,7 @@ import { Close, Send, Mic } from "@mui/icons-material";
 import { Bot, User } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useState, useRef, useEffect } from "react";
+import { t } from "../../../utils/lang";
 import {
   useSendChatMessage,
   createChatMessage,
@@ -231,7 +232,7 @@ const Chatbot = () => {
                       color: "#ffffff",
                     }}
                   >
-                    Cinema Assistant
+                    {t("chatbot.title")}
                   </Typography>
                   <Typography
                     variant="caption"
@@ -242,7 +243,7 @@ const Chatbot = () => {
                       color: "#e0e0e0",
                     }}
                   >
-                    Always here to help • Press C to toggle
+                    {t("chatbot.subtitle")}
                   </Typography>
                 </Box>
               </Box>
@@ -406,7 +407,7 @@ const Chatbot = () => {
           >
             <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 1.5 }}>
               <Chip
-                label="Suggest movies"
+                label={t("chatbot.suggestMovies")}
                 size="small"
                 onClick={() => setInputMessage("Can you suggest some movies?")}
                 sx={{
@@ -419,7 +420,7 @@ const Chatbot = () => {
                 }}
               />
               <Chip
-                label="Opening hours"
+                label={t("chatbot.openingHours")}
                 size="small"
                 onClick={() =>
                   setInputMessage("What are your opening and closing hours?")
@@ -434,7 +435,7 @@ const Chatbot = () => {
                 }}
               />
               <Chip
-                label="Locations"
+                label={t("chatbot.locations")}
                 size="small"
                 onClick={() =>
                   setInputMessage("Where are your cinema locations?")
@@ -456,7 +457,7 @@ const Chatbot = () => {
                 fullWidth
                 multiline
                 maxRows={3}
-                placeholder="Type your message..."
+                placeholder={t("chatbot.placeholder")}
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 onKeyPress={handleKeyPress}

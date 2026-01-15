@@ -103,12 +103,12 @@ export const NavBar = () => {
                 px: 2,
                 borderRadius: 1,
                 backgroundColor: isActive(item.path)
-                  ? "rgba(156, 39, 176, 0.08)"
+                  ? "#f2a8ff33"
                   : "transparent",
                 color: isActive(item.path) ? "primary.main" : "text.primary",
                 "&:hover": {
                   backgroundColor: isActive(item.path)
-                    ? "rgba(156, 39, 176, 0.12)"
+                    ? "#f2a8ff55"
                     : "action.hover",
                 },
               }}
@@ -128,6 +128,9 @@ export const NavBar = () => {
                 primaryTypographyProps={{
                   fontSize: "1.125rem",
                   fontWeight: isActive(item.path) ? 800 : 700,
+                  color: isActive(item.path)
+                    ? "primary.main"
+                    : "text.secondary",
                 }}
               />
             </ListItemButton>
@@ -172,6 +175,9 @@ export const NavBar = () => {
               primaryTypographyProps={{
                 fontSize: "1.125rem",
                 fontWeight: isActive(settingsItem.path) ? 800 : 700,
+                color: isActive(settingsItem.path)
+                  ? "primary.main"
+                  : "text.secondary",
               }}
             />
           </ListItemButton>
@@ -185,8 +191,8 @@ export const NavBar = () => {
           m: 2,
           mt: 0,
           borderRadius: 1,
-          backgroundColor: "rgba(156, 39, 176, 0.02)",
-          border: "1px solid rgba(156, 39, 176, 0.1)",
+          backgroundColor: "#f2a8ff11",
+          border: "1px solid #f2a8ff33",
         }}
       >
         <Typography

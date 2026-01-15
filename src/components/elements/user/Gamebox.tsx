@@ -1,6 +1,7 @@
 import { Box, Drawer, IconButton, Typography, Fab } from "@mui/material";
 import { Close, SportsEsports } from "@mui/icons-material";
 import { useState, useEffect } from "react";
+import { t } from "../../../utils/lang";
 import FlappyBirdGame from "./FlappyBirdGame";
 
 const Gamebox = () => {
@@ -120,7 +121,7 @@ const Gamebox = () => {
                       color: "#e0e0e0",
                     }}
                   >
-                    Play games while you wait • Press G to toggle
+                    {t("gamebox.subtitle")}
                   </Typography>
                 </Box>
               </Box>

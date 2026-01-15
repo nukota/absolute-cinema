@@ -292,4 +292,26 @@ export const translations: Record<string, [string, string]> = {
     "Quay lại Trang Quản Trị",
   ],
   "vnpayResult.goBackHome": ["Go back to Home Page", "Quay lại Trang Chủ"],
+
+  // Chatbot - [English, Vietnamese]
+  "chatbot.title": ["Cinema Assistant", "Trợ Lý Rạp Chiếu Phim"],
+  "chatbot.subtitle": [
+    "Always here to help • Press C to toggle",
+    "Luôn ở đây để giúp đỡ • Nhấn C để bật/tắt",
+  ],
+  "chatbot.placeholder": ["Type your message...", "Nhập tin nhắn của bạn..."],
+  "chatbot.suggestMovies": ["Suggest movies", "Đề xuất phim"],
+  "chatbot.openingHours": ["Opening hours", "Giờ mở cửa"],
+  "chatbot.locations": ["Locations", "Địa điểm"],
+
+  // Gamebox - [English, Vietnamese]
+  "gamebox.subtitle": [
+    "Play games while you wait • Press G to toggle",
+    "Chơi trò chơi trong khi chờ đợi • Nhấn G để bật/tắt",
+  ],
+};
+
+export const t = (key: string, lang: Language = "en"): string => {
+  const trans = translations[key];
+  return trans ? (lang === "en" ? trans[0] : trans[1]) : key;
 };

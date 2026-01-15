@@ -15,6 +15,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useFeedback } from "../../provider/FeedbackProvider";
 import { useVerifyEmail } from "../../services/authService";
+import { t } from "../../utils/lang";
 
 const VerifyCallback = () => {
   const navigate = useNavigate();
