@@ -11,7 +11,6 @@ import {
   IconButton,
 } from "@mui/material";
 import {
-  MovieFilterOutlined,
   Visibility,
   VisibilityOff,
   EmailOutlined,
@@ -21,6 +20,7 @@ import {
   BadgeOutlined,
   CakeOutlined,
 } from "@mui/icons-material";
+import { Rabbit } from "lucide-react";
 import { useSignUp, storeAuthData } from "../../services/authService";
 import { useFeedback } from "../../provider/FeedbackProvider";
 import { useQueryClient } from "@tanstack/react-query";
@@ -45,18 +45,20 @@ const Signup = () => {
   // Listen for Ctrl+Shift+A to toggle admin mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+      if (e.ctrlKey && e.shiftKey && e.key === "A") {
         e.preventDefault();
         setIsAdminMode((prev) => !prev);
         showSnackbar({
-          message: `Switched to ${!isAdminMode ? 'Admin' : 'Customer'} sign up mode`,
-          severity: 'info',
+          message: `Switched to ${
+            !isAdminMode ? "Admin" : "Customer"
+          } sign up mode`,
+          severity: "info",
         });
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isAdminMode, showSnackbar]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -167,9 +169,7 @@ const Signup = () => {
           {/* Logo and Title */}
           <Box sx={{ textAlign: "center", mb: 6 }}>
             <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-              <MovieFilterOutlined
-                sx={{ fontSize: 48, color: "primary.main" }}
-              />
+              <Rabbit size={48} color="#9c27b0" />
             </Box>
             <Typography
               variant="h4"
@@ -181,18 +181,18 @@ const Signup = () => {
             >
               Absolute Cinema
             </Typography>
-              {isAdminMode && (
-                <Typography
-                  variant="body1"
-                  sx={{
-                    color: "secondary.main",
-                    fontWeight: 500,
-                    fontStyle: "italic",
-                  }}
-                >
-                  Administrative access mode
-                </Typography>
-              )}
+            {isAdminMode && (
+              <Typography
+                variant="body1"
+                sx={{
+                  color: "secondary.main",
+                  fontWeight: 500,
+                  fontStyle: "italic",
+                }}
+              >
+                Administrative access mode
+              </Typography>
+            )}
           </Box>
 
           {/* Sign Up Form */}
