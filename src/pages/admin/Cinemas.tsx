@@ -31,23 +31,21 @@ const Cinemas = () => {
     setOpenDetailDialog(true);
   };
 
-  const handleCreateCinema = (data: { name: string; address: string }) => {
-    createCinemaMutation.mutate(data, {
-      onSuccess: () => {
-        setOpenCreateDialog(false);
-        showSnackbar({
-          message: "Cinema created successfully!",
-          severity: "success",
-        });
-      },
-      onError: (error) => {
-        console.error("Create cinema error:", error);
-        showSnackbar({
-          message: "Failed to create cinema. Please try again.",
-          severity: "error",
-        });
-      },
-    });
+  const handleCreateCinema = async (data: { name: string; address: string }) => {
+    try {
+      await createCinemaMutation.mutateAsync(data);
+      setOpenCreateDialog(false);
+      showSnackbar({
+        message: "Cinema created successfully!",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Create cinema error:", error);
+      showSnackbar({
+        message: "Failed to create cinema. Please try again.",
+        severity: "error",
+      });
+    }
   };
 
   const handleUpdateCinema = (

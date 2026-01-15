@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField, Autocomplete, IconButton } from "@mui/material";
+import { TextField, Autocomplete, IconButton, Checkbox, FormControlLabel } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 export interface FormField {
@@ -15,7 +15,8 @@ export interface FormField {
     | "tel"
     | "number"
     | "autocomplete"
-    | "list";
+    | "list"
+    | "checkbox";
   placeholder?: string;
   required?: boolean;
   options?: any[]; // For autocomplete
@@ -111,6 +112,20 @@ const Field: React.FC<FieldProps> = ({ field }) => {
               placeholder={field.placeholder}
             />
           )}
+        />
+      );
+
+    case "checkbox":
+      return (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={field.value || false}
+              onChange={(e) => field.onChange(e.target.checked)}
+              disabled={field.disabled}
+            />
+          }
+          label={field.label}
         />
       );
 

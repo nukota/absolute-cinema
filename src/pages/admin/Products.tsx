@@ -42,23 +42,21 @@ const Products = () => {
     setOpenDetailDialog(true);
   };
 
-  const handleCreateProduct = (data: any) => {
-    createProductMutation.mutate(data, {
-      onSuccess: () => {
-        setOpenCreateDialog(false);
-        showSnackbar({
-          message: "Product created successfully!",
-          severity: "success",
-        });
-      },
-      onError: (error) => {
-        console.error("Create product error:", error);
-        showSnackbar({
-          message: "Failed to create product. Please try again.",
-          severity: "error",
-        });
-      },
-    });
+  const handleCreateProduct = async (data: any) => {
+    try {
+      await createProductMutation.mutateAsync(data);
+      setOpenCreateDialog(false);
+      showSnackbar({
+        message: "Product created successfully!",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Create product error:", error);
+      showSnackbar({
+        message: "Failed to create product. Please try again.",
+        severity: "error",
+      });
+    }
   };
 
   const handleUpdateProduct = (id: string, data: any) => {
