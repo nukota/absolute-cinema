@@ -7,11 +7,8 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-import {
-  MovieFilterOutlined,
-  CheckCircleOutline,
-  ErrorOutline,
-} from "@mui/icons-material";
+import { CheckCircleOutline, ErrorOutline } from "@mui/icons-material";
+import { Rabbit } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useFeedback } from "../../provider/FeedbackProvider";
 import { useVerifyEmail } from "../../services/authService";
@@ -137,9 +134,7 @@ const VerifyCallback = () => {
           {/* Logo and Title */}
           <Box sx={{ textAlign: "center", mb: 4 }}>
             <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-              <MovieFilterOutlined
-                sx={{ fontSize: 48, color: "primary.main" }}
-              />
+              <Rabbit size={48} color="#9c27b0" />
             </Box>
             <Typography
               variant="h4"

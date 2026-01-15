@@ -10,7 +10,6 @@ import {
   MenuItem,
 } from "@mui/material";
 import {
-  MovieFilter,
   SearchRounded,
   Movie,
   ArrowForward,
@@ -25,6 +24,7 @@ import { startVoiceSearch } from "../../../utils/helper/voiceHelper";
 import { useTheme } from "../../../provider/ThemeProvider";
 import vnFlag from "../../../assets/images/vn.png";
 import enFlag from "../../../assets/images/en.png";
+import { Rabbit } from "lucide-react";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -136,7 +136,7 @@ const Header = () => {
             }}
             onClick={() => navigate("/")}
           >
-            <MovieFilter sx={{ fontSize: 32 }} />
+            <Rabbit size={32} color="white" />
             <Typography
               variant="h6"
               sx={{

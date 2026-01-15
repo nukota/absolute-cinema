@@ -11,12 +11,12 @@ import {
   IconButton,
 } from "@mui/material";
 import {
-  MovieFilterOutlined,
   Visibility,
   VisibilityOff,
   EmailOutlined,
   LockOutlined,
 } from "@mui/icons-material";
+import { Rabbit } from "lucide-react";
 import { useSignIn, storeAuthData } from "../../services/authService";
 import { useFeedback } from "../../provider/FeedbackProvider";
 import { useQueryClient } from "@tanstack/react-query";
@@ -87,9 +87,7 @@ const Signin = () => {
           {/* Logo and Title */}
           <Box sx={{ textAlign: "center", mb: 6 }}>
             <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-              <MovieFilterOutlined
-                sx={{ fontSize: 48, color: "primary.main" }}
-              />
+              <Rabbit size={48} color="#9c27b0" />
             </Box>
             <Typography
               variant="h4"

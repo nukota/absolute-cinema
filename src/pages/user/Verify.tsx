@@ -1,11 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { Box, Button, Typography, Card, CardContent } from "@mui/material";
-import {
-  MovieFilterOutlined,
-  EmailOutlined,
-  ArrowBack,
-  Refresh,
-} from "@mui/icons-material";
+import { EmailOutlined, ArrowBack, Refresh } from "@mui/icons-material";
+import { Rabbit } from "lucide-react";
 
 const Verify = () => {
   const navigate = useNavigate();
@@ -47,9 +43,7 @@ const Verify = () => {
           {/* Logo and Title */}
           <Box sx={{ textAlign: "center", mb: 1 }}>
             <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-              <MovieFilterOutlined
-                sx={{ fontSize: 48, color: "primary.main" }}
-              />
+              <Rabbit size={48} color="#9c27b0" />
             </Box>
             <Typography
               variant="h4"

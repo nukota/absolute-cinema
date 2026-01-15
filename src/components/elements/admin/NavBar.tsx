@@ -8,7 +8,6 @@ import {
   Typography,
 } from "@mui/material";
 import {
-  MovieFilterOutlined,
   DashboardRounded,
   MovieRounded,
   PeopleRounded,
@@ -19,6 +18,7 @@ import {
   LocationOnRounded,
   CalendarViewDayRounded,
 } from "@mui/icons-material";
+import { Rabbit } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 interface NavItem {
@@ -79,7 +79,7 @@ export const NavBar = () => {
           borderColor: "divider",
         }}
       >
-        <MovieFilterOutlined sx={{ fontSize: 20, color: "primary.main" }} />
+        <Rabbit size={20} color="#9c27b0" />
         <Typography
           sx={{
             fontFamily: '"Montserrat Alternates", sans-serif',
