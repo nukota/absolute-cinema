@@ -6,7 +6,7 @@ import { ProductCategory } from "../../../utils/enum";
 interface CreateProductDialogProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (data: any) => void;
+  onCreate: (data: any) => Promise<void>;
 }
 
 const categoryOptions = [
@@ -29,8 +29,9 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     // Validation
     if (!name.trim()) {
       setError("Product name is required");
@@ -45,16 +46,24 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
       return;
     }
 
-    // TODO: Add product logic here
-    onCreate({
-      name: name.trim(),
-      category: category.value,
-      price: parseFloat(price),
-      image: image.trim(),
-    });
+    setIsSubmitting(true);
+    setError("");
 
-    // Reset form and close
-    handleClose();
+    try {
+      await onCreate({
+        name: name.trim(),
+        category: category.value,
+        price: parseFloat(price),
+        image: image.trim(),
+      });
+
+      // Reset form and close only after API call succeeds
+      handleClose();
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -63,6 +72,7 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
     setPrice("");
     setImage("");
     setError("");
+    setIsSubmitting(false);
     onClose();
   };
 
@@ -120,6 +130,7 @@ const CreateProductDialog: React.FC<CreateProductDialogProps> = ({
       onAdd={handleAdd}
       error={error}
       showImage="image"
+      isLoading={isSubmitting}
     />
   );
 };

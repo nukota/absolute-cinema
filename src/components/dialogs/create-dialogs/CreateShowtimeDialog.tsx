@@ -8,7 +8,7 @@ import { useAllMovies } from "../../../services/moviesService";
 interface CreateShowtimeDialogProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (data: any) => void;
+  onCreate: (data: any) => Promise<void>;
 }
 
 const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
@@ -30,7 +30,9 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [price, setPrice] = useState("");
+  const [notifyUsers, setNotifyUsers] = useState(false);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Fetch real data
   const { data: cinemas = [], isLoading: cinemasLoading } = useAllCinemas();
@@ -65,7 +67,7 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
     setRoom(null);
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     // Validation
     if (!cinema) {
       setError("Cinema is required");
@@ -98,16 +100,26 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
       return;
     }
 
-    onCreate({
-      room_id: room.room_id,
-      movie_id: movie.movie_id,
-      start_time: startTime,
-      end_time: endTime,
-      price: parseFloat(price),
-    });
+    setIsSubmitting(true);
+    setError("");
 
-    // Reset form and close
-    handleClose();
+    try {
+      await onCreate({
+        room_id: room.room_id,
+        movie_id: movie.movie_id,
+        start_time: startTime,
+        end_time: endTime,
+        price: parseFloat(price),
+        notifyUsers, // Pass the notify flag
+      });
+
+      // Reset form and close only after API call succeeds
+      handleClose();
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -117,7 +129,9 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
     setStartTime("");
     setEndTime("");
     setPrice("");
+    setNotifyUsers(false);
     setError("");
+    setIsSubmitting(false);
     onClose();
   };
 
@@ -188,6 +202,18 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
         },
       ],
     },
+    {
+      title: "Notifications",
+      fields: [
+        {
+          name: "notifyUsers",
+          label: "Notify users who saved this movie",
+          type: "checkbox",
+          value: notifyUsers,
+          onChange: setNotifyUsers,
+        },
+      ],
+    },
   ];
 
   return (
@@ -198,6 +224,7 @@ const CreateShowtimeDialog: React.FC<CreateShowtimeDialogProps> = ({
       sections={sections}
       onAdd={handleAdd}
       error={error}
+      isLoading={isSubmitting}
     />
   );
 };

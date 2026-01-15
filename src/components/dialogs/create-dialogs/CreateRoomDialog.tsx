@@ -16,7 +16,7 @@ import { styled } from "@mui/material/styles";
 interface CreateRoomDialogProps {
   open: boolean;
   onClose: () => void;
-  onSave?: (roomData: any) => void;
+  onSave?: (roomData: any) => Promise<void>;
   cinemas?: Array<{ cinema_id: string; name: string }>;
 }
 
@@ -70,6 +70,7 @@ const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
   } | null>(null);
   const [seats, setSeats] = useState<Seat[]>([]);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const cinemaOptions = cinemas.map((c) => ({
     cinema_id: c.cinema_id,
@@ -146,7 +147,7 @@ const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
     );
   };
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     // Validation
     if (!name.trim()) {
       setError("Room name is required");
@@ -178,12 +179,20 @@ const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
       }),
     };
 
-    // Call onSave callback if provided
-    if (onSave) {
-      onSave(roomData);
-    } else {
-      // Fallback: just close the dialog
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      // Call onSave callback if provided
+      if (onSave) {
+        await onSave(roomData);
+      }
+      // Reset form and close only after API call succeeds
       handleClose();
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -191,6 +200,7 @@ const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
     setName("");
     setCinema(null);
     setError("");
+    setIsSubmitting(false);
     onClose();
   };
 
@@ -370,6 +380,7 @@ const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
           variant="outlined"
           sx={{ width: 130 }}
           disableElevation
+          disabled={isSubmitting}
         >
           Cancel
         </Button>
@@ -379,6 +390,7 @@ const CreateRoomDialog: React.FC<CreateRoomDialogProps> = ({
           color="primary"
           sx={{ width: 130 }}
           disableElevation
+          disabled={isSubmitting}
         >
           Add
         </Button>

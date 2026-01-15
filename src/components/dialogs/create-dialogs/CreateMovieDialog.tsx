@@ -5,7 +5,7 @@ import type { FormSection } from "../template/CreateDialog";
 interface CreateMovieDialogProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (data: any) => void;
+  onCreate: (data: any) => Promise<void>;
 }
 
 const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
@@ -24,8 +24,9 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
   const [genreInput, setGenreInput] = useState(""); // String input for the field
   const [rating, setRating] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     // Validation
     if (!title.trim()) {
       setError("Movie title is required");
@@ -54,22 +55,30 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
           .filter((item) => item !== "")
       : [];
 
-    // TODO: Add movie logic here
-    onCreate({
-      title: title.trim(),
-      description: description.trim(),
-      duration_min: parseInt(duration),
-      release_date: releaseDate,
-      rating: rating.trim() || undefined,
-      poster_url: posterUrl.trim(),
-      trailer_url: trailerUrl.trim(),
-      director: director.trim(),
-      actors: actorsArray,
-      genre: genreArray,
-    });
+    setIsSubmitting(true);
+    setError("");
 
-    // Reset form and close
-    handleClose();
+    try {
+      await onCreate({
+        title: title.trim(),
+        description: description.trim(),
+        duration_min: parseInt(duration),
+        release_date: releaseDate,
+        rating: rating.trim() || undefined,
+        poster_url: posterUrl.trim(),
+        trailer_url: trailerUrl.trim(),
+        director: director.trim(),
+        actors: actorsArray,
+        genre: genreArray,
+      });
+
+      // Reset form and close only after API call succeeds
+      handleClose();
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -84,6 +93,7 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
     setActorsInput("");
     setGenreInput("");
     setError("");
+    setIsSubmitting(false);
     onClose();
   };
 
@@ -186,6 +196,7 @@ const CreateMovieDialog: React.FC<CreateMovieDialogProps> = ({
       onAdd={handleAdd}
       error={error}
       showImage="poster_url"
+      isLoading={isSubmitting}
     />
   );
 };
