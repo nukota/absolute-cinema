@@ -18,8 +18,8 @@ import {
   LogoutRounded,
   MessageRounded,
   CalendarTodayRounded,
-  Lightbulb,
-  LightbulbOutlined,
+  Brightness4,
+  Brightness7,
 } from "@mui/icons-material";
 import { useState } from "react";
 import { LocalizationProvider, DateCalendar } from "@mui/x-date-pickers";
@@ -27,6 +27,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useSignOut, useCurrentUser } from "../../../services/authService";
+import { useTheme } from "../../../provider/ThemeProvider";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -34,13 +35,13 @@ export const Header = () => {
     null
   );
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const open = Boolean(anchorEl);
   const calendarOpen = Boolean(calendarAnchor);
   const navigate = useNavigate();
 
   const { mutate: signOutMutate } = useSignOut();
   const { data: user } = useCurrentUser();
+  const { mode, toggleTheme } = useTheme();
   console.log("Current User in Admin Header:", user);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -84,18 +85,39 @@ export const Header = () => {
       >
         {/* Icon Buttons */}
         <IconButton
-          color="default"
-          sx={{ p: 1.25 }}
+          sx={{
+            p: 1.25,
+            color: (theme) =>
+              theme.palette.mode === "dark"
+                ? "rgba(255, 255, 255, 0.5)"
+                : "default",
+          }}
           onClick={handleCalendarClick}
         >
           <CalendarTodayRounded sx={{ fontSize: 24 }} />
         </IconButton>
 
-        <IconButton color="default" sx={{ p: 1.25 }}>
+        <IconButton
+          sx={{
+            p: 1.25,
+            color: (theme) =>
+              theme.palette.mode === "dark"
+                ? "rgba(255, 255, 255, 0.5)"
+                : "default",
+          }}
+        >
           <MessageRounded sx={{ fontSize: 24 }} />
         </IconButton>
 
-        <IconButton color="default" sx={{ p: 1.25 }}>
+        <IconButton
+          sx={{
+            p: 1.25,
+            color: (theme) =>
+              theme.palette.mode === "dark"
+                ? "rgba(255, 255, 255, 0.5)"
+                : "default",
+          }}
+        >
           <Badge badgeContent={3} color="error">
             <NotificationsRounded sx={{ fontSize: 28 }} />
           </Badge>
@@ -103,14 +125,19 @@ export const Header = () => {
 
         {/* Theme Switch */}
         <IconButton
-          color="default"
-          sx={{ p: 1.25 }}
-          onClick={() => setIsDarkMode(!isDarkMode)}
+          sx={{
+            p: 1.25,
+            color: (theme) =>
+              theme.palette.mode === "dark"
+                ? "rgba(255, 255, 255, 0.5)"
+                : "default",
+          }}
+          onClick={toggleTheme}
         >
-          {isDarkMode ? (
-            <Lightbulb sx={{ fontSize: 24 }} />
+          {mode === "dark" ? (
+            <Brightness7 sx={{ fontSize: 24 }} />
           ) : (
-            <LightbulbOutlined sx={{ fontSize: 24 }} />
+            <Brightness4 sx={{ fontSize: 24 }} />
           )}
         </IconButton>
 

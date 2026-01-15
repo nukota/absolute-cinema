@@ -15,7 +15,16 @@ const AdminLayout = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", backgroundColor: "#F0F0F0" }}>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        backgroundColor: (theme) =>
+          theme.palette.mode === "light"
+            ? "#F0F0F0"
+            : theme.palette.background.default,
+      }}
+    >
       {/* Permanent Drawer for Desktop */}
       <Drawer
         variant="permanent"
@@ -87,7 +96,10 @@ const AdminLayout = () => {
             py: 6,
             px: 5,
             flexGrow: 1,
-            boxShadow: "inset 4px 4px 10px rgba(0, 0, 0, 0.16)",
+            boxShadow: (theme) =>
+              theme.palette.mode === "light"
+                ? "inset 4px 4px 10px rgba(0, 0, 0, 0.16)"
+                : "inset 4px 4px 10px rgba(0, 0, 0, 0.4)",
           }}
         >
           <Outlet />

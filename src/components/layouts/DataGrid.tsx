@@ -39,9 +39,21 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
   return (
     <div className="flex flex-col w-full h-full max-w-full overflow-hidden min-h-screen">
       {/* Title Bar */}
-      <div className="text-xl sm:text-2xl md:text-3xl lg:text-[40px] font-bold text-dark-gray mb-2">
+      <Typography
+        sx={{
+          fontSize: {
+            xs: "1.25rem",
+            sm: "1.5rem",
+            md: "1.875rem",
+            lg: "2.5rem",
+          },
+          lineHeight: 1,
+          fontWeight: 700,
+          color: "text.primary",
+        }}
+      >
         {title.replace("Management", "")}
-      </div>
+      </Typography>
 
       {/* Action Bar */}
       {onAddNew || onDeleteSelected ? (
@@ -80,7 +92,18 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
 
       {/* DataGrid Container */}
       {loading == false ? (
-        <div className="rounded-[20px] overflow-hidden min-h-[500px] md:min-h-[636px] bg-white shadow-md">
+        <Box
+          sx={{
+            borderRadius: "20px",
+            overflow: "hidden",
+            minHeight: { xs: "500px", md: "636px" },
+            backgroundColor: "background.paper",
+            boxShadow: (theme) =>
+              theme.palette.mode === "dark"
+                ? "0 4px 6px rgba(0, 0, 0, 0.3)"
+                : "0 4px 6px rgba(0, 0, 0, 0.1)",
+          }}
+        >
           <MuiDataGrid
             columnHeaderHeight={48}
             rowHeight={40}
@@ -112,11 +135,11 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
               "& .MuiDataGrid-columnHeaders": {
                 fontSize: { xs: "14px", sm: "16px" },
                 fontWeight: 600,
-                color: "#101010",
+                color: "text.primary",
               },
               "& .MuiDataGrid-cell": {
                 fontSize: { xs: "12px", sm: "14px" },
-                color: "#666",
+                color: "text.secondary",
                 padding: { xs: "4px 6px", sm: "6px 8px" },
                 display: "flex",
                 alignItems: "center",
@@ -126,19 +149,34 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
               "& .MuiDataGrid-row": {
                 minHeight: { xs: "48px", sm: "48px" },
                 "&:nth-of-type(odd)": {
-                  backgroundColor: "#fff",
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "rgba(255, 255, 255, 0.02)"
+                      : "#fff",
                 },
                 "&:nth-of-type(even)": {
-                  backgroundColor: "#f8f8f8",
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "rgba(255, 255, 255, 0.05)"
+                      : "#f8f8f8",
                 },
                 "&:nth-of-type(odd):hover": {
-                  backgroundColor: "#f3e5f5 !important",
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "rgba(186, 104, 200, 0.15) !important"
+                      : "#f3e5f5 !important",
                 },
                 "&:nth-of-type(even):hover": {
-                  backgroundColor: "#ede7f6 !important",
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "rgba(186, 104, 200, 0.2) !important"
+                      : "#ede7f6 !important",
                 },
                 "&.Mui-selected": {
-                  backgroundColor: "#e1bee7 !important",
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === "dark"
+                      ? "rgba(186, 104, 200, 0.25) !important"
+                      : "#e1bee7 !important",
                 },
               },
               "& .MuiDataGrid-toolbarContainer": {
@@ -160,9 +198,23 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
               },
             }}
           />
-        </div>
+        </Box>
       ) : (
-        <div className="rounded-lg border-[#e0e0e0] border overflow-hidden min-h-[500px] md:min-h-[636px] bg-white flex shadow-md">
+        <Box
+          sx={{
+            borderRadius: "8px",
+            border: 1,
+            borderColor: "divider",
+            overflow: "hidden",
+            minHeight: { xs: "500px", md: "636px" },
+            backgroundColor: "background.paper",
+            display: "flex",
+            boxShadow: (theme) =>
+              theme.palette.mode === "dark"
+                ? "0 4px 6px rgba(0, 0, 0, 0.3)"
+                : "0 4px 6px rgba(0, 0, 0, 0.1)",
+          }}
+        >
           <Box
             sx={{
               display: "flex",
@@ -172,12 +224,12 @@ const CustomDataGrid: React.FC<CustomDataGridProps> = ({
               gap: 4,
             }}
           >
-            <CircularProgress sx={{ color: "#555" }} />
-            <Typography variant="h6" sx={{ color: "#555" }}>
+            <CircularProgress color="primary" />
+            <Typography variant="h6" sx={{ color: "text.secondary" }}>
               Loading...
             </Typography>
           </Box>
-        </div>
+        </Box>
       )}
     </div>
   );

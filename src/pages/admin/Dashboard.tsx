@@ -8,6 +8,7 @@ import {
   MenuItem,
   Paper,
   styled,
+  useTheme,
 } from "@mui/material";
 import {
   TrendingUpOutlined,
@@ -40,15 +41,25 @@ import { useDashboardStats } from "../../services/dashboardService";
 // Enhanced Paper component with gradient background
 const EnhancedPaper = styled(Paper)(({ theme }) => ({
   background:
-    "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%)",
+    theme.palette.mode === "dark"
+      ? "linear-gradient(135deg, rgba(18, 18, 18, 0.95) 0%, rgba(30, 30, 30, 0.98) 100%)"
+      : "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%)",
   backdropFilter: "blur(10px)",
   borderRadius: theme.spacing(2),
-  border: "1px solid rgba(0, 0, 0, 0.08)",
-  boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
+  border: `1px solid ${
+    theme.palette.mode === "dark"
+      ? "rgba(255, 255, 255, 0.08)"
+      : "rgba(0, 0, 0, 0.08)"
+  }`,
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "0 4px 20px rgba(0, 0, 0, 0.3)"
+      : "0 4px 20px rgba(0, 0, 0, 0.05)",
   transition: "all 0.3s ease",
 }));
 
 const Dashboard = () => {
+  const theme = useTheme();
   // Generate last 12 months
   const months = useMemo(() => generateLast12Months(), []);
 
@@ -137,7 +148,12 @@ const Dashboard = () => {
         }}
       >
         <Box>
-          <Typography variant="h4" gutterBottom fontWeight={700}>
+          <Typography
+            variant="h4"
+            gutterBottom
+            fontWeight={700}
+            sx={{ lineHeight: 1 }}
+          >
             Dashboard
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
@@ -260,14 +276,30 @@ const Dashboard = () => {
                     <stop offset="95%" stopColor="#4caf50" stopOpacity={0.1} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                <XAxis dataKey="date" stroke="#666" />
-                <YAxis stroke="#666" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={theme.palette.mode === "dark" ? "#444" : "#e0e0e0"}
+                />
+                <XAxis
+                  dataKey="date"
+                  stroke={theme.palette.mode === "dark" ? "#ccc" : "#666"}
+                />
+                <YAxis
+                  stroke={theme.palette.mode === "dark" ? "#ccc" : "#666"}
+                />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "rgba(255, 255, 255, 0.95)",
-                    border: "1px solid #e0e0e0",
+                    backgroundColor:
+                      theme.palette.mode === "dark"
+                        ? "rgba(30, 30, 30, 0.95)"
+                        : "rgba(255, 255, 255, 0.95)",
+                    border: `1px solid ${
+                      theme.palette.mode === "dark"
+                        ? "rgba(255, 255, 255, 0.08)"
+                        : "#e0e0e0"
+                    }`,
                     borderRadius: 8,
+                    color: theme.palette.mode === "dark" ? "#fff" : "#000",
                   }}
                 />
                 <Legend />
@@ -347,9 +379,17 @@ const Dashboard = () => {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "rgba(255, 255, 255, 0.95)",
-                    border: "1px solid #e0e0e0",
+                    backgroundColor:
+                      theme.palette.mode === "dark"
+                        ? "rgba(30, 30, 30, 0.95)"
+                        : "rgba(255, 255, 255, 0.95)",
+                    border: `1px solid ${
+                      theme.palette.mode === "dark"
+                        ? "rgba(255, 255, 255, 0.08)"
+                        : "#e0e0e0"
+                    }`,
                     borderRadius: 8,
+                    color: theme.palette.mode === "dark" ? "#fff" : "#000",
                   }}
                 />
               </PieChart>
@@ -408,14 +448,30 @@ const Dashboard = () => {
                     <stop offset="95%" stopColor="#ce93d8" stopOpacity={0.6} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                <XAxis dataKey="movie" stroke="#666" />
-                <YAxis stroke="#666" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={theme.palette.mode === "dark" ? "#444" : "#e0e0e0"}
+                />
+                <XAxis
+                  dataKey="movie"
+                  stroke={theme.palette.mode === "dark" ? "#ccc" : "#666"}
+                />
+                <YAxis
+                  stroke={theme.palette.mode === "dark" ? "#ccc" : "#666"}
+                />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "rgba(255, 255, 255, 0.95)",
-                    border: "1px solid #e0e0e0",
+                    backgroundColor:
+                      theme.palette.mode === "dark"
+                        ? "rgba(30, 30, 30, 0.95)"
+                        : "rgba(255, 255, 255, 0.95)",
+                    border: `1px solid ${
+                      theme.palette.mode === "dark"
+                        ? "rgba(255, 255, 255, 0.08)"
+                        : "#e0e0e0"
+                    }`,
                     borderRadius: 8,
+                    color: theme.palette.mode === "dark" ? "#fff" : "#000",
                   }}
                 />
                 <Legend />
@@ -479,14 +535,30 @@ const Dashboard = () => {
                     <stop offset="95%" stopColor="#2196f3" stopOpacity={0.1} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
-                <XAxis dataKey="date" stroke="#666" />
-                <YAxis stroke="#666" />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={theme.palette.mode === "dark" ? "#444" : "#e0e0e0"}
+                />
+                <XAxis
+                  dataKey="date"
+                  stroke={theme.palette.mode === "dark" ? "#ccc" : "#666"}
+                />
+                <YAxis
+                  stroke={theme.palette.mode === "dark" ? "#ccc" : "#666"}
+                />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: "rgba(255, 255, 255, 0.95)",
-                    border: "1px solid #e0e0e0",
+                    backgroundColor:
+                      theme.palette.mode === "dark"
+                        ? "rgba(30, 30, 30, 0.95)"
+                        : "rgba(255, 255, 255, 0.95)",
+                    border: `1px solid ${
+                      theme.palette.mode === "dark"
+                        ? "rgba(255, 255, 255, 0.08)"
+                        : "#e0e0e0"
+                    }`,
                     borderRadius: 8,
+                    color: theme.palette.mode === "dark" ? "#fff" : "#000",
                   }}
                 />
                 <Legend />

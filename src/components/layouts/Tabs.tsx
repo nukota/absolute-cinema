@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import type { ReactNode } from 'react';
+import React, { useState, useMemo } from "react";
+import type { ReactNode } from "react";
 import {
   Tabs,
   Tab,
@@ -12,9 +12,10 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import SearchIcon from '@mui/icons-material/Search';
+  Typography,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface TabItem {
   label: string;
@@ -54,25 +55,25 @@ interface CustomTabsProps {
 
 const CustomTabs: React.FC<CustomTabsProps> = ({
   title,
-  activeTab = 'All',
+  activeTab = "All",
   onTabChange,
   tabs = [],
   data,
   loading = false,
-  gridCols = 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6',
-  gap = 'gap-y-8',
-  className = '',
+  gridCols = "grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6",
+  gap = "gap-y-8",
+  className = "",
   onAddNew,
-  addButtonText = 'Add New',
+  addButtonText = "Add New",
   dateColumns = [],
   searchColumns = [],
-  tabFilterProperty = 'status', // Default property to filter by
+  tabFilterProperty = "status", // Default property to filter by
   customTabFilter,
   selectFilters = [],
   children,
 }) => {
-  const [searchTerm, setSearchTerm] = useState<string>('');
-  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectFilterValues, setSelectFilterValues] = useState<
     Record<string, string>
   >({});
@@ -102,7 +103,7 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
       // Tab filtering with flexible property-based filtering
       let matchesTab = true; // Default to true when no tabs
 
-      if (tabs.length > 0 && activeTab && activeTab !== 'All') {
+      if (tabs.length > 0 && activeTab && activeTab !== "All") {
         if (customTabFilter) {
           // Use custom filter function if provided
           matchesTab = customTabFilter(item, activeTab);
@@ -110,8 +111,8 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
           // Filter by the specified property (works with any property name)
           const itemValue = item[tabFilterProperty];
           const tabValueLower = activeTab.toLowerCase();
-          
-          if (typeof itemValue === 'string') {
+
+          if (typeof itemValue === "string") {
             // For string values, compare case-insensitively
             matchesTab = itemValue.toLowerCase() === tabValueLower;
           } else {
@@ -128,12 +129,12 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
         matchesSearch = searchColumns.some((column) => {
           // Support nested object paths (e.g., "customer.full_name")
           const value = column
-            .split('.')
+            .split(".")
             .reduce((obj, key) => obj?.[key], item);
 
           if (Array.isArray(value)) {
             return value.some(
-              (v) => v && v.toString().toLowerCase().includes(searchTermLower),
+              (v) => v && v.toString().toLowerCase().includes(searchTermLower)
             );
           }
           return (
@@ -148,12 +149,12 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
         matchesDate = dateColumns.some((column) => {
           // Support nested object paths
           const itemDate = column
-            .split('.')
+            .split(".")
             .reduce((obj, key) => obj?.[key], item);
           if (!itemDate) return false;
 
           // Handle different date formats
-          if (column.includes('created_at') || column.includes('ordered_at')) {
+          if (column.includes("created_at") || column.includes("ordered_at")) {
             // For timestamp fields, match the date part
             return itemDate.startsWith(selectedDate);
           } else {
@@ -168,14 +169,14 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
       if (selectFilters.length > 0) {
         matchesSelectFilters = selectFilters.every((filter) => {
           const selectedValue = selectFilterValues[filter.property];
-          if (!selectedValue || selectedValue === 'all') return true;
+          if (!selectedValue || selectedValue === "all") return true;
 
           // Support nested object paths
           const itemValue = filter.property
-            .split('.')
+            .split(".")
             .reduce((obj, key) => obj?.[key], item);
 
-          if (typeof itemValue === 'string') {
+          if (typeof itemValue === "string") {
             return itemValue.toLowerCase() === selectedValue.toLowerCase();
           }
           return itemValue === selectedValue;
@@ -209,25 +210,37 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
       className={`flex flex-col w-full h-full max-w-full min-h-screen xl:min-h-[800px] ${className}`}
     >
       {/* Title */}
-      <div className="text-xl sm:text-2xl md:text-3xl lg:text-[40px] font-medium text-dark-gray mb-2">
+      <Typography
+        sx={{
+          fontSize: {
+            xs: "1.25rem",
+            sm: "1.5rem",
+            md: "1.875rem",
+            lg: "2.5rem",
+          },
+          lineHeight: 1,
+          fontWeight: 700,
+          color: "text.primary",
+        }}
+      >
         {title}
-      </div>
+      </Typography>
 
       {/* Action Bar */}
       {showActionBar && (
         <Box
           sx={{
-            display: 'flex',
+            display: "flex",
             gap: 2,
             rowGap: 1,
-            alignItems: { xs: 'flex-start', md: 'center' },
+            alignItems: { xs: "flex-start", md: "center" },
             mt: 2,
             mb: 1,
-            flexDirection: { xs: 'column', md: 'row' },
-            justifyContent: { xs: 'flex-start', md: 'space-between' },
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: { xs: "flex-start", md: "space-between" },
           }}
         >
-          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
             {/* Date Filter */}
             {dateColumns.length > 0 && (
               <TextField
@@ -236,14 +249,14 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
                 value={selectedDate}
                 onChange={handleDateChange}
                 InputLabelProps={
-                  dateColumns.includes('ordered_at')
+                  dateColumns.includes("ordered_at")
                     ? { shrink: true }
                     : undefined
                 }
                 sx={{
                   width: 240,
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
+                  backgroundColor: "background.paper",
+                  borderRadius: "4px",
                 }}
               />
             )}
@@ -264,8 +277,8 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
                 }}
                 sx={{
                   width: 240,
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
+                  backgroundColor: "background.paper",
+                  borderRadius: "4px",
                 }}
               />
             )}
@@ -277,13 +290,13 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
                 size="small"
                 sx={{
                   minWidth: 200,
-                  backgroundColor: 'white',
-                  borderRadius: '4px',
+                  backgroundColor: "background.paper",
+                  borderRadius: "4px",
                 }}
               >
                 <InputLabel>{filter.label}</InputLabel>
                 <Select
-                  value={selectFilterValues[filter.property] || 'all'}
+                  value={selectFilterValues[filter.property] || "all"}
                   label={filter.label}
                   onChange={(e) =>
                     handleSelectFilterChange(filter.property, e.target.value)
@@ -316,14 +329,27 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
       )}
 
       {/* Tabs and Content */}
-      <div className="content relative min-w-[360px] sm:min-w-[680px] w-full flex-1 bg-white border-[1px] border-light-gray rounded-md flex flex-col">
+      <Box
+        sx={{
+          position: "relative",
+          minWidth: { xs: "360px", sm: "680px" },
+          width: "100%",
+          flex: 1,
+          backgroundColor: "background.paper",
+          border: 1,
+          borderColor: "divider",
+          borderRadius: "6px",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         {tabs.length > 0 && (
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
               value={activeTab}
               onChange={handleTabChange}
               sx={{
-                '& .MuiTab-root': {
+                "& .MuiTab-root": {
                   fontWeight: 600,
                   minWidth: 120,
                 },
@@ -350,19 +376,19 @@ const CustomTabs: React.FC<CustomTabsProps> = ({
                   <Skeleton
                     variant="rectangular"
                     height={200}
-                    sx={{ borderRadius: '8px' }}
+                    sx={{ borderRadius: "8px" }}
                   />
-                  <Skeleton variant="text" sx={{ fontSize: '1rem' }} />
+                  <Skeleton variant="text" sx={{ fontSize: "1rem" }} />
                   <Skeleton
                     variant="text"
-                    sx={{ fontSize: '0.875rem' }}
+                    sx={{ fontSize: "0.875rem" }}
                     width="60%"
                   />
                 </div>
               ))
             : children(filteredData)}
         </div>
-      </div>
+      </Box>
     </div>
   );
 };
