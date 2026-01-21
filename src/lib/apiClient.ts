@@ -48,7 +48,7 @@ apiClient.interceptors.request.use(
   (error: AxiosError) => {
     console.error("Request Error:", error);
     return Promise.reject(error);
-  }
+  },
 );
 
 /**
@@ -57,7 +57,7 @@ apiClient.interceptors.request.use(
  */
 const refreshAccessToken = async (): Promise<string | null> => {
   const refreshToken = localStorage.getItem("refresh_token");
-  
+
   if (!refreshToken) {
     clearAuthData();
     return null;
@@ -70,16 +70,16 @@ const refreshAccessToken = async (): Promise<string | null> => {
       { refresh_token: refreshToken },
       {
         headers: { "Content-Type": "application/json" },
-      }
+      },
     );
 
     const { access_token, refresh_token: newRefreshToken } = response.data;
-    
+
     if (!access_token || !newRefreshToken) {
       clearAuthData();
       return null;
     }
-    
+
     // Update stored tokens
     localStorage.setItem("access_token", access_token);
     localStorage.setItem("refresh_token", newRefreshToken);
@@ -93,15 +93,15 @@ const refreshAccessToken = async (): Promise<string | null> => {
 };
 
 /**
- * Clears authentication data and redirects to signin
+ * Clears authentication data and optionally redirects to signin
  */
-const clearAuthData = (): void => {
+const clearAuthData = (shouldRedirect: boolean = true): void => {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
   localStorage.removeItem("user");
-  
-  // Only redirect if not already on signin page
-  if (window.location.pathname !== "/signin") {
+
+  // Only redirect if requested and not already on signin page
+  if (shouldRedirect && window.location.pathname !== "/signin") {
     window.location.href = "/signin";
   }
 };
@@ -121,7 +121,9 @@ apiClient.interceptors.response.use(
     return response;
   },
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
     // Handle different error scenarios
     if (error.response) {
@@ -135,14 +137,20 @@ apiClient.interceptors.response.use(
       }
 
       // Handle 401 Unauthorized - attempt token refresh
-      if (error.response.status === 401 && originalRequest && !originalRequest._retry) {
+      if (
+        error.response.status === 401 &&
+        originalRequest &&
+        !originalRequest._retry
+      ) {
         // Mark this request as retried to prevent infinite loops
         originalRequest._retry = true;
 
         // Skip refresh for auth endpoints to avoid infinite loops
+        // Don't redirect for /auth/me (current user check)
         const isAuthEndpoint = originalRequest.url?.includes("/auth/");
+        const isMeEndpoint = originalRequest.url?.includes("/auth/me");
         if (isAuthEndpoint) {
-          clearAuthData();
+          clearAuthData(!isMeEndpoint); // Don't redirect for /auth/me
           return Promise.reject(error);
         }
 
@@ -158,7 +166,7 @@ apiClient.interceptors.response.use(
           if (newAccessToken) {
             // Update the authorization header with new token
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-            
+
             // Retry the original request
             return apiClient(originalRequest);
           } else {
@@ -187,14 +195,14 @@ apiClient.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 // Generic API methods
 export const api = {
   get: <T = unknown>(
     url: string,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<AxiosResponse<T>> => {
     return apiClient.get<T>(url, config);
   },
@@ -202,7 +210,7 @@ export const api = {
   post: <T = unknown>(
     url: string,
     data?: unknown,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<AxiosResponse<T>> => {
     return apiClient.post<T>(url, data, config);
   },
@@ -210,7 +218,7 @@ export const api = {
   put: <T = unknown>(
     url: string,
     data?: unknown,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<AxiosResponse<T>> => {
     return apiClient.put<T>(url, data, config);
   },
@@ -218,14 +226,14 @@ export const api = {
   patch: <T = unknown>(
     url: string,
     data?: unknown,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<AxiosResponse<T>> => {
     return apiClient.patch<T>(url, data, config);
   },
 
   delete: <T = unknown>(
     url: string,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<AxiosResponse<T>> => {
     return apiClient.delete<T>(url, config);
   },

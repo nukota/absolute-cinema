@@ -259,41 +259,60 @@ const Header = () => {
             </Select>
 
             {/* User Info and Avatar */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Box
+            {user ? (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Box
+                  sx={{
+                    textAlign: "right",
+                    display: { xs: "none", sm: "block" },
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontWeight: 600,
+                      color: "white",
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    {user.full_name}
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: "rgba(255, 255, 255, 0.7)",
+                      fontSize: "0.75rem",
+                    }}
+                  >
+                    {user.email}
+                  </Typography>
+                </Box>
+                <IconButton onClick={handleClick} size="small">
+                  <Avatar
+                    sx={{ width: 40, height: 40, bgcolor: "secondary.main" }}
+                  >
+                    {user.full_name?.charAt(0).toUpperCase()}
+                  </Avatar>
+                </IconButton>
+              </Box>
+            ) : (
+              <IconButton
+                onClick={() => navigate("/signin")}
                 sx={{
-                  textAlign: "right",
-                  display: { xs: "none", sm: "block" },
+                  color: "white",
+                  bgcolor: "primary.main",
+                  "&:hover": {
+                    bgcolor: "primary.dark",
+                  },
+                  px: 2,
+                  borderRadius: 2,
                 }}
               >
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontWeight: 600,
-                    color: "white",
-                    fontSize: "0.875rem",
-                  }}
-                >
-                  {user?.full_name || "User"}
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  Sign In
                 </Typography>
-                <Typography
-                  variant="caption"
-                  sx={{
-                    color: "rgba(255, 255, 255, 0.7)",
-                    fontSize: "0.75rem",
-                  }}
-                >
-                  {user?.email || ""}
-                </Typography>
-              </Box>
-              <IconButton onClick={handleClick} size="small">
-                <Avatar
-                  sx={{ width: 40, height: 40, bgcolor: "secondary.main" }}
-                >
-                  {user?.full_name?.charAt(0).toUpperCase() || "U"}
-                </Avatar>
               </IconButton>
-            </Box>
+            )}
           </Box>
 
           {/* Profile Menu */}

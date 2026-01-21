@@ -28,17 +28,18 @@ const getMovieBySlug = async (slug: string): Promise<MovieDTO> => {
 };
 
 const getMoviesByCustomerId = async (
-  customerId: string
+  customerId: string | null,
 ): Promise<UserMovieDTO[]> => {
-  const response = await api.get<UserMovieDTO[]>(
-    `/movies/customer/${customerId}`
-  );
+  const endpoint = customerId
+    ? `/movies/customer?customer_id=${customerId}`
+    : `/movies/customer`;
+  const response = await api.get<UserMovieDTO[]>(endpoint);
   return response.data;
 };
 
 const updateMovie = async (
   id: string,
-  data: UpdateMovieDTO
+  data: UpdateMovieDTO,
 ): Promise<MovieDTO> => {
   const response = await api.patch<MovieDTO>(`/movies/${id}`, data);
   return response.data;
@@ -92,11 +93,11 @@ export const useMovieBySlug = (slug: string) => {
   });
 };
 
-export const useMoviesByCustomer = (customerId: string) => {
+export const useMoviesByCustomer = (customerId: string | null) => {
   return useQuery({
-    queryKey: moviesKeys.byCustomer(customerId),
+    queryKey: moviesKeys.byCustomer(customerId || "null"),
     queryFn: () => getMoviesByCustomerId(customerId),
-    enabled: !!customerId,
+    enabled: true,
   });
 };
 

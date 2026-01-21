@@ -13,7 +13,7 @@ import { Helmet } from "react-helmet";
 const Home = () => {
   const { data: currentUser } = useCurrentUser();
   const { data: movies, isLoading } = useMoviesByCustomer(
-    currentUser?.id || "",
+    currentUser?.id || null,
   );
   const saveMovieMutation = useSaveMovie();
   const removeSavedMovieMutation = useRemoveSavedMovie();
@@ -59,7 +59,7 @@ const Home = () => {
     }
   }, [saveMovieMutation.isSuccess, showSnackbar, saveMovieMutation, t]);
 
-  if (isLoading || !currentUser) {
+  if (isLoading) {
     return (
       <Box
         sx={{

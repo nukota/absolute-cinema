@@ -136,6 +136,7 @@ const SlideItem: React.FC<SlideItemProps> = ({
             color: movie.isSaved ? "grey.400" : undefined,
           }}
           onClick={handleSaveClicked}
+          disabled={movie.isSaved === null}
         >
           {movie.isSaved ? t("slide.unsave") : t("slide.save")}
         </Button>
