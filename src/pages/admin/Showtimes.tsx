@@ -26,7 +26,7 @@ const Showtimes = () => {
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [openDetailDialog, setOpenDetailDialog] = useState(false);
   const [selectedShowtime, setSelectedShowtime] = useState<ShowtimeDTO | null>(
-    null
+    null,
   );
 
   const handleAddNewShowtime = () => {
@@ -44,17 +44,32 @@ const Showtimes = () => {
   const handleCreateShowtime = async (data: any) => {
     const { notifyUsers, ...showtimeData } = data;
     try {
-      const createdShowtime = await createShowtimeMutation.mutateAsync(showtimeData);
-
-      if (notifyUsers) {
-        await notifyUsersMutation.mutateAsync({ showtime_id: createdShowtime.showtime_id });
-      }
+      const createdShowtime =
+        await createShowtimeMutation.mutateAsync(showtimeData);
 
       setOpenCreateDialog(false);
       showSnackbar({
         message: "Showtime created successfully!",
         severity: "success",
       });
+
+      if (notifyUsers) {
+        try {
+          await notifyUsersMutation.mutateAsync({
+            showtime_id: createdShowtime.showtime_id,
+          });
+          showSnackbar({
+            message: "Users notified successfully!",
+            severity: "success",
+          });
+        } catch (notifyError) {
+          console.error("Notify users error:", notifyError);
+          showSnackbar({
+            message: "Failed to notify users. Please try again.",
+            severity: "error",
+          });
+        }
+      }
     } catch (error) {
       console.error("Create showtime error:", error);
       showSnackbar({
@@ -82,7 +97,7 @@ const Showtimes = () => {
             severity: "error",
           });
         },
-      }
+      },
     );
   };
 
