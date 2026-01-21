@@ -17,7 +17,7 @@ import { useFeedback } from "../../provider/FeedbackProvider";
 import { MovieStatus } from "../../utils/enum";
 import SlideItem from "../../components/items/SlideItem";
 import { useTheme } from "../../provider/ThemeProvider";
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 
 const Movies = () => {
   const [searchParams] = useSearchParams();

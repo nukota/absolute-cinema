@@ -19,7 +19,7 @@ import ShowtimeItem from "../../components/items/Showtime";
 import { MovieStatus } from "../../utils/enum";
 import { formatDate } from "../../utils/helper/helper";
 import { useTheme } from "../../provider/ThemeProvider";
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 
 const MovieDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -32,7 +32,7 @@ const MovieDetail = () => {
   // API calls
   const { data: movie, isLoading: movieLoading } = useMovieBySlug(slug || "");
   const { data: showtimes, isLoading: showtimesLoading } = useShowtimesByMovie(
-    movie?.movie_id || ""
+    movie?.movie_id || "",
   );
 
   // Get unique dates and cinemas from showtimes
@@ -47,7 +47,7 @@ const MovieDetail = () => {
     ? [...new Set(showtimes.map((s) => s.cinema.cinema_id))]
         .map(
           (cinemaId) =>
-            showtimes.find((s) => s.cinema.cinema_id === cinemaId)?.cinema
+            showtimes.find((s) => s.cinema.cinema_id === cinemaId)?.cinema,
         )
         .filter(Boolean)
     : [];
@@ -108,12 +108,24 @@ const MovieDetail = () => {
     >
       <Helmet>
         <title>{movie.title} - Book Tickets | Absolute Cinema</title>
-        <meta name="description" content={`Book tickets for ${movie.title}. ${movie.description?.substring(0, 150)}...`} />
-        <meta property="og:title" content={`${movie.title} - Book Tickets | Absolute Cinema`} />
-        <meta property="og:description" content={`Book tickets for ${movie.title}. ${movie.description?.substring(0, 150)}...`} />
+        <meta
+          name="description"
+          content={`Book tickets for ${movie.title}. ${movie.description?.substring(0, 150)}...`}
+        />
+        <meta
+          property="og:title"
+          content={`${movie.title} - Book Tickets | Absolute Cinema`}
+        />
+        <meta
+          property="og:description"
+          content={`Book tickets for ${movie.title}. ${movie.description?.substring(0, 150)}...`}
+        />
         <meta property="og:image" content={movie.poster_url} />
         <meta property="og:type" content="video.movie" />
-        <meta property="og:url" content={`https://cinema.nct.pro.vn/movies/${movie.slug}`} />
+        <meta
+          property="og:url"
+          content={`https://cinema.nct.pro.vn/movies/${movie.slug}`}
+        />
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
       {/* Hero Section */}
@@ -222,7 +234,7 @@ const MovieDetail = () => {
                             {cinema.address ? ` (${cinema.address})` : ""}
                           </Typography>
                         </MenuItem>
-                      )
+                      ),
                   )}
                 </Select>
               </FormControl>
@@ -232,14 +244,17 @@ const MovieDetail = () => {
             {filteredShowtimes.length > 0 ? (
               <Box>
                 {Object.entries(
-                  filteredShowtimes.reduce((acc, showtime) => {
-                    const date = formatDate(showtime.start_time);
-                    if (!acc[date]) {
-                      acc[date] = [];
-                    }
-                    acc[date].push(showtime);
-                    return acc;
-                  }, {} as Record<string, typeof showtimes>)
+                  filteredShowtimes.reduce(
+                    (acc, showtime) => {
+                      const date = formatDate(showtime.start_time);
+                      if (!acc[date]) {
+                        acc[date] = [];
+                      }
+                      acc[date].push(showtime);
+                      return acc;
+                    },
+                    {} as Record<string, typeof showtimes>,
+                  ),
                 ).map(([date, showtimes]) => (
                   <Box key={date} sx={{ mb: 6 }}>
                     <Typography
