@@ -15,7 +15,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { CreditCard, AccountBalance, Smartphone } from "@mui/icons-material";
+import { CreditCard, AccountBalance } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { PaymentMethod } from "../../utils/enum";
 import type { InvoiceDTO } from "../../utils/dtos/invoiceDTO";
@@ -24,6 +24,7 @@ import { useCurrentUser } from "../../services/authService";
 import { useCreateBooking } from "../../services/invoicesService";
 import { useCreatePayment } from "../../services/vnpayService";
 import VNPayImg from "../../assets/images/vnpay.png";
+import MomoImg from "../../assets/images/momo.png";
 import { useTheme } from "../../provider/ThemeProvider";
 
 // Enhanced Paper component with animated gradient background and border
@@ -41,7 +42,7 @@ const Payment = () => {
   const location = useLocation();
   const { t } = useTheme();
   const [paymentMethod, setPaymentMethod] = useState<string>(
-    PaymentMethod.Card
+    PaymentMethod.Card,
   );
 
   const { data: currentUser } = useCurrentUser();
@@ -73,7 +74,7 @@ const Payment = () => {
         ([productId, quantity]) => ({
           product_id: productId,
           quantity: quantity as number,
-        })
+        }),
       ),
       tickets: {
         showtime_id: bookingData.showtime.showtime_id,
@@ -91,9 +92,8 @@ const Payment = () => {
           ...bookingPayload,
           payment_method: PaymentMethod.Banking,
         };
-        const bookingResponse = await createBookingMutation.mutateAsync(
-          vnpayBookingPayload
-        );
+        const bookingResponse =
+          await createBookingMutation.mutateAsync(vnpayBookingPayload);
 
         // Create VNPay payment
         const paymentResponse = await createPaymentMutation.mutateAsync({
@@ -114,9 +114,8 @@ const Payment = () => {
           ...bookingPayload,
           status: "completed",
         };
-        const bookingResponse = await createBookingMutation.mutateAsync(
-          finalBookingPayload
-        );
+        const bookingResponse =
+          await createBookingMutation.mutateAsync(finalBookingPayload);
 
         // Navigate to confirmation with server response data and cinema info
         navigate("/confirmation", {
@@ -299,13 +298,17 @@ const Payment = () => {
                           label=""
                           sx={{ m: 0 }}
                         />
-                        <Smartphone color="secondary" />
+                        <img
+                          src={MomoImg}
+                          alt="Momo"
+                          style={{ height: 24, width: 24 }}
+                        />
                         <Box>
                           <Typography variant="body1" fontWeight={600}>
-                            {t("payment.cash")}
+                            Momo
                           </Typography>
                           <Typography variant="caption" color="text.secondary">
-                            {t("payment.cashDesc")}
+                            Pay with Momo wallet
                           </Typography>
                         </Box>
                       </CardContent>
@@ -505,7 +508,7 @@ const Payment = () => {
                                 }).format(product.price * product.quantity)}
                               </Typography>
                             </Box>
-                          )
+                          ),
                         )}
                       </Box>
                     </Box>
@@ -529,7 +532,7 @@ const Payment = () => {
                         style: "currency",
                         currency: "VND",
                       }).format(
-                        bookingData.seats.length * bookingData.showtime.price
+                        bookingData.seats.length * bookingData.showtime.price,
                       )}
                     </Typography>
                   </Box>
@@ -552,7 +555,7 @@ const Payment = () => {
                         }).format(
                           bookingData.total -
                             bookingData.seats.length *
-                              bookingData.showtime.price
+                              bookingData.showtime.price,
                         )}
                       </Typography>
                     </Box>
