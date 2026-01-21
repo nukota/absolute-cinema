@@ -27,7 +27,7 @@ const Movies = () => {
 
   const { data: currentUser } = useCurrentUser();
   const { data: movies, isLoading } = useMoviesByCustomer(
-    currentUser?.id || "",
+    currentUser?.id || null,
   );
   const saveMovieMutation = useSaveMovie();
   const removeSavedMovieMutation = useRemoveSavedMovie();
@@ -183,7 +183,7 @@ const Movies = () => {
         </Box>
 
         {/* Loading State */}
-        {isLoading || !currentUser ? (
+        {isLoading ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
             <CircularProgress size={60} sx={{ color: "primary.main" }} />
           </Box>

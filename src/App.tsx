@@ -41,28 +41,30 @@ const App = () => {
         <Route path="/verify" element={<Verify />} />
         <Route path="/verify-email" element={<VerifyCallback />} />
 
-        {/* User routes with layout - Protected for customers and admins */}
-        <Route
-          element={
-            <ProtectedRoute
-              allowedRoles={[UserRole.Customer, UserRole.Admin]}
-            />
-          }
-        >
-          <Route path="/" element={<UserLayout />}>
-            <Route index element={<Home />} />
-            <Route path="movies" element={<MoviesPage />} />
+        {/* Public user routes - No authentication required */}
+        <Route path="/" element={<UserLayout />}>
+          <Route index element={<Home />} />
+          <Route path="movies" element={<MoviesPage />} />
+          <Route path="movie/:slug" element={<MovieDetail />} />
+          <Route path="help-center" element={<HelpCenter />} />
+          <Route path="terms-conditions" element={<TermsConditions />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+
+          {/* Protected user routes - Authentication required */}
+          <Route
+            element={
+              <ProtectedRoute
+                allowedRoles={[UserRole.Customer, UserRole.Admin]}
+              />
+            }
+          >
             <Route path="saved-movies" element={<SavedMoviesPage />} />
-            <Route path="movie/:slug" element={<MovieDetail />} />
             <Route path="booking" element={<Booking />} />
             <Route path="payment" element={<Payment />} />
             <Route path="confirmation" element={<Confirmation />} />
             <Route path="vnpay-payment" element={<VNPayPayment />} />
             <Route path="payment-result" element={<VNPayResult />} />
             <Route path="profile" element={<Profile />} />
-            <Route path="help-center" element={<HelpCenter />} />
-            <Route path="terms-conditions" element={<TermsConditions />} />
-            <Route path="privacy-policy" element={<PrivacyPolicy />} />
           </Route>
         </Route>
 

@@ -3,7 +3,10 @@ import type { SignUpDTO, SignInDTO, AuthResponse } from "../utils/dtos/authDTO";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // Helper function to store authentication data
-export const storeAuthData = (authResponse: AuthResponse, queryClient?: any) => {
+export const storeAuthData = (
+  authResponse: AuthResponse,
+  queryClient?: any,
+) => {
   // Ensure user data has full_name instead of name
   const userData = { ...authResponse.user };
   if ((userData as any).name && !(userData as any).full_name) {
@@ -66,7 +69,7 @@ const forgotPassword = async (data: {
 }): Promise<{ message: string }> => {
   const response = await api.post<{ message: string }>(
     "/auth/forgot-password",
-    data
+    data,
   );
   return response.data;
 };
@@ -76,7 +79,7 @@ const resetPassword = async (data: {
 }): Promise<{ message: string }> => {
   const response = await api.post<{ message: string }>(
     "/auth/reset-password",
-    data
+    data,
   );
   return response.data;
 };
@@ -85,10 +88,10 @@ const verifyEmail = async (data: {
   access_token: string;
   refresh_token: string;
 }): Promise<{ message: string; user: AuthResponse["user"] }> => {
-  const response = await api.post<{ message: string; user: AuthResponse["user"] }>(
-    "/auth/verify",
-    data
-  );
+  const response = await api.post<{
+    message: string;
+    user: AuthResponse["user"];
+  }>("/auth/verify", data);
   return response.data;
 };
 
@@ -111,7 +114,7 @@ export const useSignIn = () => {
 
 export const useSignOut = () => {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: signOut,
     onSuccess: () => {
@@ -150,6 +153,9 @@ export const useCurrentUser = () => {
     queryFn: getCurrentUser,
     initialData: getInitialUserData(),
     staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: false, // Don't retry on failure
+    // Return null for non-authenticated users instead of throwing error
+    throwOnError: false,
   });
 };
 
