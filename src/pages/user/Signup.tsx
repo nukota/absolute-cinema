@@ -25,7 +25,7 @@ import { useSignUp, storeAuthData } from "../../services/authService";
 import { useFeedback } from "../../provider/FeedbackProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { UserRole } from "../../utils/enum";
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 
 const Signup = () => {
   const navigate = useNavigate();

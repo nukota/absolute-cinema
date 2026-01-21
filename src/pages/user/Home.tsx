@@ -8,7 +8,7 @@ import { useTheme } from "../../provider/ThemeProvider";
 import { MovieStatus } from "../../utils/enum";
 import MovieSwiper from "../../components/elements/user/MovieSwiper";
 import HeroSection from "../../components/elements/user/HeroSection";
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 
 const Home = () => {
   const { data: currentUser } = useCurrentUser();

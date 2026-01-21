@@ -20,7 +20,7 @@ import { Rabbit } from "lucide-react";
 import { useSignIn, storeAuthData } from "../../services/authService";
 import { useFeedback } from "../../provider/FeedbackProvider";
 import { useQueryClient } from "@tanstack/react-query";
-import { Helmet } from "react-helmet-async";
+import { Helmet } from "react-helmet";
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -77,9 +77,15 @@ const Signin = () => {
     >
       <Helmet>
         <title>Sign In - Absolute Cinema</title>
-        <meta name="description" content="Sign in to your Absolute Cinema account to book movie tickets, manage bookings, and access exclusive features." />
+        <meta
+          name="description"
+          content="Sign in to your Absolute Cinema account to book movie tickets, manage bookings, and access exclusive features."
+        />
         <meta property="og:title" content="Sign In - Absolute Cinema" />
-        <meta property="og:description" content="Sign in to your Absolute Cinema account to book movie tickets, manage bookings, and access exclusive features." />
+        <meta
+          property="og:description"
+          content="Sign in to your Absolute Cinema account to book movie tickets, manage bookings, and access exclusive features."
+        />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://cinema.nct.pro.vn/signin" />
         <meta name="twitter:card" content="summary" />
