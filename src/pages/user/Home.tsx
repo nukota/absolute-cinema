@@ -8,11 +8,12 @@ import { useTheme } from "../../provider/ThemeProvider";
 import { MovieStatus } from "../../utils/enum";
 import MovieSwiper from "../../components/elements/user/MovieSwiper";
 import HeroSection from "../../components/elements/user/HeroSection";
+import { Helmet } from "react-helmet-async";
 
 const Home = () => {
   const { data: currentUser } = useCurrentUser();
   const { data: movies, isLoading } = useMoviesByCustomer(
-    currentUser?.id || ""
+    currentUser?.id || "",
   );
   const saveMovieMutation = useSaveMovie();
   const removeSavedMovieMutation = useRemoveSavedMovie();
@@ -83,6 +84,24 @@ const Home = () => {
         minHeight: "100vh",
       }}
     >
+      <Helmet>
+        <title>Absolute Cinema - Book Movie Tickets Online</title>
+        <meta
+          name="description"
+          content="Discover and book the latest movies at Absolute Cinema. Enjoy now showing and coming soon films with easy online ticket booking."
+        />
+        <meta
+          property="og:title"
+          content="Absolute Cinema - Book Movie Tickets Online"
+        />
+        <meta
+          property="og:description"
+          content="Discover and book the latest movies at Absolute Cinema. Enjoy now showing and coming soon films with easy online ticket booking."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://cinema.nct.pro.vn/" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
       {/* Hero Section */}
       <HeroSection movies={movies || []} />
 

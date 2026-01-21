@@ -17,6 +17,7 @@ import { useFeedback } from "../../provider/FeedbackProvider";
 import { MovieStatus } from "../../utils/enum";
 import SlideItem from "../../components/items/SlideItem";
 import { useTheme } from "../../provider/ThemeProvider";
+import { Helmet } from "react-helmet-async";
 
 const Movies = () => {
   const [searchParams] = useSearchParams();
@@ -26,7 +27,7 @@ const Movies = () => {
 
   const { data: currentUser } = useCurrentUser();
   const { data: movies, isLoading } = useMoviesByCustomer(
-    currentUser?.id || ""
+    currentUser?.id || "",
   );
   const saveMovieMutation = useSaveMovie();
   const removeSavedMovieMutation = useRemoveSavedMovie();
@@ -91,6 +92,24 @@ const Movies = () => {
         py: 6,
       }}
     >
+      <Helmet>
+        <title>Movies - Browse and Book Cinema Tickets | Absolute Cinema</title>
+        <meta
+          name="description"
+          content="Browse all movies at Absolute Cinema. Find now showing and coming soon films, read reviews, and book tickets online easily."
+        />
+        <meta
+          property="og:title"
+          content="Movies - Browse and Book Cinema Tickets | Absolute Cinema"
+        />
+        <meta
+          property="og:description"
+          content="Browse all movies at Absolute Cinema. Find now showing and coming soon films, read reviews, and book tickets online easily."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://cinema.nct.pro.vn/movies" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
       <Container maxWidth="lg">
         <Typography variant="h3" fontWeight={700} gutterBottom color="white">
           {t("moviesPage.title")}

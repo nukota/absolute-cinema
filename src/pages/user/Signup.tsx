@@ -25,6 +25,7 @@ import { useSignUp, storeAuthData } from "../../services/authService";
 import { useFeedback } from "../../provider/FeedbackProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { UserRole } from "../../utils/enum";
+import { Helmet } from "react-helmet-async";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -156,6 +157,24 @@ const Signup = () => {
         p: 2,
       }}
     >
+      <Helmet>
+        <title>Sign Up - Create Account | Absolute Cinema</title>
+        <meta
+          name="description"
+          content="Create your Absolute Cinema account to start booking movie tickets, saving favorites, and enjoying personalized recommendations."
+        />
+        <meta
+          property="og:title"
+          content="Sign Up - Create Account | Absolute Cinema"
+        />
+        <meta
+          property="og:description"
+          content="Create your Absolute Cinema account to start booking movie tickets, saving favorites, and enjoying personalized recommendations."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://cinema.nct.pro.vn/signup" />
+        <meta name="twitter:card" content="summary" />
+      </Helmet>
       <Card
         elevation={0}
         sx={{

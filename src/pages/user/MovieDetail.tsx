@@ -19,6 +19,7 @@ import ShowtimeItem from "../../components/items/Showtime";
 import { MovieStatus } from "../../utils/enum";
 import { formatDate } from "../../utils/helper/helper";
 import { useTheme } from "../../provider/ThemeProvider";
+import { Helmet } from "react-helmet-async";
 
 const MovieDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -105,6 +106,16 @@ const MovieDetail = () => {
         minHeight: "100vh",
       }}
     >
+      <Helmet>
+        <title>{movie.title} - Book Tickets | Absolute Cinema</title>
+        <meta name="description" content={`Book tickets for ${movie.title}. ${movie.description?.substring(0, 150)}...`} />
+        <meta property="og:title" content={`${movie.title} - Book Tickets | Absolute Cinema`} />
+        <meta property="og:description" content={`Book tickets for ${movie.title}. ${movie.description?.substring(0, 150)}...`} />
+        <meta property="og:image" content={movie.poster_url} />
+        <meta property="og:type" content="video.movie" />
+        <meta property="og:url" content={`https://cinema.nct.pro.vn/movies/${movie.slug}`} />
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
       {/* Hero Section */}
       <MovieInfo movie={movie} />
 
