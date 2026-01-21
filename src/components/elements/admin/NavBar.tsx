@@ -205,7 +205,7 @@ export const NavBar = () => {
             lineHeight: 1.4,
           }}
         >
-          This application was developed by group 0
+          This application was developed by group 4
         </Typography>
       </Box>
     </Box>

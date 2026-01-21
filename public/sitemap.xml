@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<url>
+	<loc>https://cinema.nct.pro.vn/</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/signin</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/signup</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/verify</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/verify-email</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/movies</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/saved-movies</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/booking</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/payment</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/confirmation</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/vnpay-payment</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/payment-result</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/profile</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/help-center</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/terms-conditions</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://cinema.nct.pro.vn/privacy-policy</loc>
+	<lastmod>2026-01-21T11:26:02+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+</urlset>
