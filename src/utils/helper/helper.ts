@@ -95,8 +95,11 @@ export const generateDailyDataPoints = (
   const points: string[] = [];
 
   for (let day = 1; day <= daysInMonth; day += 2) {
-    const date = new Date(year, month - 1, day);
-    points.push(date.toISOString().split("T")[0]);
+    // This represents a calendar day, not a UTC instant. Building the string
+    // directly prevents negative UTC offsets from shifting it into the prior day.
+    points.push(
+      `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+    );
   }
 
   return points;
