@@ -95,6 +95,18 @@ const verifyEmail = async (data: {
   return response.data;
 };
 
+// Expose the request layer separately so its API contract can be tested and
+// reused without rendering React Query hooks.
+export const authApi = {
+  signUp,
+  signIn,
+  signOut,
+  getCurrentUser,
+  forgotPassword,
+  resetPassword,
+  verifyEmail,
+};
+
 export const authKeys = {
   all: ["auth"] as const,
   currentUser: () => [...authKeys.all, "current"] as const,
