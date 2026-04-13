@@ -1,4 +1,5 @@
-import { afterEach, beforeEach, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, vi } from "vitest";
+import { server } from "./server";
 
 class MemoryStorage implements Storage {
   private readonly values = new Map<string, string>();
@@ -28,17 +29,20 @@ class MemoryStorage implements Storage {
   }
 }
 
-export const installTestStorage = () => {
-  const storage = new MemoryStorage();
+const storage = new MemoryStorage();
 
-  beforeEach(() => {
-    vi.stubGlobal("localStorage", storage);
-    storage.clear();
-  });
+beforeAll(() => {
+  vi.stubGlobal("localStorage", storage);
+  server.listen({ onUnhandledRequest: "error" });
+});
 
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
+afterEach(() => {
+  storage.clear();
+  server.resetHandlers();
+  vi.restoreAllMocks();
+});
 
-  return storage;
-};
+afterAll(() => {
+  server.close();
+  vi.unstubAllGlobals();
+});
