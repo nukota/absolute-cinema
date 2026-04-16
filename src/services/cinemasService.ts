@@ -33,6 +33,14 @@ const deleteCinema = async (id: string): Promise<void> => {
   await api.delete(`/cinemas/${id}`);
 };
 
+export const cinemasApi = {
+  createCinema,
+  getAllCinemas,
+  getCinemaById,
+  updateCinema,
+  deleteCinema,
+};
+
 export const cinemasKeys = {
   all: ["cinemas"] as const,
   lists: () => [...cinemasKeys.all, "list"] as const,
