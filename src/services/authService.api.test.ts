@@ -1,16 +1,8 @@
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { authApi } from "./authService";
 import { UserRole } from "../utils/enum";
-import { installTestStorage } from "../test/helpers";
-
-const server = setupServer();
-installTestStorage();
-
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+import { server } from "../test/server";
 
 const user = {
   id: "user-1",

@@ -1,9 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { clearAuthData, storeAuthData } from "./authService";
 import { UserRole } from "../utils/enum";
-import { installTestStorage } from "../test/helpers";
-
-const storage = installTestStorage();
 
 describe("authentication storage", () => {
   it("stores tokens and normalizes legacy user names before caching", () => {
@@ -24,9 +21,9 @@ describe("authentication storage", () => {
       { setQueryData },
     );
 
-    expect(storage.getItem("access_token")).toBe("access-token");
-    expect(storage.getItem("refresh_token")).toBe("refresh-token");
-    expect(JSON.parse(storage.getItem("user")!)).toEqual({
+    expect(localStorage.getItem("access_token")).toBe("access-token");
+    expect(localStorage.getItem("refresh_token")).toBe("refresh-token");
+    expect(JSON.parse(localStorage.getItem("user")!)).toEqual({
       id: "user-1",
       email: "user@example.com",
       full_name: "Legacy Name",
@@ -39,14 +36,14 @@ describe("authentication storage", () => {
   });
 
   it("removes every locally stored authentication value", () => {
-    storage.setItem("access_token", "access-token");
-    storage.setItem("refresh_token", "refresh-token");
-    storage.setItem("user", "{}");
+    localStorage.setItem("access_token", "access-token");
+    localStorage.setItem("refresh_token", "refresh-token");
+    localStorage.setItem("user", "{}");
     const clear = vi.fn();
 
     clearAuthData({ clear });
 
-    expect(storage.length).toBe(0);
+    expect(localStorage.length).toBe(0);
     expect(clear).toHaveBeenCalledOnce();
   });
 });
