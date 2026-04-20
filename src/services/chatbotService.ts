@@ -39,6 +39,10 @@ const sendChatMessage = async (data: {
   return response.data.reply;
 };
 
+export const chatbotApi = {
+  sendChatMessage,
+};
+
 // Query Keys
 export const chatbotKeys = {
   all: ["chatbot"] as const,

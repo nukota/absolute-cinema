@@ -1,19 +1,11 @@
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { http, HttpResponse } from "msw";
-import { setupServer } from "msw/node";
 import { api } from "./apiClient";
-import { installTestStorage } from "../test/helpers";
-
-const server = setupServer();
-const storage = installTestStorage();
-
-beforeAll(() => server.listen({ onUnhandledRequest: "error" }));
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+import { server } from "../test/server";
 
 describe("api client authentication", () => {
   it("adds the stored access token to outgoing requests", async () => {
-    storage.setItem("access_token", "stored-token");
+    localStorage.setItem("access_token", "stored-token");
     server.use(
       http.get("http://localhost:8000/movies", ({ request }) => {
         expect(request.headers.get("authorization")).toBe("Bearer stored-token");
@@ -27,8 +19,8 @@ describe("api client authentication", () => {
   });
 
   it("refreshes an expired token once and retries the original request", async () => {
-    storage.setItem("access_token", "expired-token");
-    storage.setItem("refresh_token", "refresh-token");
+    localStorage.setItem("access_token", "expired-token");
+    localStorage.setItem("refresh_token", "refresh-token");
     let protectedRequestCount = 0;
 
     server.use(
@@ -54,7 +46,7 @@ describe("api client authentication", () => {
 
     expect(response.data).toEqual({ ok: true });
     expect(protectedRequestCount).toBe(2);
-    expect(storage.getItem("access_token")).toBe("new-access-token");
-    expect(storage.getItem("refresh_token")).toBe("new-refresh-token");
+    expect(localStorage.getItem("access_token")).toBe("new-access-token");
+    expect(localStorage.getItem("refresh_token")).toBe("new-refresh-token");
   });
 });
