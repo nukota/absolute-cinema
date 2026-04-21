@@ -21,6 +21,8 @@ const createPayment = async (
   return response.data;
 };
 
+export const vnpayApi = { createPayment };
+
 export const useCreatePayment = () => {
   return useMutation({
     mutationFn: createPayment,
