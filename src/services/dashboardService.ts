@@ -5,7 +5,7 @@ import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
 // Dashboard API endpoints
-const dashboardApi = {
+export const dashboardApi = {
   // Get dashboard statistics for a specific month
   getDashboardStats: async (month?: string): Promise<DashboardData> => {
     const params = month ? `?month=${month}` : "";
