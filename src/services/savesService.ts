@@ -1,20 +1,20 @@
-import { api } from "../lib/apiClient";
-import type { CreateSaveDto, SavedMovieResponse } from "../utils/dtos/saveDTO";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { moviesKeys } from "./moviesService";
+import { api } from '../lib/apiClient';
+import type { CreateSaveDto, SavedMovieResponse } from '../utils/dtos/saveDTO';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { moviesKeys } from './moviesService';
 
 const saveMovie = async (data: CreateSaveDto): Promise<SavedMovieResponse> => {
-  const response = await api.post<SavedMovieResponse>("/saves", data);
+  const response = await api.post<SavedMovieResponse>('/saves', data);
   return response.data;
 };
 
 const getAllSaves = async (): Promise<SavedMovieResponse[]> => {
-  const response = await api.get<SavedMovieResponse[]>("/saves");
+  const response = await api.get<SavedMovieResponse[]>('/saves');
   return response.data;
 };
 
 const getSavedMoviesByCustomer = async (
-  customerId: string
+  customerId: string,
 ): Promise<SavedMovieResponse[]> => {
   const response = await api.get<SavedMovieResponse[]>(`/saves/${customerId}`);
   return response.data;
@@ -22,17 +22,24 @@ const getSavedMoviesByCustomer = async (
 
 const removeSavedMovie = async (
   customerId: string,
-  movieId: string
+  movieId: string,
 ): Promise<void> => {
   await api.delete(`/saves/${customerId}/${movieId}`);
 };
 
+export const savesApi = {
+  saveMovie,
+  getAllSaves,
+  getSavedMoviesByCustomer,
+  removeSavedMovie,
+};
+
 export const savesKeys = {
-  all: ["saves"] as const,
-  lists: () => [...savesKeys.all, "list"] as const,
+  all: ['saves'] as const,
+  lists: () => [...savesKeys.all, 'list'] as const,
   list: (filters?: string) => [...savesKeys.lists(), filters] as const,
   byCustomer: (customerId: string) =>
-    [...savesKeys.all, "customer", customerId] as const,
+    [...savesKeys.all, 'customer', customerId] as const,
 };
 
 export const useSaveMovie = () => {
@@ -41,7 +48,9 @@ export const useSaveMovie = () => {
     mutationFn: saveMovie,
     onSuccess: (_, { customer_id }) => {
       queryClient.invalidateQueries({ queryKey: savesKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: moviesKeys.byCustomer(customer_id) });
+      queryClient.invalidateQueries({
+        queryKey: moviesKeys.byCustomer(customer_id),
+      });
     },
   });
 };
