@@ -55,6 +55,16 @@ const notifyUsers = async (
   return response.data;
 };
 
+export const showtimesApi = {
+  createShowtime,
+  getAllShowtimes,
+  getShowtimesByMovieId,
+  getShowtimeById,
+  updateShowtime,
+  deleteShowtime,
+  notifyUsers,
+};
+
 export const showtimesKeys = {
   all: ["showtimes"] as const,
   lists: () => [...showtimesKeys.all, "list"] as const,
