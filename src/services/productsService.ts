@@ -1,18 +1,18 @@
-import { api } from "../lib/apiClient";
+import { api } from '../lib/apiClient';
 import type {
   ProductDTO,
   CreateProductDTO,
   UpdateProductDTO,
-} from "../utils/dtos/productDTO";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+} from '../utils/dtos/productDTO';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const createProduct = async (data: CreateProductDTO): Promise<ProductDTO> => {
-  const response = await api.post<ProductDTO>("/products", data);
+  const response = await api.post<ProductDTO>('/products', data);
   return response.data;
 };
 
 const getAllProducts = async (): Promise<ProductDTO[]> => {
-  const response = await api.get<ProductDTO[]>("/products");
+  const response = await api.get<ProductDTO[]>('/products');
   return response.data;
 };
 
@@ -23,7 +23,7 @@ const getProductById = async (id: string): Promise<ProductDTO> => {
 
 const updateProduct = async (
   id: string,
-  data: UpdateProductDTO
+  data: UpdateProductDTO,
 ): Promise<ProductDTO> => {
   const response = await api.patch<ProductDTO>(`/products/${id}`, data);
   return response.data;
@@ -33,11 +33,19 @@ const deleteProduct = async (id: string): Promise<void> => {
   await api.delete(`/products/${id}`);
 };
 
+export const productsApi = {
+  createProduct,
+  getAllProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+};
+
 export const productsKeys = {
-  all: ["products"] as const,
-  lists: () => [...productsKeys.all, "list"] as const,
+  all: ['products'] as const,
+  lists: () => [...productsKeys.all, 'list'] as const,
   list: (filters?: string) => [...productsKeys.lists(), filters] as const,
-  details: () => [...productsKeys.all, "detail"] as const,
+  details: () => [...productsKeys.all, 'detail'] as const,
   detail: (id: string) => [...productsKeys.details(), id] as const,
 };
 
