@@ -43,6 +43,15 @@ const getUserProfile = async (customerId: string): Promise<UserProfileDTO> => {
   return response.data;
 };
 
+export const customersApi = {
+  createCustomer,
+  getAllCustomers,
+  getCustomerById,
+  updateCustomer,
+  deleteCustomer,
+  getUserProfile,
+};
+
 // Query Keys
 export const customersKeys = {
   all: ["customers"] as const,
