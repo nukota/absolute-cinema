@@ -1,19 +1,19 @@
-import { api } from "../lib/apiClient";
+import { api } from '../lib/apiClient';
 import type {
   RoomDTO,
   CreateRoomDTO,
   UpdateRoomDTO,
-} from "../utils/dtos/roomDTO";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { seatsKeys } from "./seatsService";
+} from '../utils/dtos/roomDTO';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { seatsKeys } from './seatsService';
 
 const createRoom = async (data: CreateRoomDTO): Promise<RoomDTO> => {
-  const response = await api.post<RoomDTO>("/rooms", data);
+  const response = await api.post<RoomDTO>('/rooms', data);
   return response.data;
 };
 
 const getAllRooms = async (): Promise<RoomDTO[]> => {
-  const response = await api.get<RoomDTO[]>("/rooms");
+  const response = await api.get<RoomDTO[]>('/rooms');
   return response.data;
 };
 
@@ -24,7 +24,7 @@ const getRoomById = async (id: string): Promise<RoomDTO> => {
 
 const updateRoom = async (
   id: string,
-  data: UpdateRoomDTO
+  data: UpdateRoomDTO,
 ): Promise<RoomDTO> => {
   const response = await api.patch<RoomDTO>(`/rooms/${id}`, data);
   return response.data;
@@ -34,11 +34,19 @@ const deleteRoom = async (id: string): Promise<void> => {
   await api.delete(`/rooms/${id}`);
 };
 
+export const roomsApi = {
+  createRoom,
+  getAllRooms,
+  getRoomById,
+  updateRoom,
+  deleteRoom,
+};
+
 export const roomsKeys = {
-  all: ["rooms"] as const,
-  lists: () => [...roomsKeys.all, "list"] as const,
+  all: ['rooms'] as const,
+  lists: () => [...roomsKeys.all, 'list'] as const,
   list: (filters?: string) => [...roomsKeys.lists(), filters] as const,
-  details: () => [...roomsKeys.all, "detail"] as const,
+  details: () => [...roomsKeys.all, 'detail'] as const,
   detail: (id: string) => [...roomsKeys.details(), id] as const,
 };
 
