@@ -1,18 +1,18 @@
-import { api } from "../lib/apiClient";
+import { api } from '../lib/apiClient';
 import type {
   CreateRatingDTO,
   RatingDTO,
   UpdateRatingDTO,
-} from "../utils/dtos/ratingDTO";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+} from '../utils/dtos/ratingDTO';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const createRating = async (data: CreateRatingDTO): Promise<RatingDTO> => {
-  const response = await api.post<RatingDTO>("/ratings", data);
+  const response = await api.post<RatingDTO>('/ratings', data);
   return response.data;
 };
 
 const getAllRatings = async (): Promise<RatingDTO[]> => {
-  const response = await api.get<RatingDTO[]>("/ratings");
+  const response = await api.get<RatingDTO[]>('/ratings');
   return response.data;
 };
 
@@ -23,7 +23,7 @@ const getRatingById = async (id: string): Promise<RatingDTO> => {
 
 const updateRating = async (
   id: string,
-  data: UpdateRatingDTO
+  data: UpdateRatingDTO,
 ): Promise<RatingDTO> => {
   const response = await api.patch<RatingDTO>(`/ratings/${id}`, data);
   return response.data;
@@ -33,11 +33,19 @@ const deleteRating = async (id: string): Promise<void> => {
   await api.delete(`/ratings/${id}`);
 };
 
+export const ratingsApi = {
+  createRating,
+  getAllRatings,
+  getRatingById,
+  updateRating,
+  deleteRating,
+};
+
 export const ratingsKeys = {
-  all: ["ratings"] as const,
-  lists: () => [...ratingsKeys.all, "list"] as const,
+  all: ['ratings'] as const,
+  lists: () => [...ratingsKeys.all, 'list'] as const,
   list: (filters?: string) => [...ratingsKeys.lists(), filters] as const,
-  details: () => [...ratingsKeys.all, "detail"] as const,
+  details: () => [...ratingsKeys.all, 'detail'] as const,
   detail: (id: string) => [...ratingsKeys.details(), id] as const,
 };
 
