@@ -49,6 +49,16 @@ const deleteMovie = async (id: string): Promise<void> => {
   await api.delete(`/movies/${id}`);
 };
 
+export const moviesApi = {
+  createMovie,
+  getAllMovies,
+  getMovieById,
+  getMovieBySlug,
+  getMoviesByCustomerId,
+  updateMovie,
+  deleteMovie,
+};
+
 export const moviesKeys = {
   all: ["movies"] as const,
   lists: () => [...moviesKeys.all, "list"] as const,
