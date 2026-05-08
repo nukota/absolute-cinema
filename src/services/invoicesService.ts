@@ -40,6 +40,15 @@ const deleteInvoice = async (id: string): Promise<void> => {
   await api.delete(`/invoices/${id}`);
 };
 
+export const invoicesApi = {
+  createBooking,
+  getAllInvoices,
+  getInvoiceById,
+  getUserProfile,
+  getBookingHistory,
+  deleteInvoice,
+};
+
 export const invoicesKeys = {
   all: ["invoices"] as const,
   lists: () => [...invoicesKeys.all, "list"] as const,
