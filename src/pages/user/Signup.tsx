@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   TextField,
@@ -9,7 +9,7 @@ import {
   CardContent,
   InputAdornment,
   IconButton,
-} from "@mui/material";
+} from '@mui/material';
 import {
   Visibility,
   VisibilityOff,
@@ -19,13 +19,13 @@ import {
   PhoneOutlined,
   BadgeOutlined,
   CakeOutlined,
-} from "@mui/icons-material";
-import { Rabbit } from "lucide-react";
-import { useSignUp, storeAuthData } from "../../services/authService";
-import { useFeedback } from "../../provider/FeedbackProvider";
-import { useQueryClient } from "@tanstack/react-query";
-import { UserRole } from "../../utils/enum";
-import { Helmet } from "react-helmet";
+} from '@mui/icons-material';
+import { Rabbit } from 'lucide-react';
+import { useSignUp, storeAuthData } from '../../services/authService';
+import { useFeedback } from '../../provider/FeedbackProvider';
+import { useQueryClient } from '@tanstack/react-query';
+import { UserRole } from '../../utils/enum';
+import { Helmet } from 'react-helmet-async';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -33,33 +33,33 @@ const Signup = () => {
   const signUpMutation = useSignUp();
   const queryClient = useQueryClient();
   const [isAdminMode, setIsAdminMode] = useState(false);
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [cccd, setCccd] = useState("");
-  const [dob, setDob] = useState("");
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [cccd, setCccd] = useState('');
+  const [dob, setDob] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Listen for Ctrl+Shift+A to toggle admin mode
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === "A") {
+      if (e.ctrlKey && e.shiftKey && e.key === 'A') {
         e.preventDefault();
         setIsAdminMode((prev) => !prev);
         showSnackbar({
           message: `Switched to ${
-            !isAdminMode ? "Admin" : "Customer"
+            !isAdminMode ? 'Admin' : 'Customer'
           } sign up mode`,
-          severity: "info",
+          severity: 'info',
         });
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isAdminMode, showSnackbar]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,8 +68,8 @@ const Signup = () => {
     // Validate password match
     if (password !== confirmPassword) {
       showSnackbar({
-        message: "Passwords do not match",
-        severity: "error",
+        message: 'Passwords do not match',
+        severity: 'error',
       });
       return;
     }
@@ -86,8 +86,8 @@ const Signup = () => {
       if (!isAdminMode) {
         if (!phoneNumber || !cccd || !dob) {
           showSnackbar({
-            message: "Please fill in all required customer fields",
-            severity: "error",
+            message: 'Please fill in all required customer fields',
+            severity: 'error',
           });
           return;
         }
@@ -102,16 +102,16 @@ const Signup = () => {
       if (!response.access_token || !response.refresh_token) {
         // User needs to verify email
         showSnackbar({
-          message: "Account created! Please verify your email.",
-          severity: "success",
+          message: 'Account created! Please verify your email.',
+          severity: 'success',
         });
 
         // Navigate to verification page
-        navigate("/verify", {
+        navigate('/verify', {
           state: {
             message:
               response.message ||
-              "Please check your email to verify your account.",
+              'Please check your email to verify your account.',
             email: email,
           },
         });
@@ -122,18 +122,18 @@ const Signup = () => {
       storeAuthData(response, queryClient);
 
       showSnackbar({
-        message: "Account created successfully!",
-        severity: "success",
+        message: 'Account created successfully!',
+        severity: 'success',
       });
 
       // Navigate to admin dashboard
-      navigate("/admin");
+      navigate('/admin');
     } catch (error: any) {
       showSnackbar({
         message:
           error?.response?.data?.message ||
-          "Failed to create account. Please try again.",
-        severity: "error",
+          'Failed to create account. Please try again.',
+        severity: 'error',
       });
     }
   };
@@ -149,11 +149,11 @@ const Signup = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#f5f5f5",
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f5f5f5',
         p: 2,
       }}
     >
@@ -179,15 +179,15 @@ const Signup = () => {
         elevation={0}
         sx={{
           maxWidth: 450,
-          width: "100%",
+          width: '100%',
           border: 1,
-          borderColor: "divider",
+          borderColor: 'divider',
         }}
       >
         <CardContent sx={{ p: 4 }}>
           {/* Logo and Title */}
-          <Box sx={{ textAlign: "center", mb: 6 }}>
-            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+          <Box sx={{ textAlign: 'center', mb: 6 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
               <Rabbit size={48} color="#9c27b0" />
             </Box>
             <Typography
@@ -204,9 +204,9 @@ const Signup = () => {
               <Typography
                 variant="body1"
                 sx={{
-                  color: "secondary.main",
+                  color: 'secondary.main',
                   fontWeight: 500,
-                  fontStyle: "italic",
+                  fontStyle: 'italic',
                 }}
               >
                 Administrative access mode
@@ -314,7 +314,7 @@ const Signup = () => {
             <TextField
               fullWidth
               label="Password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -342,7 +342,7 @@ const Signup = () => {
             <TextField
               fullWidth
               label="Confirm Password"
-              type={showConfirmPassword ? "text" : "password"}
+              type={showConfirmPassword ? 'text' : 'password'}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
@@ -376,27 +376,27 @@ const Signup = () => {
               sx={{
                 py: 1.5,
                 fontWeight: 600,
-                textTransform: "none",
-                fontSize: "1rem",
+                textTransform: 'none',
+                fontSize: '1rem',
               }}
             >
-              {signUpMutation.isPending ? "Creating Account..." : "Sign Up"}
+              {signUpMutation.isPending ? 'Creating Account...' : 'Sign Up'}
             </Button>
           </form>
 
           {/* Footer */}
-          <Box sx={{ mt: 3, textAlign: "center" }}>
+          <Box sx={{ mt: 3, textAlign: 'center' }}>
             <Typography variant="body1" color="text.secondary">
-              Already have an account?{" "}
+              Already have an account?{' '}
               <Typography
                 component="span"
-                onClick={() => navigate("/signin")}
+                onClick={() => navigate('/signin')}
                 sx={{
-                  color: "primary.main",
+                  color: 'primary.main',
                   fontWeight: 600,
-                  cursor: "pointer",
-                  "&:hover": {
-                    textDecoration: "underline",
+                  cursor: 'pointer',
+                  '&:hover': {
+                    textDecoration: 'underline',
                   },
                 }}
               >

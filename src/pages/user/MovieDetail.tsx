@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Box,
   Button,
@@ -9,30 +9,30 @@ import {
   Select,
   MenuItem,
   CircularProgress,
-} from "@mui/material";
-import { EventSeat } from "@mui/icons-material";
-import { useNavigate, useParams } from "react-router-dom";
-import { useMovieBySlug } from "../../services/moviesService";
-import { useShowtimesByMovie } from "../../services/showtimesSerivce";
-import MovieInfo from "../../components/elements/user/MovieInfo";
-import ShowtimeItem from "../../components/items/Showtime";
-import { MovieStatus } from "../../utils/enum";
-import { formatDate } from "../../utils/helper/helper";
-import { useTheme } from "../../provider/ThemeProvider";
-import { Helmet } from "react-helmet";
+} from '@mui/material';
+import { EventSeat } from '@mui/icons-material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useMovieBySlug } from '../../services/moviesService';
+import { useShowtimesByMovie } from '../../services/showtimesSerivce';
+import MovieInfo from '../../components/elements/user/MovieInfo';
+import ShowtimeItem from '../../components/items/Showtime';
+import { MovieStatus } from '../../utils/enum';
+import { formatDate } from '../../utils/helper/helper';
+import { useTheme } from '../../provider/ThemeProvider';
+import { Helmet } from 'react-helmet-async';
 
 const MovieDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [selectedShowtime, setSelectedShowtime] = useState<string | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedCinema, setSelectedCinema] = useState<string>("");
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedCinema, setSelectedCinema] = useState<string>('');
   const { t } = useTheme();
 
   // API calls
-  const { data: movie, isLoading: movieLoading } = useMovieBySlug(slug || "");
+  const { data: movie, isLoading: movieLoading } = useMovieBySlug(slug || '');
   const { data: showtimes, isLoading: showtimesLoading } = useShowtimesByMovie(
-    movie?.movie_id || "",
+    movie?.movie_id || '',
   );
 
   // Get unique dates and cinemas from showtimes
@@ -69,14 +69,14 @@ const MovieDetail = () => {
       <Box
         sx={{
           background:
-            "radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)",
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+            'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <CircularProgress size={60} sx={{ color: "primary.main" }} />
+        <CircularProgress size={60} sx={{ color: 'primary.main' }} />
       </Box>
     );
   }
@@ -84,9 +84,9 @@ const MovieDetail = () => {
   if (!movie) {
     return (
       <Container maxWidth="lg" sx={{ py: 6 }}>
-        <Typography variant="h4">{t("movieDetail.movieNotFound")}</Typography>
-        <Button onClick={() => navigate("/movies")} sx={{ mt: 2 }}>
-          {t("movieDetail.backToMovies")}
+        <Typography variant="h4">{t('movieDetail.movieNotFound')}</Typography>
+        <Button onClick={() => navigate('/movies')} sx={{ mt: 2 }}>
+          {t('movieDetail.backToMovies')}
         </Button>
       </Container>
     );
@@ -94,7 +94,7 @@ const MovieDetail = () => {
 
   const handleBooking = () => {
     if (selectedShowtime) {
-      navigate("/booking", { state: { showtimeId: selectedShowtime } });
+      navigate('/booking', { state: { showtimeId: selectedShowtime } });
     }
   };
 
@@ -102,8 +102,8 @@ const MovieDetail = () => {
     <Box
       sx={{
         background:
-          "radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)",
-        minHeight: "100vh",
+          'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
+        minHeight: '100vh',
       }}
     >
       <Helmet>
@@ -143,52 +143,52 @@ const MovieDetail = () => {
               gutterBottom
               color="rgba(255, 255, 255, 0.7)"
             >
-              {t("movieDetail.selectShowtime")}
+              {t('movieDetail.selectShowtime')}
             </Typography>
             <Typography
               variant="body1"
               color="rgba(255, 255, 255, 0.5)"
               sx={{ mb: 4 }}
             >
-              {t("movieDetail.chooseDateTime")}
+              {t('movieDetail.chooseDateTime')}
             </Typography>
 
             {/* Date and Cinema Selection */}
             <Box
               sx={{
-                display: "flex",
-                flexDirection: { xs: "column", sm: "row" },
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
                 gap: 3,
                 mb: 4,
                 p: 3,
-                bgcolor: "rgba(255, 255, 255, 0.05)",
+                bgcolor: 'rgba(255, 255, 255, 0.05)',
                 borderRadius: 2,
-                border: "1px solid rgba(255, 255, 255, 0.1)",
+                border: '1px solid rgba(255, 255, 255, 0.1)',
               }}
             >
               <FormControl fullWidth sx={{ minWidth: 200 }}>
-                <InputLabel sx={{ color: "white" }}>
-                  {t("movieDetail.selectDate")}
+                <InputLabel sx={{ color: 'white' }}>
+                  {t('movieDetail.selectDate')}
                 </InputLabel>
                 <Select
                   value={selectedDate}
                   onChange={(e) => setSelectedDate(e.target.value)}
-                  label={t("movieDetail.selectDate")}
+                  label={t('movieDetail.selectDate')}
                   sx={{
-                    color: "white",
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
+                    color: 'white',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
                     },
-                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "white",
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'white',
                     },
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "secondary.main",
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'secondary.main',
                     },
                   }}
                 >
                   <MenuItem value="">
-                    <em>{t("movieDetail.allDates")}</em>
+                    <em>{t('movieDetail.allDates')}</em>
                   </MenuItem>
                   {availableDates.map((date) => (
                     <MenuItem key={date} value={date}>
@@ -199,28 +199,28 @@ const MovieDetail = () => {
               </FormControl>
 
               <FormControl fullWidth sx={{ minWidth: 200 }}>
-                <InputLabel sx={{ color: "white" }}>
-                  {t("movieDetail.selectCinema")}
+                <InputLabel sx={{ color: 'white' }}>
+                  {t('movieDetail.selectCinema')}
                 </InputLabel>
                 <Select
                   value={selectedCinema}
                   onChange={(e) => setSelectedCinema(e.target.value)}
-                  label={t("movieDetail.selectCinema")}
+                  label={t('movieDetail.selectCinema')}
                   sx={{
-                    color: "white",
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "rgba(255, 255, 255, 0.3)",
+                    color: 'white',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'rgba(255, 255, 255, 0.3)',
                     },
-                    "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "white",
+                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'white',
                     },
-                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "secondary.main",
+                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                      borderColor: 'secondary.main',
                     },
                   }}
                 >
                   <MenuItem value="">
-                    <em>{t("movieDetail.allCinemas")}</em>
+                    <em>{t('movieDetail.allCinemas')}</em>
                   </MenuItem>
                   {availableCinemas.map(
                     (cinema) =>
@@ -231,7 +231,7 @@ const MovieDetail = () => {
                         >
                           <Typography variant="body1">
                             {cinema.name}
-                            {cinema.address ? ` (${cinema.address})` : ""}
+                            {cinema.address ? ` (${cinema.address})` : ''}
                           </Typography>
                         </MenuItem>
                       ),
@@ -267,12 +267,12 @@ const MovieDetail = () => {
                     </Typography>
                     <Box
                       sx={{
-                        display: "grid",
+                        display: 'grid',
                         gridTemplateColumns: {
-                          xs: "1fr",
-                          sm: "repeat(3, 1fr)",
-                          md: "repeat(5, 1fr)",
-                          lg: "repeat(7, 1fr)",
+                          xs: '1fr',
+                          sm: 'repeat(3, 1fr)',
+                          md: 'repeat(5, 1fr)',
+                          lg: 'repeat(7, 1fr)',
                         },
                         gap: 2,
                       }}
@@ -290,7 +290,7 @@ const MovieDetail = () => {
                 ))}
 
                 <Box
-                  sx={{ mt: 6, display: "flex", justifyContent: "flex-end" }}
+                  sx={{ mt: 6, display: 'flex', justifyContent: 'flex-end' }}
                 >
                   <Button
                     variant="contained"
@@ -300,67 +300,67 @@ const MovieDetail = () => {
                     sx={{
                       px: 3,
                       py: 1,
-                      fontSize: "1.3rem",
+                      fontSize: '1.3rem',
                       fontWeight: 600,
                       background:
-                        "linear-gradient(135deg, #ffd700 0%, #ffb300 100%)",
-                      color: "#1a0a2e",
-                      border: "2px solid transparent",
+                        'linear-gradient(135deg, #ffd700 0%, #ffb300 100%)',
+                      color: '#1a0a2e',
+                      border: '2px solid transparent',
                       borderRadius: 3,
-                      boxShadow: "0 4px 15px rgba(255, 215, 0, 0.3)",
-                      transition: "all 0.3s ease",
-                      "&:hover": {
+                      boxShadow: '0 4px 15px rgba(255, 215, 0, 0.3)',
+                      transition: 'all 0.3s ease',
+                      '&:hover': {
                         background:
-                          "linear-gradient(135deg, #ffb300 0%, #ff8f00 100%)",
-                        transform: "translateY(-2px)",
-                        boxShadow: "0 8px 25px rgba(255, 215, 0, 0.4)",
-                        borderColor: "#ffd700",
+                          'linear-gradient(135deg, #ffb300 0%, #ff8f00 100%)',
+                        transform: 'translateY(-2px)',
+                        boxShadow: '0 8px 25px rgba(255, 215, 0, 0.4)',
+                        borderColor: '#ffd700',
                       },
-                      "&:active": {
-                        transform: "translateY(0px)",
-                        boxShadow: "0 4px 15px rgba(255, 215, 0, 0.3)",
+                      '&:active': {
+                        transform: 'translateY(0px)',
+                        boxShadow: '0 4px 15px rgba(255, 215, 0, 0.3)',
                       },
-                      "&:disabled": {
-                        background: "rgba(255, 255, 255, 0.1)",
-                        color: "rgba(255, 255, 255, 0.5)",
-                        boxShadow: "none",
-                        transform: "none",
+                      '&:disabled': {
+                        background: 'rgba(255, 255, 255, 0.1)',
+                        color: 'rgba(255, 255, 255, 0.5)',
+                        boxShadow: 'none',
+                        transform: 'none',
                       },
                     }}
                   >
-                    {t("movieDetail.continueToSeats")}
+                    {t('movieDetail.continueToSeats')}
                   </Button>
                 </Box>
               </Box>
             ) : (
-              <Box sx={{ textAlign: "center", py: 8 }}>
+              <Box sx={{ textAlign: 'center', py: 8 }}>
                 <EventSeat
-                  sx={{ fontSize: 64, color: "secondary.main", mb: 2 }}
+                  sx={{ fontSize: 64, color: 'secondary.main', mb: 2 }}
                 />
                 <Typography
                   variant="h4"
                   fontWeight={700}
                   color="secondary.main"
-                  sx={{ textTransform: "uppercase", mb: 2 }}
+                  sx={{ textTransform: 'uppercase', mb: 2 }}
                 >
-                  {t("movieDetail.noShowtimes")}
+                  {t('movieDetail.noShowtimes')}
                 </Typography>
                 <Typography variant="body1" color="rgba(255, 255, 255, 0.7)">
-                  {t("movieDetail.tryDifferent")}
+                  {t('movieDetail.tryDifferent')}
                 </Typography>
               </Box>
             )}
           </Box>
         ) : (
-          <Box sx={{ textAlign: "center", py: 8 }}>
-            <EventSeat sx={{ fontSize: 64, color: "secondary.main", mb: 2 }} />
+          <Box sx={{ textAlign: 'center', py: 8 }}>
+            <EventSeat sx={{ fontSize: 64, color: 'secondary.main', mb: 2 }} />
             <Typography
               variant="h4"
               fontWeight={700}
               color="secondary.main"
-              sx={{ textTransform: "uppercase", mb: 2 }}
+              sx={{ textTransform: 'uppercase', mb: 2 }}
             >
-              {t("movieDetail.noShowtimes")}
+              {t('movieDetail.noShowtimes')}
             </Typography>
             <Typography
               variant="body1"
@@ -368,15 +368,15 @@ const MovieDetail = () => {
               sx={{ mb: 3 }}
             >
               {movie.status === MovieStatus.ComingSoon
-                ? t("movieDetail.checkBack")
-                : t("movieDetail.noLongerShowing")}
+                ? t('movieDetail.checkBack')
+                : t('movieDetail.noLongerShowing')}
             </Typography>
             <Button
               variant="outlined"
-              onClick={() => navigate("/movies")}
-              sx={{ color: "white", borderColor: "white" }}
+              onClick={() => navigate('/movies')}
+              sx={{ color: 'white', borderColor: 'white' }}
             >
-              {t("movieDetail.browseOther")}
+              {t('movieDetail.browseOther')}
             </Button>
           </Box>
         )}

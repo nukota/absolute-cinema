@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   TextField,
@@ -9,26 +9,26 @@ import {
   CardContent,
   InputAdornment,
   IconButton,
-} from "@mui/material";
+} from '@mui/material';
 import {
   Visibility,
   VisibilityOff,
   EmailOutlined,
   LockOutlined,
-} from "@mui/icons-material";
-import { Rabbit } from "lucide-react";
-import { useSignIn, storeAuthData } from "../../services/authService";
-import { useFeedback } from "../../provider/FeedbackProvider";
-import { useQueryClient } from "@tanstack/react-query";
-import { Helmet } from "react-helmet";
+} from '@mui/icons-material';
+import { Rabbit } from 'lucide-react';
+import { useSignIn, storeAuthData } from '../../services/authService';
+import { useFeedback } from '../../provider/FeedbackProvider';
+import { useQueryClient } from '@tanstack/react-query';
+import { Helmet } from 'react-helmet-async';
 
 const Signin = () => {
   const navigate = useNavigate();
   const { showSnackbar } = useFeedback();
   const signInMutation = useSignIn();
   const queryClient = useQueryClient();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,18 +44,18 @@ const Signin = () => {
       storeAuthData(response, queryClient);
 
       showSnackbar({
-        message: "Sign in successful!",
-        severity: "success",
+        message: 'Sign in successful!',
+        severity: 'success',
       });
 
       // Navigate to admin dashboard
-      navigate("/admin");
+      navigate('/admin');
     } catch (error: any) {
       showSnackbar({
         message:
           error?.response?.data?.message ||
-          "Failed to sign in. Please check your credentials.",
-        severity: "error",
+          'Failed to sign in. Please check your credentials.',
+        severity: 'error',
       });
     }
   };
@@ -67,11 +67,11 @@ const Signin = () => {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#f5f5f5",
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#f5f5f5',
         p: 2,
       }}
     >
@@ -94,15 +94,15 @@ const Signin = () => {
         elevation={0}
         sx={{
           maxWidth: 450,
-          width: "100%",
+          width: '100%',
           border: 1,
-          borderColor: "divider",
+          borderColor: 'divider',
         }}
       >
         <CardContent sx={{ p: 4 }}>
           {/* Logo and Title */}
-          <Box sx={{ textAlign: "center", mb: 6 }}>
-            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+          <Box sx={{ textAlign: 'center', mb: 6 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
               <Rabbit size={48} color="#9c27b0" />
             </Box>
             <Typography
@@ -142,7 +142,7 @@ const Signin = () => {
             <TextField
               fullWidth
               label="Password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -176,27 +176,27 @@ const Signin = () => {
               sx={{
                 py: 1.5,
                 fontWeight: 600,
-                textTransform: "none",
-                fontSize: "1rem",
+                textTransform: 'none',
+                fontSize: '1rem',
               }}
             >
-              {signInMutation.isPending ? "Signing In..." : "Sign In"}
+              {signInMutation.isPending ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
 
           {/* Footer */}
-          <Box sx={{ mt: 3, textAlign: "center" }}>
+          <Box sx={{ mt: 3, textAlign: 'center' }}>
             <Typography variant="body1" color="text.secondary">
-              Don't have an account?{" "}
+              Don't have an account?{' '}
               <Typography
                 component="span"
-                onClick={() => navigate("/signup")}
+                onClick={() => navigate('/signup')}
                 sx={{
-                  color: "primary.main",
+                  color: 'primary.main',
                   fontWeight: 600,
-                  cursor: "pointer",
-                  "&:hover": {
-                    textDecoration: "underline",
+                  cursor: 'pointer',
+                  '&:hover': {
+                    textDecoration: 'underline',
                   },
                 }}
               >

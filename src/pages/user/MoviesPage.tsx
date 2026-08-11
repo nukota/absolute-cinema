@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Box,
   Checkbox,
@@ -8,20 +8,20 @@ import {
   TextField,
   Typography,
   CircularProgress,
-} from "@mui/material";
-import { Search } from "@mui/icons-material";
-import { useMoviesByCustomer } from "../../services/moviesService";
-import { useCurrentUser } from "../../services/authService";
-import { useSaveMovie, useRemoveSavedMovie } from "../../services/savesService";
-import { useFeedback } from "../../provider/FeedbackProvider";
-import { MovieStatus } from "../../utils/enum";
-import SlideItem from "../../components/items/SlideItem";
-import { useTheme } from "../../provider/ThemeProvider";
-import { Helmet } from "react-helmet";
+} from '@mui/material';
+import { Search } from '@mui/icons-material';
+import { useMoviesByCustomer } from '../../services/moviesService';
+import { useCurrentUser } from '../../services/authService';
+import { useSaveMovie, useRemoveSavedMovie } from '../../services/savesService';
+import { useFeedback } from '../../provider/FeedbackProvider';
+import { MovieStatus } from '../../utils/enum';
+import SlideItem from '../../components/items/SlideItem';
+import { useTheme } from '../../provider/ThemeProvider';
+import { Helmet } from 'react-helmet-async';
 
 const Movies = () => {
   const [searchParams] = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [showNowShowing, setShowNowShowing] = useState(true);
   const [showComingSoon, setShowComingSoon] = useState(true);
 
@@ -36,7 +36,7 @@ const Movies = () => {
 
   // Initialize search term from URL query parameter
   useEffect(() => {
-    const searchQuery = searchParams.get("search");
+    const searchQuery = searchParams.get('search');
     if (searchQuery) {
       setSearchTerm(searchQuery);
     }
@@ -46,8 +46,8 @@ const Movies = () => {
   useEffect(() => {
     if (saveMovieMutation.isSuccess) {
       showSnackbar({
-        message: t("moviesPage.movieSaved"),
-        severity: "success",
+        message: t('moviesPage.movieSaved'),
+        severity: 'success',
       });
       saveMovieMutation.reset();
     }
@@ -87,8 +87,8 @@ const Movies = () => {
     <Box
       sx={{
         background:
-          "radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)",
-        minHeight: "100vh",
+          'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
+        minHeight: '100vh',
         py: 6,
       }}
     >
@@ -112,21 +112,21 @@ const Movies = () => {
       </Helmet>
       <Container maxWidth="lg">
         <Typography variant="h3" fontWeight={700} gutterBottom color="white">
-          {t("moviesPage.title")}
+          {t('moviesPage.title')}
         </Typography>
         <Typography
           variant="body1"
           color="rgba(255, 255, 255, 0.7)"
           sx={{ mb: 4 }}
         >
-          {t("moviesPage.subtitle")}
+          {t('moviesPage.subtitle')}
         </Typography>
 
         {/* Filters */}
         <Box
           sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
             gap: 2,
             mb: 4,
           }}
@@ -134,26 +134,26 @@ const Movies = () => {
           <TextField
             fullWidth
             size="small"
-            placeholder={t("moviesPage.searchPlaceholder")}
+            placeholder={t('moviesPage.searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             InputProps={{
               startAdornment: (
-                <Search sx={{ mr: 1, color: "text.secondary" }} />
+                <Search sx={{ mr: 1, color: 'text.secondary' }} />
               ),
             }}
             sx={{
-              "& .MuiOutlinedInput-root": {
-                bgcolor: "rgba(255, 255, 255, 0.1)",
-                color: "white",
+              '& .MuiOutlinedInput-root': {
+                bgcolor: 'rgba(255, 255, 255, 0.1)',
+                color: 'white',
               },
             }}
           />
           <Box
             sx={{
-              display: "flex",
+              display: 'flex',
               gap: 2,
-              alignItems: "center",
+              alignItems: 'center',
               minWidth: 300,
             }}
           >
@@ -162,52 +162,52 @@ const Movies = () => {
                 <Checkbox
                   checked={showNowShowing}
                   onChange={(e) => setShowNowShowing(e.target.checked)}
-                  sx={{ color: "white" }}
+                  sx={{ color: 'white' }}
                 />
               }
-              label={t("moviesPage.nowShowing")}
-              sx={{ color: "white", minWidth: 160 }}
+              label={t('moviesPage.nowShowing')}
+              sx={{ color: 'white', minWidth: 160 }}
             />
             <FormControlLabel
               control={
                 <Checkbox
                   checked={showComingSoon}
                   onChange={(e) => setShowComingSoon(e.target.checked)}
-                  sx={{ color: "white" }}
+                  sx={{ color: 'white' }}
                 />
               }
-              label={t("moviesPage.comingSoon")}
-              sx={{ color: "white", minWidth: 160 }}
+              label={t('moviesPage.comingSoon')}
+              sx={{ color: 'white', minWidth: 160 }}
             />
           </Box>
         </Box>
 
         {/* Loading State */}
         {isLoading ? (
-          <Box sx={{ display: "flex", justifyContent: "center", py: 8 }}>
-            <CircularProgress size={60} sx={{ color: "primary.main" }} />
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 8 }}>
+            <CircularProgress size={60} sx={{ color: 'primary.main' }} />
           </Box>
         ) : (
           <>
             {/* Movie Grid */}
             {filteredMovies.length === 0 ? (
-              <Box sx={{ textAlign: "center", py: 8 }}>
+              <Box sx={{ textAlign: 'center', py: 8 }}>
                 <Typography variant="h6" color="rgba(255, 255, 255, 0.7)">
-                  {t("moviesPage.noMovies")}
+                  {t('moviesPage.noMovies')}
                 </Typography>
               </Box>
             ) : (
               <Box
                 sx={{
-                  display: "grid",
+                  display: 'grid',
                   gridTemplateColumns: {
-                    xs: "1fr",
-                    sm: "repeat(2, 1fr)",
-                    md: "repeat(3, 1fr)",
-                    lg: "repeat(4, 1fr)",
+                    xs: '1fr',
+                    sm: 'repeat(2, 1fr)',
+                    md: 'repeat(3, 1fr)',
+                    lg: 'repeat(4, 1fr)',
                   },
                   gap: 4,
-                  justifyItems: "center",
+                  justifyItems: 'center',
                 }}
               >
                 {filteredMovies.map((movie) => (
