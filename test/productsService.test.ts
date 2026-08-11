@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
-import { productsApi } from './productsService';
-import { server } from '../test/server';
-import { ProductCategory } from '../utils/enum';
+import { productsApi } from '../src/services/productsService';
+import { server } from './server';
+import { ProductCategory } from '../src/utils/enum';
 
 const product = {
   product_id: 'product-1',

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
-import { ratingsApi } from './ratingsService';
-import { server } from '../test/server';
+import { ratingsApi } from '../src/services/ratingsService';
+import { server } from './server';
 
 const rating = {
   rating_id: 'rating-1',
