@@ -1,16 +1,16 @@
-import axios from "axios";
+import axios from 'axios';
 import type {
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
   InternalAxiosRequestConfig,
   AxiosError,
-} from "axios";
-import type { AuthResponse } from "../utils/dtos/authDTO";
+} from 'axios';
+import type { AuthResponse } from '../utils/dtos/authDTO';
 
 // API base URL - adjust based on your backend
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 // Token refresh state management to prevent race conditions
 let isRefreshing = false;
@@ -21,7 +21,7 @@ const apiClient: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000, // 30 seconds
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
@@ -29,14 +29,14 @@ const apiClient: AxiosInstance = axios.create({
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     // Add authorization token if available
-    const token = localStorage.getItem("access_token");
+    const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
 
     // Log request in development
     if (import.meta.env.DEV) {
-      console.log("API Request:", {
+      console.log('API Request:', {
         method: config.method?.toUpperCase(),
         url: config.url,
         data: config.data,
@@ -46,7 +46,7 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error: AxiosError) => {
-    console.error("Request Error:", error);
+    console.error('Request Error:', error);
     return Promise.reject(error);
   },
 );
@@ -56,7 +56,7 @@ apiClient.interceptors.request.use(
  * Prevents race conditions by ensuring only one refresh happens at a time
  */
 const refreshAccessToken = async (): Promise<string | null> => {
-  const refreshToken = localStorage.getItem("refresh_token");
+  const refreshToken = localStorage.getItem('refresh_token');
 
   if (!refreshToken) {
     clearAuthData();
@@ -69,7 +69,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
       `${API_BASE_URL}/auth/refresh`,
       { refresh_token: refreshToken },
       {
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       },
     );
 
@@ -81,12 +81,12 @@ const refreshAccessToken = async (): Promise<string | null> => {
     }
 
     // Update stored tokens
-    localStorage.setItem("access_token", access_token);
-    localStorage.setItem("refresh_token", newRefreshToken);
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('refresh_token', newRefreshToken);
 
     return access_token;
   } catch (error) {
-    console.error("Token refresh failed:", error);
+    console.error('Token refresh failed:', error);
     clearAuthData();
     return null;
   }
@@ -96,13 +96,13 @@ const refreshAccessToken = async (): Promise<string | null> => {
  * Clears authentication data and optionally redirects to signin
  */
 const clearAuthData = (shouldRedirect: boolean = true): void => {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
-  localStorage.removeItem("user");
+  localStorage.removeItem('access_token');
+  localStorage.removeItem('refresh_token');
+  localStorage.removeItem('user');
 
   // Only redirect if requested and not already on signin page
-  if (shouldRedirect && window.location.pathname !== "/signin") {
-    window.location.href = "/signin";
+  if (shouldRedirect && window.location.pathname !== '/signin') {
+    window.location.href = '/signin';
   }
 };
 
@@ -111,7 +111,7 @@ apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     // Log response in development
     if (import.meta.env.DEV) {
-      console.log("API Response:", {
+      console.log('API Response:', {
         status: response.status,
         url: response.config.url,
         data: response.data,
@@ -129,7 +129,7 @@ apiClient.interceptors.response.use(
     if (error.response) {
       // Server responded with error status
       if (import.meta.env.DEV) {
-        console.error("Response Error:", {
+        console.error('Response Error:', {
           status: error.response.status,
           data: error.response.data,
           url: error.config?.url,
@@ -147,8 +147,8 @@ apiClient.interceptors.response.use(
 
         // Skip refresh for auth endpoints to avoid infinite loops
         // Don't redirect for /auth/me (current user check)
-        const isAuthEndpoint = originalRequest.url?.includes("/auth/");
-        const isMeEndpoint = originalRequest.url?.includes("/auth/me");
+        const isAuthEndpoint = originalRequest.url?.includes('/auth/');
+        const isMeEndpoint = originalRequest.url?.includes('/auth/me');
         if (isAuthEndpoint) {
           clearAuthData(!isMeEndpoint); // Don't redirect for /auth/me
           return Promise.reject(error);
@@ -184,14 +184,14 @@ apiClient.interceptors.response.use(
 
       // Handle 403 Forbidden
       if (error.response.status === 403) {
-        console.error("Access forbidden - insufficient permissions");
+        console.error('Access forbidden - insufficient permissions');
       }
     } else if (error.request) {
       // Request made but no response received
-      console.error("Network Error:", error.message);
+      console.error('Network Error:', error.message);
     } else {
       // Something else happened
-      console.error("Error:", error.message);
+      console.error('Error:', error.message);
     }
 
     return Promise.reject(error);

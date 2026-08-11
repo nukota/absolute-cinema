@@ -24,6 +24,8 @@ dist-ssr
 *.sw?
 API_DOC.md
 .env
+.env.local
+.env.test
 
 # Playwright
 /test-results/

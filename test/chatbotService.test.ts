@@ -2,11 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { chatbotApi } from '../src/services/chatbotService';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 describe('chatbot API', () => {
   it('converts client history into the backend format and returns the reply', async () => {
     server.use(
-      http.post('http://localhost:8000/chatbot', async ({ request }) => {
+      http.post(`${API_BASE_URL}/chatbot`, async ({ request }) => {
         expect(await request.json()).toEqual({
           message: 'What is playing tonight?',
           history: [

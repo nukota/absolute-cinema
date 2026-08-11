@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { savesApi } from '../src/services/savesService';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const save = {
   customer_id: 'customer-1',
@@ -15,7 +16,7 @@ const save = {
 describe('saves API', () => {
   it('save a movie', async () => {
     server.use(
-      http.post('http://localhost:8000/saves', async ({ request }) => {
+      http.post(`${API_BASE_URL}/saves`, async ({ request }) => {
         expect(await request.json()).toEqual({
           customer_id: save.customer_id,
           movie_id: save.movie_id,
@@ -34,8 +35,8 @@ describe('saves API', () => {
 
   it('gets all saves and one save by customer ID', async () => {
     server.use(
-      http.get('http://localhost:8000/saves', () => HttpResponse.json([save])),
-      http.get('http://localhost:8000/saves/:customerId', ({ params }) => {
+      http.get(`${API_BASE_URL}/saves`, () => HttpResponse.json([save])),
+      http.get(`${API_BASE_URL}/saves/:customerId`, ({ params }) => {
         expect(params.customerId).toBe(save.customer_id);
         return HttpResponse.json([save]);
       }),
@@ -50,7 +51,7 @@ describe('saves API', () => {
   it('removes a saved movie', async () => {
     server.use(
       http.delete(
-        'http://localhost:8000/saves/:customerId/:movieId',
+        `${API_BASE_URL}/saves/:customerId/:movieId`,
         ({ params }) => {
           expect(params).toEqual({
             customerId: save.customer_id,

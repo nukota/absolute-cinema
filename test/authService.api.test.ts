@@ -3,6 +3,7 @@ import { http, HttpResponse } from 'msw';
 import { authApi } from '../src/services/authService';
 import { UserRole } from '../src/utils/enum';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const user = {
   id: 'user-1',
@@ -14,7 +15,7 @@ const user = {
 describe('auth API', () => {
   it('sends signup data and returns the created authentication session', async () => {
     server.use(
-      http.post('http://localhost:8000/auth/signup', async ({ request }) => {
+      http.post(`${API_BASE_URL}/auth/signup`, async ({ request }) => {
         expect(await request.json()).toEqual({
           email: user.email,
           password: 'safe-password',
@@ -44,7 +45,7 @@ describe('auth API', () => {
 
   it('sends credentials to signin and returns the authentication session', async () => {
     server.use(
-      http.post('http://localhost:8000/auth/signin', async ({ request }) => {
+      http.post(`${API_BASE_URL}/auth/signin`, async ({ request }) => {
         expect(await request.json()).toEqual({
           email: user.email,
           password: 'safe-password',
@@ -67,7 +68,7 @@ describe('auth API', () => {
 
   it('calls signout and returns the server confirmation', async () => {
     server.use(
-      http.post('http://localhost:8000/auth/signout', () =>
+      http.post(`${API_BASE_URL}/auth/signout`, () =>
         HttpResponse.json({ message: 'Signed out' }),
       ),
     );
@@ -77,7 +78,7 @@ describe('auth API', () => {
 
   it('gets the current user and normalizes a legacy name field', async () => {
     server.use(
-      http.get('http://localhost:8000/auth/me', () =>
+      http.get(`${API_BASE_URL}/auth/me`, () =>
         HttpResponse.json({
           id: user.id,
           email: user.email,

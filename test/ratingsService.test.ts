@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { ratingsApi } from '../src/services/ratingsService';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const rating = {
   rating_id: 'rating-1',
@@ -21,7 +22,7 @@ const rating = {
 describe('ratings API', () => {
   it('creates a rating', async () => {
     server.use(
-      http.post('http://localhost:8000/ratings', async ({ request }) => {
+      http.post(`${API_BASE_URL}/ratings`, async ({ request }) => {
         expect(await request.json()).toEqual({
           movie_id: rating.movie.movie_id,
           customer_id: rating.customer.customer_id,
@@ -44,10 +45,8 @@ describe('ratings API', () => {
 
   it('gets all ratings and one rating by ID', async () => {
     server.use(
-      http.get('http://localhost:8000/ratings', () =>
-        HttpResponse.json([rating]),
-      ),
-      http.get('http://localhost:8000/ratings/rating-1', () =>
+      http.get(`${API_BASE_URL}/ratings`, () => HttpResponse.json([rating])),
+      http.get(`${API_BASE_URL}/ratings/rating-1`, () =>
         HttpResponse.json(rating),
       ),
     );
@@ -60,15 +59,12 @@ describe('ratings API', () => {
 
   it('updates a rating and deletes it', async () => {
     server.use(
-      http.patch(
-        'http://localhost:8000/ratings/rating-1',
-        async ({ request }) => {
-          expect(await request.json()).toEqual({ rating: 4 });
-          return HttpResponse.json({ ...rating, rating_value: 4 });
-        },
-      ),
+      http.patch(`${API_BASE_URL}/ratings/rating-1`, async ({ request }) => {
+        expect(await request.json()).toEqual({ rating: 4 });
+        return HttpResponse.json({ ...rating, rating_value: 4 });
+      }),
       http.delete(
-        'http://localhost:8000/ratings/rating-1',
+        `${API_BASE_URL}/ratings/rating-1`,
         () => new HttpResponse(null, { status: 204 }),
       ),
     );

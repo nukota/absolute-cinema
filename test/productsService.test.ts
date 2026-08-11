@@ -3,6 +3,7 @@ import { http, HttpResponse } from 'msw';
 import { productsApi } from '../src/services/productsService';
 import { server } from './server';
 import { ProductCategory } from '../src/utils/enum';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const product = {
   product_id: 'product-1',
@@ -15,7 +16,7 @@ const product = {
 describe('products API', () => {
   it('creates a product', async () => {
     server.use(
-      http.post('http://localhost:8000/products', async ({ request }) => {
+      http.post(`${API_BASE_URL}/products`, async ({ request }) => {
         expect(await request.json()).toEqual({
           name: product.name,
           category: product.category,
@@ -38,10 +39,8 @@ describe('products API', () => {
 
   it('gets all products and one product by ID', async () => {
     server.use(
-      http.get('http://localhost:8000/products', () =>
-        HttpResponse.json([product]),
-      ),
-      http.get('http://localhost:8000/products/product-1', () =>
+      http.get(`${API_BASE_URL}/products`, () => HttpResponse.json([product])),
+      http.get(`${API_BASE_URL}/products/product-1`, () =>
         HttpResponse.json(product),
       ),
     );
@@ -54,15 +53,12 @@ describe('products API', () => {
 
   it('updates a product and deletes it', async () => {
     server.use(
-      http.patch(
-        'http://localhost:8000/products/product-1',
-        async ({ request }) => {
-          expect(await request.json()).toEqual({ name: 'Renamed Product' });
-          return HttpResponse.json({ ...product, name: 'Renamed Product' });
-        },
-      ),
+      http.patch(`${API_BASE_URL}/products/product-1`, async ({ request }) => {
+        expect(await request.json()).toEqual({ name: 'Renamed Product' });
+        return HttpResponse.json({ ...product, name: 'Renamed Product' });
+      }),
       http.delete(
-        'http://localhost:8000/products/product-1',
+        `${API_BASE_URL}/products/product-1`,
         () => new HttpResponse(null, { status: 204 }),
       ),
     );

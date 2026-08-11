@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { moviesApi } from '../src/services/moviesService';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const movie = {
   movie_id: 'movie-1',
@@ -22,17 +23,14 @@ describe('movies API', () => {
       poster_url: movie.poster_url,
     };
     server.use(
-      http.post('http://localhost:8000/movies', async ({ request }) => {
+      http.post(`${API_BASE_URL}/movies`, async ({ request }) => {
         expect(await request.json()).toEqual(createData);
         return HttpResponse.json(movie, { status: 201 });
       }),
-      http.patch(
-        'http://localhost:8000/movies/movie-1',
-        async ({ request }) => {
-          expect(await request.json()).toEqual({ title: 'Dune Part Two' });
-          return HttpResponse.json({ ...movie, title: 'Dune Part Two' });
-        },
-      ),
+      http.patch(`${API_BASE_URL}/movies/movie-1`, async ({ request }) => {
+        expect(await request.json()).toEqual({ title: 'Dune Part Two' });
+        return HttpResponse.json({ ...movie, title: 'Dune Part Two' });
+      }),
     );
 
     await expect(moviesApi.createMovie(createData)).resolves.toEqual(movie);
@@ -43,16 +41,14 @@ describe('movies API', () => {
 
   it('gets movies by list, ID, slug, and customer', async () => {
     server.use(
-      http.get('http://localhost:8000/movies', () =>
-        HttpResponse.json([movie]),
-      ),
-      http.get('http://localhost:8000/movies/movie-1', () =>
+      http.get(`${API_BASE_URL}/movies`, () => HttpResponse.json([movie])),
+      http.get(`${API_BASE_URL}/movies/movie-1`, () =>
         HttpResponse.json(movie),
       ),
-      http.get('http://localhost:8000/movies/slug/dune-part-two', () =>
+      http.get(`${API_BASE_URL}/movies/slug/dune-part-two`, () =>
         HttpResponse.json(movie),
       ),
-      http.get('http://localhost:8000/movies/customer', ({ request }) => {
+      http.get(`${API_BASE_URL}/movies/customer`, ({ request }) => {
         expect(new URL(request.url).searchParams.get('customer_id')).toBe(
           'customer-1',
         );
@@ -73,7 +69,7 @@ describe('movies API', () => {
   it('deletes a movie', async () => {
     server.use(
       http.delete(
-        'http://localhost:8000/movies/movie-1',
+        `${API_BASE_URL}/movies/movie-1`,
         () => new HttpResponse(null, { status: 204 }),
       ),
     );

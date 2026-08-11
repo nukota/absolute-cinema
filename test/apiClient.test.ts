@@ -2,12 +2,13 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { api } from '../src/lib/apiClient';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 describe('api client authentication', () => {
   it('adds the stored access token to outgoing requests', async () => {
     localStorage.setItem('access_token', 'stored-token');
     server.use(
-      http.get('http://localhost:8000/movies', ({ request }) => {
+      http.get(`${API_BASE_URL}/movies`, ({ request }) => {
         expect(request.headers.get('authorization')).toBe(
           'Bearer stored-token',
         );
@@ -26,7 +27,7 @@ describe('api client authentication', () => {
     let protectedRequestCount = 0;
 
     server.use(
-      http.post('http://localhost:8000/auth/refresh', async ({ request }) => {
+      http.post(`${API_BASE_URL}/auth/refresh`, async ({ request }) => {
         expect(await request.json()).toEqual({
           refresh_token: 'refresh-token',
         });
@@ -35,7 +36,7 @@ describe('api client authentication', () => {
           refresh_token: 'new-refresh-token',
         });
       }),
-      http.get('http://localhost:8000/protected', ({ request }) => {
+      http.get(`${API_BASE_URL}/protected`, ({ request }) => {
         protectedRequestCount += 1;
         if (request.headers.get('authorization') === 'Bearer expired-token') {
           return HttpResponse.json({ message: 'Expired' }, { status: 401 });

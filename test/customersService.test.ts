@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { customersApi } from '../src/services/customersService';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const customer = {
   customer_id: 'customer-1',
@@ -30,12 +31,12 @@ describe('customers API', () => {
       password: 'safe-password',
     };
     server.use(
-      http.post('http://localhost:8000/customers', async ({ request }) => {
+      http.post(`${API_BASE_URL}/customers`, async ({ request }) => {
         expect(await request.json()).toEqual(createData);
         return HttpResponse.json(customer, { status: 201 });
       }),
       http.patch(
-        'http://localhost:8000/customers/customer-1',
+        `${API_BASE_URL}/customers/customer-1`,
         async ({ request }) => {
           expect(await request.json()).toEqual({ phone_number: '0911111111' });
           return HttpResponse.json({ ...customer, phone_number: '0911111111' });
@@ -54,13 +55,13 @@ describe('customers API', () => {
 
   it('gets customers, a customer detail, and its invoice-backed profile', async () => {
     server.use(
-      http.get('http://localhost:8000/customers', () =>
+      http.get(`${API_BASE_URL}/customers`, () =>
         HttpResponse.json([customer]),
       ),
-      http.get('http://localhost:8000/customers/customer-1', () =>
+      http.get(`${API_BASE_URL}/customers/customer-1`, () =>
         HttpResponse.json(customer),
       ),
-      http.get('http://localhost:8000/invoices/customer/customer-1', () =>
+      http.get(`${API_BASE_URL}/invoices/customer/customer-1`, () =>
         HttpResponse.json(profile),
       ),
     );
@@ -76,7 +77,7 @@ describe('customers API', () => {
   it('deletes a customer', async () => {
     server.use(
       http.delete(
-        'http://localhost:8000/customers/customer-1',
+        `${API_BASE_URL}/customers/customer-1`,
         () => new HttpResponse(null, { status: 204 }),
       ),
     );

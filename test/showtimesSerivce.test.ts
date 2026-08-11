@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { showtimesApi } from '../src/services/showtimesSerivce';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const showtime = {
   showtime_id: 'showtime-1',
@@ -23,29 +24,26 @@ const createData = {
 describe('showtimes API', () => {
   it('creates, updates, and notifies users about a showtime', async () => {
     server.use(
-      http.post('http://localhost:8000/showtimes', async ({ request }) => {
+      http.post(`${API_BASE_URL}/showtimes`, async ({ request }) => {
         expect(await request.json()).toEqual(createData);
         return HttpResponse.json(showtime, { status: 201 });
       }),
       http.patch(
-        'http://localhost:8000/showtimes/showtime-1',
+        `${API_BASE_URL}/showtimes/showtime-1`,
         async ({ request }) => {
           expect(await request.json()).toEqual({ price: 100000 });
           return HttpResponse.json({ ...showtime, price: 100000 });
         },
       ),
-      http.post(
-        'http://localhost:8000/showtimes/notify',
-        async ({ request }) => {
-          expect(await request.json()).toEqual({
-            showtime_id: showtime.showtime_id,
-          });
-          return HttpResponse.json({
-            message: 'Users notified',
-            notified_users: 3,
-          });
-        },
-      ),
+      http.post(`${API_BASE_URL}/showtimes/notify`, async ({ request }) => {
+        expect(await request.json()).toEqual({
+          showtime_id: showtime.showtime_id,
+        });
+        return HttpResponse.json({
+          message: 'Users notified',
+          notified_users: 3,
+        });
+      }),
     );
     await expect(showtimesApi.createShowtime(createData)).resolves.toEqual(
       showtime,
@@ -60,17 +58,17 @@ describe('showtimes API', () => {
 
   it('gets showtimes by list, movie, and ID, then deletes one', async () => {
     server.use(
-      http.get('http://localhost:8000/showtimes', () =>
+      http.get(`${API_BASE_URL}/showtimes`, () =>
         HttpResponse.json([showtime]),
       ),
-      http.get('http://localhost:8000/showtimes/movie/movie-1', () =>
+      http.get(`${API_BASE_URL}/showtimes/movie/movie-1`, () =>
         HttpResponse.json([showtime]),
       ),
-      http.get('http://localhost:8000/showtimes/showtime-1', () =>
+      http.get(`${API_BASE_URL}/showtimes/showtime-1`, () =>
         HttpResponse.json(showtime),
       ),
       http.delete(
-        'http://localhost:8000/showtimes/showtime-1',
+        `${API_BASE_URL}/showtimes/showtime-1`,
         () => new HttpResponse(null, { status: 204 }),
       ),
     );

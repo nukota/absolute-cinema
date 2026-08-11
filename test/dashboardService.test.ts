@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { dashboardApi } from '../src/services/dashboardService';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const dashboard = {
   stats: {
@@ -19,15 +20,10 @@ const dashboard = {
 describe('dashboard API', () => {
   it('requests dashboard statistics for the selected month', async () => {
     server.use(
-      http.get(
-        'http://localhost:8000/invoices/dashboard/stats',
-        ({ request }) => {
-          expect(new URL(request.url).searchParams.get('month')).toBe(
-            '2026-08',
-          );
-          return HttpResponse.json(dashboard);
-        },
-      ),
+      http.get(`${API_BASE_URL}/invoices/dashboard/stats`, ({ request }) => {
+        expect(new URL(request.url).searchParams.get('month')).toBe('2026-08');
+        return HttpResponse.json(dashboard);
+      }),
     );
     await expect(dashboardApi.getDashboardStats('2026-08')).resolves.toEqual(
       dashboard,
@@ -36,13 +32,10 @@ describe('dashboard API', () => {
 
   it('requests current dashboard statistics when no month is supplied', async () => {
     server.use(
-      http.get(
-        'http://localhost:8000/invoices/dashboard/stats',
-        ({ request }) => {
-          expect(new URL(request.url).search).toBe('');
-          return HttpResponse.json(dashboard);
-        },
-      ),
+      http.get(`${API_BASE_URL}/invoices/dashboard/stats`, ({ request }) => {
+        expect(new URL(request.url).search).toBe('');
+        return HttpResponse.json(dashboard);
+      }),
     );
     await expect(dashboardApi.getDashboardStats()).resolves.toEqual(dashboard);
   });

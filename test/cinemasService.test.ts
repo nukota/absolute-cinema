@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { cinemasApi } from '../src/services/cinemasService';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const cinema = {
   cinema_id: 'cinema-1',
@@ -13,7 +14,7 @@ const cinema = {
 describe('cinemas API', () => {
   it('creates a cinema', async () => {
     server.use(
-      http.post('http://localhost:8000/cinemas', async ({ request }) => {
+      http.post(`${API_BASE_URL}/cinemas`, async ({ request }) => {
         expect(await request.json()).toEqual({
           name: cinema.name,
           address: cinema.address,
@@ -29,10 +30,8 @@ describe('cinemas API', () => {
 
   it('gets all cinemas and one cinema by ID', async () => {
     server.use(
-      http.get('http://localhost:8000/cinemas', () =>
-        HttpResponse.json([cinema]),
-      ),
-      http.get('http://localhost:8000/cinemas/cinema-1', () =>
+      http.get(`${API_BASE_URL}/cinemas`, () => HttpResponse.json([cinema])),
+      http.get(`${API_BASE_URL}/cinemas/cinema-1`, () =>
         HttpResponse.json(cinema),
       ),
     );
@@ -45,15 +44,12 @@ describe('cinemas API', () => {
 
   it('updates a cinema and deletes it', async () => {
     server.use(
-      http.patch(
-        'http://localhost:8000/cinemas/cinema-1',
-        async ({ request }) => {
-          expect(await request.json()).toEqual({ name: 'Renamed Cinema' });
-          return HttpResponse.json({ ...cinema, name: 'Renamed Cinema' });
-        },
-      ),
+      http.patch(`${API_BASE_URL}/cinemas/cinema-1`, async ({ request }) => {
+        expect(await request.json()).toEqual({ name: 'Renamed Cinema' });
+        return HttpResponse.json({ ...cinema, name: 'Renamed Cinema' });
+      }),
       http.delete(
-        'http://localhost:8000/cinemas/cinema-1',
+        `${API_BASE_URL}/cinemas/cinema-1`,
         () => new HttpResponse(null, { status: 204 }),
       ),
     );

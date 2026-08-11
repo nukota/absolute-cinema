@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { invoicesApi } from '../src/services/invoicesService';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const invoice = {
   invoice_id: 'invoice-1',
@@ -63,23 +64,18 @@ const history = [
 describe('invoices API', () => {
   it('creates a booking with its tickets, products, and payment details', async () => {
     server.use(
-      http.post(
-        'http://localhost:8000/invoices/booking',
-        async ({ request }) => {
-          expect(await request.json()).toEqual(booking);
-          return HttpResponse.json(invoice, { status: 201 });
-        },
-      ),
+      http.post(`${API_BASE_URL}/invoices/booking`, async ({ request }) => {
+        expect(await request.json()).toEqual(booking);
+        return HttpResponse.json(invoice, { status: 201 });
+      }),
     );
     await expect(invoicesApi.createBooking(booking)).resolves.toEqual(invoice);
   });
 
   it('gets invoice lists and a single invoice', async () => {
     server.use(
-      http.get('http://localhost:8000/invoices', () =>
-        HttpResponse.json([invoice]),
-      ),
-      http.get('http://localhost:8000/invoices/invoice-1', () =>
+      http.get(`${API_BASE_URL}/invoices`, () => HttpResponse.json([invoice])),
+      http.get(`${API_BASE_URL}/invoices/invoice-1`, () =>
         HttpResponse.json(invoice),
       ),
     );
@@ -91,12 +87,11 @@ describe('invoices API', () => {
 
   it("gets a customer's invoice-backed profile and booking history", async () => {
     server.use(
-      http.get('http://localhost:8000/invoices/customer/customer-1', () =>
+      http.get(`${API_BASE_URL}/invoices/customer/customer-1`, () =>
         HttpResponse.json(profile),
       ),
-      http.get(
-        'http://localhost:8000/invoices/customer/customer-1/history',
-        () => HttpResponse.json(history),
+      http.get(`${API_BASE_URL}/invoices/customer/customer-1/history`, () =>
+        HttpResponse.json(history),
       ),
     );
     await expect(invoicesApi.getUserProfile('customer-1')).resolves.toEqual(
@@ -110,7 +105,7 @@ describe('invoices API', () => {
   it('deletes an invoice', async () => {
     server.use(
       http.delete(
-        'http://localhost:8000/invoices/invoice-1',
+        `${API_BASE_URL}/invoices/invoice-1`,
         () => new HttpResponse(null, { status: 204 }),
       ),
     );

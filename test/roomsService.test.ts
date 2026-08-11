@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { http, HttpResponse } from 'msw';
 import { roomsApi } from '../src/services/roomsService';
 import { server } from './server';
+import { API_BASE_URL } from '../src/lib/apiClient.ts';
 
 const room = {
   room_id: 'room-1',
@@ -17,7 +18,7 @@ const seats = [
 describe('rooms API', () => {
   it('creates and updates rooms', async () => {
     server.use(
-      http.post('http://localhost:8000/rooms', async ({ request }) => {
+      http.post(`${API_BASE_URL}/rooms`, async ({ request }) => {
         expect(await request.json()).toEqual({
           cinema_id: 'cinema-1',
           name: room.name,
@@ -25,7 +26,7 @@ describe('rooms API', () => {
         });
         return HttpResponse.json(room, { status: 201 });
       }),
-      http.patch('http://localhost:8000/rooms/room-1', async ({ request }) => {
+      http.patch(`${API_BASE_URL}/rooms/room-1`, async ({ request }) => {
         expect(await request.json()).toEqual({ name: 'Premium Room' });
         return HttpResponse.json({ ...room, name: 'Premium Room' });
       }),
@@ -40,12 +41,10 @@ describe('rooms API', () => {
 
   it('gets room lists and details, then deletes a room', async () => {
     server.use(
-      http.get('http://localhost:8000/rooms', () => HttpResponse.json([room])),
-      http.get('http://localhost:8000/rooms/room-1', () =>
-        HttpResponse.json(room),
-      ),
+      http.get(`${API_BASE_URL}/rooms`, () => HttpResponse.json([room])),
+      http.get(`${API_BASE_URL}/rooms/room-1`, () => HttpResponse.json(room)),
       http.delete(
-        'http://localhost:8000/rooms/room-1',
+        `${API_BASE_URL}/rooms/room-1`,
         () => new HttpResponse(null, { status: 204 }),
       ),
     );
