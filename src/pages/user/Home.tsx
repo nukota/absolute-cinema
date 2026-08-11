@@ -1,14 +1,14 @@
-import { Box, Container, Typography, CircularProgress } from "@mui/material";
-import { useEffect } from "react";
-import { useMoviesByCustomer } from "../../services/moviesService";
-import { useCurrentUser } from "../../services/authService";
-import { useSaveMovie, useRemoveSavedMovie } from "../../services/savesService";
-import { useFeedback } from "../../provider/FeedbackProvider";
-import { useTheme } from "../../provider/ThemeProvider";
-import { MovieStatus } from "../../utils/enum";
-import MovieSwiper from "../../components/elements/user/MovieSwiper";
-import HeroSection from "../../components/elements/user/HeroSection";
-import { Helmet } from "react-helmet";
+import { Box, Container, Typography, CircularProgress } from '@mui/material';
+import { useEffect } from 'react';
+import { useMoviesByCustomer } from '../../services/moviesService';
+import { useCurrentUser } from '../../services/authService';
+import { useSaveMovie, useRemoveSavedMovie } from '../../services/savesService';
+import { useFeedback } from '../../provider/FeedbackProvider';
+import { useTheme } from '../../provider/ThemeProvider';
+import { MovieStatus } from '../../utils/enum';
+import MovieSwiper from '../../components/elements/user/MovieSwiper';
+import HeroSection from '../../components/elements/user/HeroSection';
+import { Helmet } from 'react-helmet-async';
 
 const Home = () => {
   const { data: currentUser } = useCurrentUser();
@@ -51,8 +51,8 @@ const Home = () => {
   useEffect(() => {
     if (saveMovieMutation.isSuccess) {
       showSnackbar({
-        message: t("home.movieSaved"),
-        severity: "success",
+        message: t('home.movieSaved'),
+        severity: 'success',
       });
       // Reset the mutation state to prevent repeated snackbars
       saveMovieMutation.reset();
@@ -64,14 +64,14 @@ const Home = () => {
       <Box
         sx={{
           background:
-            "radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)",
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+            'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <CircularProgress size={60} sx={{ color: "primary.main" }} />
+        <CircularProgress size={60} sx={{ color: 'primary.main' }} />
       </Box>
     );
   }
@@ -80,8 +80,8 @@ const Home = () => {
     <Box
       sx={{
         background:
-          "radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)",
-        minHeight: "100vh",
+          'radial-gradient(ellipse at top, rgba(156, 39, 176, 0.15) 0%, transparent 50%), radial-gradient(ellipse at bottom, rgba(156, 39, 176, 0.2) 0%, transparent 50%), linear-gradient(180deg, #1a0a2e 0%, #16213e 50%, #1a0a2e 100%)',
+        minHeight: '100vh',
       }}
     >
       <Helmet>
@@ -108,7 +108,7 @@ const Home = () => {
       {/* Now Showing Section */}
       <Container maxWidth="lg" sx={{ my: 8 }}>
         <MovieSwiper
-          title={t("home.nowShowing")}
+          title={t('home.nowShowing')}
           movies={featuredMovies}
           onSaveMovie={handleSaveMovie}
           onUnsaveMovie={handleUnsaveMovie}
@@ -118,7 +118,7 @@ const Home = () => {
       {/* Coming Soon Section */}
       <Container maxWidth="lg" sx={{ mb: 8 }}>
         <MovieSwiper
-          title={t("home.comingSoon")}
+          title={t('home.comingSoon')}
           movies={comingSoonMovies}
           onSaveMovie={handleSaveMovie}
           onUnsaveMovie={handleUnsaveMovie}
@@ -135,12 +135,12 @@ const Home = () => {
             mb={6}
             color="primary.secondary"
           >
-            {t("home.whyChooseUs")}
+            {t('home.whyChooseUs')}
           </Typography>
           <Box
             sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "repeat(3, 1fr)" },
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
               gap: 4,
             }}
           >
@@ -149,14 +149,14 @@ const Home = () => {
                 sx={{
                   width: 80,
                   height: 80,
-                  borderRadius: "50%",
-                  bgcolor: "primary.main",
-                  color: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 16px",
-                  fontSize: "2rem",
+                  borderRadius: '50%',
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 16px',
+                  fontSize: '2rem',
                 }}
               >
                 🎬
@@ -167,10 +167,10 @@ const Home = () => {
                 gutterBottom
                 color="white"
               >
-                {t("home.latestMovies")}
+                {t('home.latestMovies')}
               </Typography>
               <Typography color="rgba(255, 255, 255, 0.7)">
-                {t("home.latestMoviesDesc")}
+                {t('home.latestMoviesDesc')}
               </Typography>
             </Box>
             <Box textAlign="center">
@@ -178,14 +178,14 @@ const Home = () => {
                 sx={{
                   width: 80,
                   height: 80,
-                  borderRadius: "50%",
-                  bgcolor: "primary.main",
-                  color: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 16px",
-                  fontSize: "2rem",
+                  borderRadius: '50%',
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 16px',
+                  fontSize: '2rem',
                 }}
               >
                 🪑
@@ -196,10 +196,10 @@ const Home = () => {
                 gutterBottom
                 color="white"
               >
-                {t("home.comfortableSeats")}
+                {t('home.comfortableSeats')}
               </Typography>
               <Typography color="rgba(255, 255, 255, 0.7)">
-                {t("home.comfortableSeatsDesc")}
+                {t('home.comfortableSeatsDesc')}
               </Typography>
             </Box>
             <Box textAlign="center">
@@ -207,14 +207,14 @@ const Home = () => {
                 sx={{
                   width: 80,
                   height: 80,
-                  borderRadius: "50%",
-                  bgcolor: "primary.main",
-                  color: "white",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  margin: "0 auto 16px",
-                  fontSize: "2rem",
+                  borderRadius: '50%',
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 16px',
+                  fontSize: '2rem',
                 }}
               >
                 🎟️
@@ -225,10 +225,10 @@ const Home = () => {
                 gutterBottom
                 color="white"
               >
-                {t("home.easyBooking")}
+                {t('home.easyBooking')}
               </Typography>
               <Typography color="rgba(255, 255, 255, 0.7)">
-                {t("home.easyBookingDesc")}
+                {t('home.easyBookingDesc')}
               </Typography>
             </Box>
           </Box>
