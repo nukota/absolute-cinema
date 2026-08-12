@@ -1,4 +1,4 @@
-name: CI
+name: CI & Deploy
 
 on:
   pull_request:
@@ -43,6 +43,13 @@ jobs:
           E2E_CUSTOMER_PASSWORD: ${{ secrets.E2E_CUSTOMER_PASSWORD }}
         run: npm run test:e2e
 
+      - name: Upload production build
+        uses: actions/upload-artifact@v5
+        with:
+          name: production-build
+          path: dist/
+          retention-days: 1
+
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v5
@@ -50,3 +57,29 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
+
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download production build
+        uses: actions/download-artifact@v6
+        with:
+          name: production-build
+          path: dist/
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/id_ed25519" \
+            dist/ \
+            ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}:/var/www/absolute-cinema/
