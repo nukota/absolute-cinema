@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-const appUrl = process.env.E2E_APP_URL ?? 'http://127.0.0.1:5173';
+const appUrl = process.env.E2E_APP_URL ?? 'http://localhost:4173';
 const email = process.env.E2E_CUSTOMER_EMAIL;
 const password = process.env.E2E_CUSTOMER_PASSWORD;
 
