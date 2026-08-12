@@ -29,6 +29,31 @@ jobs:
       - name: Run unit tests
         run: npm run test:unit
 
+      - name: Check build environment
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          E2E_CUSTOMER_EMAIL: ${{ secrets.E2E_CUSTOMER_EMAIL }}
+          E2E_CUSTOMER_PASSWORD: ${{ secrets.E2E_CUSTOMER_PASSWORD }}
+        run: |
+          if [ -z "$VITE_API_BASE_URL" ]; then
+            echo "❌ VITE_API_BASE_URL is missing"
+            exit 1
+          fi
+
+          if [ -z "$E2E_CUSTOMER_EMAIL" ]; then
+            echo "❌ E2E_CUSTOMER_EMAIL is missing"
+            exit 1
+          fi
+
+          if [ -z "$E2E_CUSTOMER_PASSWORD" ]; then
+            echo "❌ E2E_CUSTOMER_PASSWORD is missing"
+            exit 1
+          fi
+
+          echo "✅ VITE_API_BASE_URL is configured"
+          echo "✅ E2E_CUSTOMER_EMAIL is configured"
+          echo "✅ E2E_CUSTOMER_PASSWORD is configured"
+
       - name: Build application
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
